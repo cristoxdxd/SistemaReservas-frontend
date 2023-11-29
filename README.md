@@ -1,5 +1,6 @@
 # Copo-De-Nieve-Sistema-de-Reservas
 
+
 ## Project Conditions
 The Snowflake hotel presents a unique blend of cabins and a main house with various room configurations. Your team is responsible for determining the specific number of cabins and rooms in the main house, drawing inspiration from existing examples like the "Dos Chorreras" hotel in Cuenca.
 
@@ -15,3 +16,4 @@ Main House Rooms
 - **Suites with Single Extra-Large Bed**
 
 The project is dynamic, allowing for expansion and modifications as it progresses. Keep in mind that the project owner is your professor, who will guide the product development.
+Cambio Erick
