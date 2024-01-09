@@ -3,6 +3,7 @@
 ## Overview
 Welcome to the documentation for the "Copo de Nieve" (Snowflake) hotel room reservation web application. This project aims to streamline the booking process for the Snow
 
+
 ## Project Conditions
 The Snowflake hotel presents a unique blend of cabins and a main house with various room configurations. Your team is responsible for determining the specific number of cabins and rooms in the main house, drawing inspiration from existing examples like the "Dos Chorreras" hotel in Cuenca.
 
