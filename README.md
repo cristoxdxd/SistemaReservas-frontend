@@ -1,4 +1,6 @@
-# Snowflake Hotel Room Reservation
+# Copo-De-Nieve-Sistema-de-Reservas
+
+[![Board Status](https://dev.azure.com/cristopherherrera/ae42c27c-c167-460a-90f0-c813e20bd55d/2529d15f-d280-4ab4-9f77-c8111cc7fcde/_apis/work/boardbadge/27388745-e2ce-4d78-b67d-8b613e0e68d7?columnOptions=1)](https://dev.azure.com/cristopherherrera/ae42c27c-c167-460a-90f0-c813e20bd55d/_boards/board/t/2529d15f-d280-4ab4-9f77-c8111cc7fcde/Issues/)
 
 ## Overview
 Welcome to the documentation for the "Copo de Nieve" (Snowflake) hotel room reservation web application. This project aims to streamline the booking process for the Snow
