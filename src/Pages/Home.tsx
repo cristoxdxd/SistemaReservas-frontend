@@ -5,6 +5,7 @@ import { useBookingContainer } from "../components/BookingContainer/State/useBoo
 import { Cabania } from "../constants/cabanias";
 import { Habitacion } from "../constants/habitaciones";
 import { Booking } from "../models/Booking.interface";
+import {FiltroBusquedas} from "../components/FiltroBusqueda";
 
 export const Home = () => {
 
@@ -27,6 +28,7 @@ export const Home = () => {
                 </div>
                 <div className="absolute inset-0 border-2 border-blue-500"></div>
             </div>
+            <FiltroBusquedas />
             <br />
             <h1 className="text-center text-3xl font-extrabold text-white sm:text-4xl">Cabañas</h1>
             <br />
@@ -36,6 +38,8 @@ export const Home = () => {
             <h1 className="text-center text-3xl font-extrabold text-white sm:text-4xl">Habitaciones</h1>
             <br />
             <BookingContainer listBooking={habitacionesList} />
+            
+            
         </>
     )
 }
