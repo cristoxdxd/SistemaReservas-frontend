@@ -9,7 +9,7 @@ interface Reservation {
 }
 
 const BookingHistory: React.FC = () => {
-    const [reservations, setReservations] = useState<Reservation[]>([
+    const [reservations] = useState<Reservation[]>([
         {
             id: 1,
             roomName: 'Habitación 1',
@@ -33,11 +33,11 @@ const BookingHistory: React.FC = () => {
         },
     ]);
 
-    const handleModifyReservation = (reservationId: number) => {
+    const handleModifyReservation = (_reservationId: number) => {//prefijo
         // Lógica para modificar la reserva
     };
 
-    const handleCancelReservation = (reservationId: number) => {
+    const handleCancelReservation = (_reservationId: number) => { //prefijo
         // Lógica para cancelar la reserva
     };
 
