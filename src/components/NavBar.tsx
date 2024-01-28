@@ -20,12 +20,12 @@ export const NavBar = () => {
                                 <img
                                     className="block lg:hidden h-12 w-auto"
                                     src={SnowFlakeLogo}
-                                    alt="ComicVerse"
+                                    alt="SnowFlake"
                                 />
                                 <img
                                     className="hidden lg:block h-12 w-auto"
                                     src={SnowFlakeLogo}
-                                    alt="ComicVerse"
+                                    alt="SnowFlake"
                                 />
                             </a>
                         </div>
