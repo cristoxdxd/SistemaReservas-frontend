@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { NavBarUser } from "../components/NavBarUser";
 import NavBarProfile from "../components/NavBarProfile";
-import BookingHistory from "../components/BookingHistory";  // Importa el componente de historial de reservas
+import BookingHistory from "../components/BookingHistory";
 
-const UserProfile: React.FC = () => {
+
+export const UserProfile = () => {
     const [selectedOption, setSelectedOption] = useState<'profile' | 'reservations'>('profile');
 
     const handleProfileClick = () => {
