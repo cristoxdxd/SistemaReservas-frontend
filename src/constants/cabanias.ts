@@ -1,8 +1,8 @@
-const images1 = 'src/assets/_3e89d9a4-feed-42ed-878a-b1085b92e1fc.jpeg';
-const images2 = 'src/assets/_563df07e-fcbd-4335-8160-422ec2498d5f.jpeg';
-const images3 = 'src/assets/_01628343-a4e4-4daa-b620-9044299349c4.jpeg';
-const images4 = 'src/assets/_bdc08c7a-e8ac-4857-90e0-96382e1c06e5.jpeg';
-const images5 = 'src/assets/_f6189f6e-3a65-4ca7-a853-e32b7abb9231.jpeg';
+const images1 = 'src/assets/3e89d9a4-feed-42ed-878a-b1085b92e1fc.jpg';
+const images2 = 'src/assets/563df07e-fcbd-4335-8160-422ec2498d5f.jpg';
+const images3 = 'src/assets/01628343-a4e4-4daa-b620-9044299349c4.jpg';
+const images4 = 'src/assets/bdc08c7a-e8ac-4857-90e0-96382e1c06e5.jpg';
+const images5 = 'src/assets/f6189f6e-3a65-4ca7-a853-e32b7abb9231.jpg';
 
 export interface ICabania {
     id: string;
