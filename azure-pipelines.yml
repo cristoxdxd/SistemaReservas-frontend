@@ -20,7 +20,7 @@ steps:
   displayName: 'npm install'
 
 - script: |
-    npm run dev
+    npm run build
   displayName: 'npm build'
   
 - task: CopyFiles@2
