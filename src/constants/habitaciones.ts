@@ -1,3 +1,9 @@
+const image1 = 'src/assets/_8714bd8f-aacf-4b86-b965-ae6f7bda7bf6.jpeg'
+const image2 = 'src/assets/_ca2426ac-1c99-41b2-a85c-3e025074c3bc.jpeg'
+const image3 = 'src/assets/_e9bb97de-dc28-41aa-b5b6-ded33d4fb3ea.jpeg'
+const image4 = 'src/assets/_4fa49748-a03c-4ac5-a7b3-4294be9a5b89.jpeg'
+const image5 = 'src/assets/_17dc1ad0-75a7-4e7e-a7ce-c878940eb1fb.jpeg'
+
 export interface IHabitacion {
     id: string;
     name: string;
@@ -14,7 +20,7 @@ export const Habitacion: IHabitacion[] = [
         description: 'Habitación individual con baño privado y vistas al exterior.',
         price: 50,
         capacity: 1,
-        image: '../../src/constants/images/_8714bd8f-aacf-4b86-b965-ae6f7bda7bf6.jpeg'
+        image: image1
     },
     {
         id: '2',
@@ -22,7 +28,7 @@ export const Habitacion: IHabitacion[] = [
         description: 'Habitación doble con baño privado y vistas al exterior.',
         price: 80,
         capacity: 2,
-        image: '../../src/constants/images/_ca2426ac-1c99-41b2-a85c-3e025074c3bc.jpeg'
+        image: image2
     },
     {
         id: '3',
@@ -30,7 +36,7 @@ export const Habitacion: IHabitacion[] = [
         description: 'Habitación triple con baño privado y vistas al exterior.',
         price: 100,
         capacity: 3,
-        image: '../../src/constants/images/_e9bb97de-dc28-41aa-b5b6-ded33d4fb3ea.jpeg'
+        image: image3
     },
     {
         id: '4',
@@ -38,7 +44,7 @@ export const Habitacion: IHabitacion[] = [
         description: 'Habitación cuádruple con baño privado y vistas al exterior.',
         price: 120,
         capacity: 4,
-        image: '../../src/constants/images/_4fa49748-a03c-4ac5-a7b3-4294be9a5b89.jpeg'
+        image: image4
     },
     {
         id: '5',
@@ -46,6 +52,6 @@ export const Habitacion: IHabitacion[] = [
         description: 'Habitación familiar con baño privado y vistas al exterior.',
         price: 140,
         capacity: 5,
-        image: '../../src/constants/images/_17dc1ad0-75a7-4e7e-a7ce-c878940eb1fb.jpeg'
+        image: image5
     }
 ]
