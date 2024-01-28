@@ -1,7 +1,15 @@
 import { NavBar } from "../components/NavBar";
 import HotelOverview from "../assets/hotel-overiew.jpg";
+import { BookingContainer } from "../components/BookingContainer/BookingContainer";
+import { useBookingContainer } from "../components/BookingContainer/State/useBookingContainer";
+import { Cabania } from "../constants/cabanias";
+import { Habitacion } from "../constants/habitaciones";
+import { Booking } from "../models/Booking.interface";
 
 export const Home = () => {
+
+    const { bookingList: cabaniasList }: { bookingList: Booking[] } = useBookingContainer(Cabania.map(cabania => ({ ...cabania, price: cabania.price.toString(), capacity: cabania.capacity.toString() })));
+    const { bookingList: habitacionesList }: { bookingList: Booking[] } = useBookingContainer(Habitacion.map(habitacion => ({ ...habitacion, price: habitacion.price.toString(), capacity: habitacion.capacity.toString() })));
 
     return(
         <>
@@ -19,6 +27,15 @@ export const Home = () => {
                 </div>
                 <div className="absolute inset-0 border-2 border-blue-500"></div>
             </div>
+            <br />
+            <h1 className="text-center text-3xl font-extrabold text-white sm:text-4xl">Cabañas</h1>
+            <br />
+            <BookingContainer listBooking={cabaniasList} />
+            <br />
+            <br />
+            <h1 className="text-center text-3xl font-extrabold text-white sm:text-4xl">Habitaciones</h1>
+            <br />
+            <BookingContainer listBooking={habitacionesList} />
         </>
     )
 }
