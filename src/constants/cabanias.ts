@@ -1,8 +1,8 @@
-const images1 = 'src/assets/3e89d9a4-feed-42ed-878a-b1085b92e1fc.jpg';
-const images2 = 'src/assets/563df07e-fcbd-4335-8160-422ec2498d5f.jpg';
-const images3 = 'src/assets/01628343-a4e4-4daa-b620-9044299349c4.jpg';
-const images4 = 'src/assets/bdc08c7a-e8ac-4857-90e0-96382e1c06e5.jpg';
-const images5 = 'src/assets/f6189f6e-3a65-4ca7-a853-e32b7abb9231.jpg';
+import images1 from '../assets/3e89d9a4-feed-42ed-878a-b1085b92e1fc.jpg';
+import images2 from '../assets/563df07e-fcbd-4335-8160-422ec2498d5f.jpg';
+import images3 from '../assets/01628343-a4e4-4daa-b620-9044299349c4.jpg';
+import images4 from '../assets/bdc08c7a-e8ac-4857-90e0-96382e1c06e5.jpg';
+import images5 from '../assets/f6189f6e-3a65-4ca7-a853-e32b7abb9231.jpg';
 
 export interface ICabania {
     id: string;
@@ -10,7 +10,7 @@ export interface ICabania {
     description: string;
     price: number;
     capacity: number;
-    image: string;
+    image: any;
 }
 
 export const Cabania: ICabania[] = [
