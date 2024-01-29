@@ -4,6 +4,7 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Home } from './Pages/Home'
 import UserProfile from './Pages/UserProfile'
+import ReservePage from './Pages/ReservePage'
 
 const router = createBrowserRouter([
   { 
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: '/userprofile',
     element: <UserProfile />,
+  },
+  {
+    path: '/reservepage',
+    element: <ReservePage />,
   },
   
   
