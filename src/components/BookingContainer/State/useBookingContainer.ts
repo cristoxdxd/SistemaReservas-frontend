@@ -5,8 +5,10 @@ export const useBookingContainer = (listBooking: Booking[]) => {
     const [bookingList, setBooking] = useState<Booking[]>([]);
 
     useEffect(() => {
-        setBooking(listBooking);
-    }, [listBooking]);
+        if (JSON.stringify(listBooking) !== JSON.stringify(bookingList)) {
+            setBooking(listBooking);
+        }
+    }, [listBooking, bookingList]);
 
-    return { bookingList }
+    return { bookingList };
 }
