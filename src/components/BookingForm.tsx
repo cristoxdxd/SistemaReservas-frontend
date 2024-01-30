@@ -16,6 +16,13 @@ export const BookingForm = () => {
     });
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [formErrors, setFormErrors] = useState({
+        name: '',
+        email: '',
+        numninos: '',
+        numadul: '',
+        // Agrega más campos según sea necesario
+    });
 
     const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -23,16 +30,49 @@ export const BookingForm = () => {
             ...prevData,
             [name]: value,
         }));
+        // Limpiar mensaje de error al cambiar el valor del campo
+        setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: '',
+        }));
     }, []);
+
+    const validateForm = () => {
+        const errors: { [key: string]: string } = {};
+    
+        if (!reservationData.name.trim()) {
+            errors.name = 'El nombre es requerido';
+        }
+    
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reservationData.email)) {
+            errors.email = 'Ingresa un correo electrónico válido';
+        }
+    
+        if (!/^\d+$/.test(reservationData.numninos)) {
+            errors.numninos = 'El número de niños debe ser un número entero';
+        }
+    
+        if (!/^\d+$/.test(reservationData.numadul)) {
+            errors.numadul = 'El número de adultos debe ser un número entero';
+        }
+    
+        setFormErrors(prevErrors => ({
+            ...prevErrors,
+            ...errors
+        }));
+    
+        return Object.keys(errors).length === 0;
+    };
+    
 
     const handleReservationSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Realizar alguna acción con los datos de la reserva, por ejemplo, enviarlos a un servidor
-        console.log('Datos de la reserva:', reservationData);
 
-        // Abrir el modal después de enviar la reserva
-        setModalIsOpen(true);
-    }, [reservationData]);
+        if (validateForm()) {
+            console.log('Datos de la reserva:', reservationData);
+            setModalIsOpen(true);
+        }
+    }, [reservationData, validateForm]);
 
     const closeModal = () => {
         // Cerrar el modal y limpiar los campos después de cerrar el modal
@@ -69,7 +109,7 @@ export const BookingForm = () => {
     return (
         <>
             <form onSubmit={handleReservationSubmit} className="max-w-6x1 mx-auto bg-white p-8 rounded-md shadow-md my-8 mx-8 w-1/2">
-                <div className="mb-4">
+            <div className="mb-4">
                     <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
                         Nombre
                     </label>
@@ -79,9 +119,10 @@ export const BookingForm = () => {
                         name="name"
                         value={reservationData.name}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.name ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.name && <p className="text-red-500 text-sm">{formErrors.name}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="apellido" className="block text-gray-700 text-sm font-bold mb-2">
@@ -135,9 +176,10 @@ export const BookingForm = () => {
                         name="numninos"
                         value={reservationData.numninos}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.numninos ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.numninos && <p className="text-red-500 text-sm">{formErrors.numninos}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="numadul" className="block text-gray-700 text-sm font-bold mb-2">
@@ -149,9 +191,10 @@ export const BookingForm = () => {
                         name="numadul"
                         value={reservationData.numadul}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.numadul ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.numadul && <p className="text-red-500 text-sm">{formErrors.numadul}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="servicios" className="block text-gray-700 text-sm font-bold mb-2">
@@ -177,9 +220,10 @@ export const BookingForm = () => {
                         name="email"
                         value={reservationData.email}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.email ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.email && <p className="text-red-500 text-sm">{formErrors.email}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="checkInDate" className="block text-gray-700 text-sm font-bold mb-2">
