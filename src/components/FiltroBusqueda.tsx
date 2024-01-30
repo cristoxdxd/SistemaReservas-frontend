@@ -90,10 +90,10 @@ export const FiltroBusquedas = () => {
 
     return (
         <div className="flex flex-col items-center">
-            <div className="bg-gray-500 bg-opacity-70 p-10 rounded-md shadow-md mx-auto mt-10">
+            <div className="bg-gray-900 bg-opacity-70 p-10 rounded-md shadow-md mx-auto mt-10">
                 <form onSubmit={handleSubmit} className="lg:grid lg:grid-cols-3 lg:grid-rows-2 gap-5">      
                     <div className="mb-5 flex items-center col-span-1">
-                        <label htmlFor="checkInDate" className="block text-sm font-semibold mb-1">
+                        <label htmlFor="checkInDate" className="block text-sm font-semibold mb-1 text-white">
                             Fecha de Check-in: 
                         </label>
                         <input
@@ -109,7 +109,7 @@ export const FiltroBusquedas = () => {
         
                     
                     <div className="mb-5 flex items-center col-span-1">
-                        <label htmlFor="checkOutDate" className="block text-sm font-semibold mb-1">
+                        <label htmlFor="checkOutDate" className="block text-sm font-semibold mb-1 text-white">
                             Fecha de Check-out:
                         </label>
                         <input
@@ -125,7 +125,7 @@ export const FiltroBusquedas = () => {
         
                     
                     <div className="mb-5 flex items-center col-span-1">
-                        <label htmlFor="numAdults" className="block text-sm font-semibold mb-1">
+                        <label htmlFor="numAdults" className="block text-sm font-semibold mb-1 text-white">
                             Cantidad de Adultos:
                         </label>
                         <button
@@ -135,7 +135,7 @@ export const FiltroBusquedas = () => {
                         >
                             -
                         </button>
-                        <span className="ml-2 text-sm">{numAdults}</span>
+                        <span className="ml-2 text-sm text-white">{numAdults}</span>
                         <button
                             type="button"
                             className="ml-2 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
@@ -148,7 +148,7 @@ export const FiltroBusquedas = () => {
         
                     
                     <div className="mb-5 flex items-center col-span-1">
-                        <label htmlFor="numChildren" className="block text-sm font-semibold mb-1">
+                        <label htmlFor="numChildren" className="block text-sm font-semibold mb-1 text-white">
                             Cantidad de Niños:
                         </label>
                         <button
@@ -158,7 +158,7 @@ export const FiltroBusquedas = () => {
                         >
                             -
                         </button>
-                        <span className="ml-2 text-sm">{numChildren}</span>
+                        <span className="ml-2 text-sm text-white">{numChildren}</span>
                         <button
                             type="button"
                             className="ml-2 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
@@ -171,13 +171,13 @@ export const FiltroBusquedas = () => {
     
                     {numChildren > 0 && (
                         <div className="mb-5 col-span-1">
-                            <label htmlFor="childAges" className="block text-sm font-semibold mb-1">
+                            <label htmlFor="childAges" className="block text-sm font-semibold mb-1 text-white">
                                 Edades de los Niños:
                             </label>
                             <div className="flex flex-wrap">
                                 {Array.from({ length: numChildren }, (_, index) => (
-                                    <div key={index} className="mb-1 w-1/2 pr-2">
-                                        <label htmlFor={`childAge${index + 1}`} className="text-sm">
+                                    <div key={index} className="mb-1 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 pr-2">
+                                        <label htmlFor={`childAge${index + 1}`} className="text-sm text-white">
                                             Niño {index + 1}:
                                         </label>
                                         <input
@@ -189,7 +189,7 @@ export const FiltroBusquedas = () => {
                                                 ages[index] = parseInt(e.target.value, 10);
                                                 setChildAges(ages);
                                             }}
-                                            className="ml-2 w-10 px-1 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
+                                            className="ml-2 w-full px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
                                             min={0}
                                             required
                                         />
@@ -199,7 +199,7 @@ export const FiltroBusquedas = () => {
                         </div>
                     )}
                 
-                    <button type="submit" className="bg-blue-500 text-white px-10 py-5 rounded-md">
+                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4">
                         Buscar
                     </button>
                 </form>
