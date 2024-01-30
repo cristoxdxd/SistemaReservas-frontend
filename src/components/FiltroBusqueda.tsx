@@ -2,14 +2,8 @@ import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 export const FiltroBusquedas = () => {
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [isAnimating] = useState(false);
 
-  const handleReservarClick = () => {
-    setIsAnimating(true);
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 1000);
-  };
   const handleCheckInDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCheckInDate(e.target.value);
     setShowCheckInLabel(true);
@@ -24,7 +18,7 @@ export const FiltroBusquedas = () => {
   const [numAdults, setNumAdults] = useState<number>(1);
   const [numChildren, setNumChildren] = useState<number>(0);
   const [numBabies, setNumBabies] = useState<number>(0);
-  const [childAges, setChildAges] = useState<number[]>([]);
+  const [childAges] = useState<number[]>([]);
   const [isServiceAnimal, setIsServiceAnimal] = useState<boolean>(false);
 
   const MAX_ADULTS_CAPACITY = 4; // Establece la capacidad máxima de adultos en la habitación
