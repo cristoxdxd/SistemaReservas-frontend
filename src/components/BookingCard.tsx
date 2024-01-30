@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 
 export const BookingCard = ({
   name,
@@ -35,14 +36,16 @@ export const BookingCard = ({
       <p className="text-blue-400 mb-2">{description}</p>
       <p className="text-blue-400 mb-2">Price: {price}</p>
       <p className="text-blue-400 mb-2">Capacity: {capacity}</p>
-      <button
-        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
-          isAnimating ? "animate-jump" : ""
-        }`}
-        onClick={handleReservarClick}
-      >
-        Reservar
-      </button>
+      <Link to={`/reservepage${queryParams}`}>
+        <button
+          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
+            isAnimating ? "animate-jump" : ""
+          }`}
+          onClick={handleReservarClick}
+        >
+          Reservar
+        </button>
+      </Link>
     </div>
   );
 };
