@@ -1,13 +1,36 @@
 import { NavBar } from "../components/NavBar";
-import HotelOverview from "../assets/hotel-overiew.jpg";
+import HotelOverview from "../assets/hotel-overview-1.jpg";
+import HotelOverview2 from "../assets/hotel-overview-2.jpg";
+import HotelOverview3 from "../assets/hotel-overview-3.jpg";
+import HotelOverview4 from "../assets/hotel-overview-4.jpg";
+import HotelOverview5 from "../assets/hotel-overview-5.jpg";
+import HotelOverview6 from "../assets/hotel-overview-6.jpg";
+import HotelOverview7 from "../assets/hotel-overview-7.jpg";
+import HotelOverview8 from "../assets/hotel-overview-8.jpg";
 import { BookingContainer } from "../components/BookingContainer/BookingContainer";
 import { useBookingContainer } from "../components/BookingContainer/State/useBookingContainer";
 import { Cabania } from "../constants/cabanias";
 import { Habitacion } from "../constants/habitaciones";
 import { Booking } from "../models/Booking.interface";
 import { FiltroBusquedas } from "../components/FiltroBusqueda";
+import { useEffect, useState } from "react";
+import { Footer } from "../components/Footer";
+
+const images = [HotelOverview, HotelOverview2, HotelOverview3, HotelOverview4, HotelOverview5, HotelOverview6, HotelOverview7, HotelOverview8];
 
 export const Home = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+  
   const { bookingList: cabaniasList }: { bookingList: Booking[] } =
     useBookingContainer(
       Cabania.map((cabania) => ({
@@ -30,9 +53,9 @@ export const Home = () => {
       <NavBar />
       
       <div
-        className="py-20 relative"
+        className="py-20 relative animate-fade-down"
         style={{
-          backgroundImage: `url(${HotelOverview})`,
+          backgroundImage: `url(${images[currentImageIndex]})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -63,6 +86,8 @@ export const Home = () => {
       </h1>
       <br />
       <BookingContainer listBooking={habitacionesList} />
+      <br />
+      <Footer />
     </>
   );
 };

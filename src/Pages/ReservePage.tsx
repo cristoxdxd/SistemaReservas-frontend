@@ -1,5 +1,5 @@
 import { NavBar } from "../components/NavBar";
-import HotelOverview from "../assets/hotel-overiew.jpg";
+import HotelOverview from "../assets/hotel-overview-1.jpg";
 import { BookingForm } from "../components/BookingForm";
 import { BookingPreview } from "../components/BookingPreview";
 import { useLocation } from 'react-router-dom';
