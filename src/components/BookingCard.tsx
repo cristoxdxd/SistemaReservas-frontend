@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 export const BookingCard = ({
   name,
@@ -14,6 +14,13 @@ export const BookingCard = ({
   capacity: string;
   image: string;
 }) => {
+  const queryParams = `?name=${encodeURIComponent(
+    name
+  )}&description=${encodeURIComponent(description)}&price=${encodeURIComponent(
+    price
+  )}&capacity=${encodeURIComponent(capacity)}&image=${encodeURIComponent(
+    image
+  )}`;
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleReservarClick = () => {
