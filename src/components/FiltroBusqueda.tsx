@@ -1,209 +1,279 @@
 import { useState } from "react";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 export const FiltroBusquedas = () => {
-    const [checkInDate, setCheckInDate] = useState("");
-    const [checkOutDate, setCheckOutDate] = useState("");
-    const [numAdults, setNumAdults] = useState<number>(1);
-    const [numChildren, setNumChildren] = useState<number>(0);
-    const [childAges, setChildAges] = useState<number[]>([]);
+  const [isAnimating] = useState(false);
 
-    const MAX_ADULTS_CAPACITY = 4; // Establece la capacidad máxima de adultos en la habitación
-    const MAX_CHILDREN_PER_ROOM = 4; // Establece el límite máximo de niños por habitación
-    const MAX_CHILD_AGE = 12; // Establece la edad máxima permitida para los niños\
+  const handleCheckInDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckInDate(e.target.value);
+    setShowCheckInLabel(true);
+  };
 
-    const [adultsError, setAdultsError] = useState<string | null>(null);
-    const [childrenError, setChildrenError] = useState<string | null>(null);
+  const handleCheckOutDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckOutDate(e.target.value);
+    setShowCheckOutLabel(true);
+  };
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [numAdults, setNumAdults] = useState<number>(1);
+  const [numChildren, setNumChildren] = useState<number>(0);
+  const [numBabies, setNumBabies] = useState<number>(0);
+  const [childAges] = useState<number[]>([]);
+  const [isServiceAnimal, setIsServiceAnimal] = useState<boolean>(false);
 
-    const handleIncrementAdults = () => {
-        // Validar si ya alcanzó el límite de adultos
-        if (numAdults < MAX_ADULTS_CAPACITY) {
-            setNumAdults((prevNumAdults) => prevNumAdults + 1);
-        } else {
-            setAdultsError(`La cantidad de adultos no puede superar la capacidad máxima de ${MAX_ADULTS_CAPACITY}`);
-        }
-    };
-    const handleDecrementAdults = () => {
-        // Validar si ya es el valor mínimo
-        if (numAdults > 1) {
-            setNumAdults((prevNumAdults) => prevNumAdults - 1);
-            setAdultsError(null); // Limpiar mensaje de error al decrementar
-        }
-    };
+  const MAX_ADULTS_CAPACITY = 4; // Establece la capacidad máxima de adultos en la habitación
+  const MAX_CHILDREN_PER_ROOM = 4; // Establece el límite máximo de niños por habitación
+  const MAX_CHILD_AGE = 12; // Establece la edad máxima permitida para los niños
+  const MAX_BABY_AGE = 2; // Establece la edad máxima permitida para los bebés
 
-    const handleIncrementChildren = () => {
-        // Validar si ya alcanzó el límite de niños
-        if (numChildren < MAX_CHILDREN_PER_ROOM) {
-            setNumChildren((prevNumChildren) => prevNumChildren + 1);
-        } else {
-            setChildrenError(`La cantidad de niños no puede superar el límite máximo de ${MAX_CHILDREN_PER_ROOM}`);
-        }
-    };
-    const handleDecrementChildren = () => {
-        // Validar si ya es el valor mínimo
-        if (numChildren > 0) {
-            setNumChildren((prevNumChildren) => prevNumChildren - 1);
-            setChildrenError(null); // Limpiar mensaje de error al decrementar
-        }
-    };
+  const [, setAdultsError] = useState<string | null>(null);
+  const [, setChildrenError] = useState<string | null>(null);
+  const [, setBabiesError] = useState<string | null>(null);
 
-    // Función para manejar el envío del formulario
-    const handleSubmit = (event: { preventDefault: () => void; }) => {
-        event.preventDefault();
-        
-        // Limpiar mensajes de error antes de realizar nuevas validaciones
-        setAdultsError(null);
-        setChildrenError(null);
+  const handleSubmit = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
 
-         // Validaciones
-        if (numAdults > MAX_ADULTS_CAPACITY) {
-            setAdultsError(`La cantidad de adultos no puede superar la capacidad máxima de ${MAX_ADULTS_CAPACITY}`);
-            return;
-        }
+    setAdultsError(null);
+    setChildrenError(null);
+    setBabiesError(null);
 
-        if (numChildren > MAX_CHILDREN_PER_ROOM) {
-            setChildrenError(`La cantidad de niños no puede superar el límite máximo de ${MAX_CHILDREN_PER_ROOM}`);
-            return;
-        }
+    if (numAdults > MAX_ADULTS_CAPACITY) {
+      setAdultsError(
+        `La cantidad de adultos no puede superar la capacidad máxima de ${MAX_ADULTS_CAPACITY}`
+      );
+      return;
+    }
 
-        if (numChildren < 0) {
-            setChildrenError("La cantidad de niños no puede ser un número negativo");
-            return;
-        }
+    if (numChildren > MAX_CHILDREN_PER_ROOM) {
+      setChildrenError(
+        `La cantidad de niños no puede superar el límite máximo de ${MAX_CHILDREN_PER_ROOM}`
+      );
+      return;
+    }
 
-        if (numChildren > 0) {
-            const invalidChildAge = childAges.some((age) => age > MAX_CHILD_AGE);
-            if (invalidChildAge) {
-                setChildrenError(`La edad de los niños no puede superar los ${MAX_CHILD_AGE} años.`);
-                return;
-            }
-        }
+    if (numBabies > MAX_CHILDREN_PER_ROOM) {
+      setBabiesError(
+        `La cantidad de bebés no puede superar el límite máximo de ${MAX_CHILDREN_PER_ROOM}`
+      );
+      return;
+    }
 
-        // Aquí puedes realizar acciones con los datos del formulario, como enviarlos al servidor, etc.
-        console.log("Datos del formulario:", {
-            checkInDate,
-            checkOutDate,
-            numAdults,
-            numChildren,
-            childAges,
-        });
-    };
+    if (numChildren < 0) {
+      setChildrenError("La cantidad de niños no puede ser un número negativo");
+      return;
+    }
 
-    return (
-        <div className="flex flex-col items-center">
-            <div className="bg-gray-900 bg-opacity-70 p-10 rounded-md shadow-md mx-auto mt-10">
-                <form onSubmit={handleSubmit} className="lg:grid lg:grid-cols-3 lg:grid-rows-2 gap-5">      
-                    <div className="mb-5 flex items-center col-span-1">
-                        <label htmlFor="checkInDate" className="block text-sm font-semibold mb-1 text-white">
-                            Fecha de Check-in: 
+    if (numBabies < 0) {
+      setBabiesError("La cantidad de bebés no puede ser un número negativo");
+      return;
+    }
+
+    if (numChildren > 0) {
+      const invalidChildAge = childAges.some((age) => age > MAX_CHILD_AGE);
+      if (invalidChildAge) {
+        setChildrenError(
+          `La edad de los niños no puede superar los ${MAX_CHILD_AGE} años.`
+        );
+        return;
+      }
+    }
+
+    console.log("Datos del formulario:", {
+      checkInDate,
+      checkOutDate,
+      numAdults,
+      numChildren,
+      numBabies,
+      childAges,
+      isServiceAnimal,
+    });
+  };
+
+  const isFormValid = checkInDate && checkOutDate;
+
+  const [showCheckInLabel, setShowCheckInLabel] = useState(true);
+  const [showCheckOutLabel, setShowCheckOutLabel] = useState(true);
+  const [showQuien, setShowQuien] = useState(false);
+
+  return (
+    <div className="flex flex-col items-center">
+      <div className="bg-gray-900 bg-opacity-70 p-10 rounded-md shadow-md mx-auto mt-10">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-wrap justify-center gap-5"
+        >
+          <div className="flex items-center">
+            <label
+              htmlFor="checkInDate"
+              className={`block text-sm font-semibold text-white ${
+                showCheckInLabel ? "" : "hidden"
+              }`}
+              onClick={() => setShowCheckInLabel(false)}
+            >
+              Llegada
+            </label>
+            <>
+              {!showCheckInLabel && (
+                <input
+                  type="date"
+                  id="checkInDate"
+                  value={checkInDate}
+                  onChange={handleCheckInDateChange}
+                  min={new Date().toISOString().split("T")[0]}
+                  className="ml-2 block w-40 px-6 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
+                  required
+                />
+              )}
+              {checkInDate && (
+                <span className="ml-2 text-sm text-white">{checkInDate}</span>
+              )}
+            </>
+          </div>
+
+          <div className="flex items-center">
+            <label
+              htmlFor="checkOutDate"
+              className={`block text-sm font-semibold text-white ${
+                showCheckOutLabel ? "" : "hidden"
+              }`}
+              onClick={() => setShowCheckOutLabel(false)}
+            >
+              Salida
+            </label>
+            <>
+              {!showCheckOutLabel && (
+                <input
+                  type="date"
+                  id="checkOutDate"
+                  value={checkOutDate}
+                  onChange={handleCheckOutDateChange}
+                  className="ml-2 block w-40 px-6 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
+                  min={checkInDate}
+                  required
+                />
+              )}
+              {checkOutDate && (
+                <span className="ml-2 text-sm text-white">{checkOutDate}</span>
+              )}
+            </>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <div className="bg-gray-900 bg-opacity-70 p-4 rounded-md shadow-md mx-auto">
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-wrap justify-center gap-5"
+              >
+                <div className="flex items-center">
+                  <label
+                    htmlFor="quien"
+                    className={`block text-sm font-semibold text-white ${
+                      isAnimating ? "animate-fade-left" : "animate-jump"
+                    }`}
+                    onClick={() => setShowQuien(!showQuien)}
+                  >
+                    Quién
+                  </label>
+                  {showQuien && (
+                    <div className="flex flex-col gap-5">
+                      <div className="flex items-center">
+                        <label
+                          htmlFor="numAdults"
+                          className={`block text-sm font-semibold mb-1 text-white`}
+                        >
+                          Adultos
                         </label>
                         <input
-                            type="date"
-                            id="checkInDate"
-                            value={checkInDate}
-                            onChange={(e) => setCheckInDate(e.target.value)}
-                            min={new Date().toISOString().split("T")[0]}
-                            className="ml-2 block w-40 px-6 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                            required
+                          type="number"
+                          id="numAdults"
+                          value={numAdults}
+                          onChange={(e) =>
+                            setNumAdults(parseInt(e.target.value, 10))
+                          }
+                          className="ml-2 block w-16 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
+                          min={1}
+                          required
                         />
-                    </div>
-        
-                    
-                    <div className="mb-5 flex items-center col-span-1">
-                        <label htmlFor="checkOutDate" className="block text-sm font-semibold mb-1 text-white">
-                            Fecha de Check-out:
+                      </div>
+
+                      <div className="flex items-center">
+                        <label
+                          htmlFor="numChildren"
+                          className={`block text-sm font-semibold mb-1 text-white`}
+                        >
+                          Niños
                         </label>
                         <input
-                            type="date"
-                            id="checkOutDate"
-                            value={checkOutDate}
-                            onChange={(e) => setCheckOutDate(e.target.value)}
-                            className="ml-2 block w-40 px-6 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                            min={checkInDate}
-                            required
+                          type="number"
+                          id="numChildren"
+                          value={numChildren}
+                          onChange={(e) =>
+                            setNumChildren(parseInt(e.target.value, 10))
+                          }
+                          className="ml-2 block w-16 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
+                          min={0}
+                          required
                         />
-                    </div>
-        
-                    
-                    <div className="mb-5 flex items-center col-span-1">
-                        <label htmlFor="numAdults" className="block text-sm font-semibold mb-1 text-white">
-                            Cantidad de Adultos:
+                        <span className="ml-2 text-sm text-white">{`De 2 a ${MAX_CHILD_AGE} años`}</span>
+                      </div>
+
+                      <div className="flex items-center">
+                        <label
+                          htmlFor="numBabies"
+                          className={`block text-sm font-semibold mb-1 text-white`}
+                        >
+                          Bebés
                         </label>
-                        <button
-                            type="button"
-                            className="ml-2 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                            onClick={handleDecrementAdults}
+                        <input
+                          type="number"
+                          id="numBabies"
+                          value={numBabies}
+                          onChange={(e) =>
+                            setNumBabies(parseInt(e.target.value, 10))
+                          }
+                          className="ml-2 block w-16 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
+                          min={0}
+                          required
+                        />
+                        <span className="ml-2 text-sm text-white">{`Menos de ${MAX_BABY_AGE} años`}</span>
+                      </div>
+
+                      <div className="flex items-center">
+                        <label
+                          htmlFor="isServiceAnimal"
+                          className={`block text-sm font-semibold mb-1 text-white`}
                         >
-                            -
-                        </button>
-                        <span className="ml-2 text-sm text-white">{numAdults}</span>
-                        <button
-                            type="button"
-                            className="ml-2 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                            onClick={handleIncrementAdults}
-                        >
-                            +
-                        </button>
-                        {adultsError && <span className="text-red-500 ml-2">{adultsError}</span>}
-                    </div>
-        
-                    
-                    <div className="mb-5 flex items-center col-span-1">
-                        <label htmlFor="numChildren" className="block text-sm font-semibold mb-1 text-white">
-                            Cantidad de Niños:
+                          Mascotas
                         </label>
-                        <button
-                            type="button"
-                            className="ml-2 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                            onClick={handleDecrementChildren}
-                        >
-                            -
-                        </button>
-                        <span className="ml-2 text-sm text-white">{numChildren}</span>
-                        <button
-                            type="button"
-                            className="ml-2 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                            onClick={handleIncrementChildren}
-                        >
-                            +
-                        </button>
-                        {childrenError && <span className="text-red-500 ml-2">{childrenError}</span>}
+                        <input
+                          type="checkbox"
+                          id="isServiceAnimal"
+                          checked={isServiceAnimal}
+                          onChange={(e) => setIsServiceAnimal(e.target.checked)}
+                          className="ml-2"
+                        />
+                        <span className="ml-2 text-sm text-white">
+                          ¿Traes a un animal de servicio?
+                        </span>
+                      </div>
                     </div>
-    
-                    {numChildren > 0 && (
-                        <div className="mb-5 col-span-1">
-                            <label htmlFor="childAges" className="block text-sm font-semibold mb-1 text-white">
-                                Edades de los Niños:
-                            </label>
-                            <div className="flex flex-wrap">
-                                {Array.from({ length: numChildren }, (_, index) => (
-                                    <div key={index} className="mb-1 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 pr-2">
-                                        <label htmlFor={`childAge${index + 1}`} className="text-sm text-white">
-                                            Niño {index + 1}:
-                                        </label>
-                                        <input
-                                            id={`childAge${index + 1}`}
-                                            type="number"
-                                            value={childAges[index] || ""}
-                                            onChange={(e) => {
-                                                const ages = [...childAges];
-                                                ages[index] = parseInt(e.target.value, 10);
-                                                setChildAges(ages);
-                                            }}
-                                            className="ml-2 w-full px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                                            min={0}
-                                            required
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                
-                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4">
-                        Buscar
-                    </button>
-                </form>
+                  )}
+                </div>
+              </form>
             </div>
-        </div>
-    );
+          </div>
+
+          <button
+            type="submit"
+            className={`bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4 h-12 ${
+              !isFormValid ? "cursor-not-allowed" : ""
+            }`}
+            disabled={!isFormValid}
+          >
+            <MagnifyingGlassIcon className="h-5 w-5" />
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 };
