@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FormEvent, useCallback } from 'react';
+import Modal from 'react-modal';
 
 export const BookingForm = () => {
     const [reservationData, setReservationData] = useState({
@@ -14,6 +15,8 @@ export const BookingForm = () => {
         servicios: ''
     });
 
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+
     const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setReservationData((prevData) => ({
@@ -24,8 +27,44 @@ export const BookingForm = () => {
 
     const handleReservationSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        // Realizar alguna acción con los datos de la reserva, por ejemplo, enviarlos a un servidor
         console.log('Datos de la reserva:', reservationData);
+
+        // Abrir el modal después de enviar la reserva
+        setModalIsOpen(true);
     }, [reservationData]);
+
+    const closeModal = () => {
+        // Cerrar el modal y limpiar los campos después de cerrar el modal
+        setModalIsOpen(false);
+        setReservationData({
+            name: '',
+            email: '',
+            checkInDate: '',
+            checkOutDate: '',
+            apellido: '',
+            cedula: '',
+            thabitacion: '',
+            numninos: '',
+            numadul: '',
+            servicios: ''
+        });
+    };
+
+    const customModalStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            border: 'none', // Puedes agregar más estilos según tus necesidades
+        },
+        overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente detrás del modal
+        },
+    };
 
     return (
         <>
@@ -170,7 +209,6 @@ export const BookingForm = () => {
                         required
                     />
                 </div>
-                {/* Agrega más campos según sea necesario */}
                 <button
                     type="submit"
                     className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
@@ -178,6 +216,18 @@ export const BookingForm = () => {
                     Reservar Ahora
                 </button>
             </form>
+            {/* Modal */}
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Detalles de la Reserva"
+                style={customModalStyles}
+            >
+                <h2>Reserva Exitosa</h2>
+                <p>Detalles de la reserva:</p>
+                <pre>{JSON.stringify(reservationData, null, 2)}</pre>
+                <button onClick={closeModal}>Cerrar</button>
+            </Modal>
         </>
     );
 };

@@ -5,11 +5,9 @@ import { BookingPreview } from "../components/BookingPreview";
 import { useLocation } from 'react-router-dom';
 
 export const ReservationForm = () => {
-
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
 
-    // Obtener y asignar valores con valores predeterminados
     const name = queryParams.get('name') || 'Nombre no disponible';
     const description = queryParams.get('description') || 'Descripción no disponible';
     const price = queryParams.get('price') || 'Precio no disponible';
@@ -29,6 +27,7 @@ export const ReservationForm = () => {
                 </div>
                 <div className="absolute inset-0 border-2 border-blue-500"></div>
             </div>
+
             <div className="flex max-w-7x1 mx-auto">
                 <BookingForm />
                 <BookingPreview
