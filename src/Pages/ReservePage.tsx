@@ -2,8 +2,19 @@ import { NavBar } from "../components/NavBar";
 import HotelOverview from "../assets/hotel-overiew.jpg";
 import { BookingForm } from "../components/BookingForm";
 import { BookingPreview } from "../components/BookingPreview";
+import { useLocation } from 'react-router-dom';
 
 export const ReservationForm = () => {
+
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+
+    // Obtener y asignar valores con valores predeterminados
+    const name = queryParams.get('name') || 'Nombre no disponible';
+    const description = queryParams.get('description') || 'Descripción no disponible';
+    const price = queryParams.get('price') || 'Precio no disponible';
+    const capacity = queryParams.get('capacity') || 'Capacidad no disponible';
+    const image = queryParams.get('image') || 'Imagen no disponible';
 
     return (
         <>
@@ -21,11 +32,11 @@ export const ReservationForm = () => {
             <div className="flex max-w-7x1 mx-auto">
                 <BookingForm />
                 <BookingPreview
-                    name={"Hola"}
-                    description={"Es una prueba"}
-                    price={"Funcion?"}
-                    capacity={"Tengo miedo"}
-                    image={"Mucho miedo xdd"}
+                    name={name}
+                    description={description}
+                    price={price}
+                    capacity={capacity}
+                    image={image}
                 />
             </div>
         </>
