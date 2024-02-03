@@ -14,7 +14,7 @@ export const Login = () => {
     if (loginForm.formState.isValid) {
       signInWithEmailAndPassword(
         auth,
-        loginForm.getValues().firstName,
+        loginForm.getValues().email,
         loginForm.getValues().password
       )
         .then((userCredential) => {
@@ -33,25 +33,25 @@ export const Login = () => {
     <>
       <div className="flex flex-col items-center justify-center animate-fade-down">
         <div className="flex flex-col items-center bg-gray-800 rounded-lg shadow-lg p-8 w-80">
-        <h1 className="text-2xl font-bold mb-4 text-white">Login</h1>
+        {/* <h1 className="text-2xl font-bold mb-4 text-white">Login</h1> */}
           <input
-            {...loginForm.register("firstName", {
+            {...loginForm.register("email", {
               required: "Este campo es requerido.",
               pattern: {
-                value: /^[A-Za-z]+$/i,
-                message: "Porfavor solo ingresa letras.",
+                value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+                message: "Porfavor ingresa un correo válido.",
               },
             })}
             className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded"
             type="text"
-            placeholder="Ingrese Nombre"
+            placeholder="Ingrese correo"
           />
           {!isEmpty(loginForm.formState.errors) && (
             <p className="text-red-500 mb-4">
               {
                 get(
                   loginForm,
-                  "formState.errors.firstName.message",
+                  "formState.errors.email.message",
                   ""
                 ) as string
               }
@@ -62,12 +62,12 @@ export const Login = () => {
               required: "Este campo es requerido.",
               minLength: {
                 value: 8,
-                message: "La contrasenia debe tener al menos 8 caracteres.",
+                message: "La contrase&ntilde;a debe tener al menos 8 caracteres.",
               },
             })}
             className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded"
             type="password"
-            placeholder="Ingrese contrasenia"
+            placeholder="Ingrese contrase&ntilde;a"
           />
           {!isEmpty(loginForm.formState.errors) && (
             <p className="text-red-500 mb-4">
