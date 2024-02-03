@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import { NavBar } from "../components/NavBar";
 import { get, isEmpty } from "lodash";
 import { auth } from "../Firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -32,11 +31,9 @@ export const Login = () => {
 
   return (
     <>
-      <NavBar />
-      <br />
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-bold mb-4 text-white">Login</h1>
+      <div className="flex flex-col items-center justify-center animate-fade-down">
         <div className="flex flex-col items-center bg-gray-800 rounded-lg shadow-lg p-8 w-80">
+        <h1 className="text-2xl font-bold mb-4 text-white">Login</h1>
           <input
             {...loginForm.register("firstName", {
               required: "Este campo es requerido.",

@@ -34,7 +34,7 @@ export const SignUp = () => {
     <>
       <NavBar />
       <br />
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center animate-fade-left">
         <h1 className="text-2xl font-bold mb-4 text-white">Register</h1>
         <div className="flex flex-col items-center bg-gray-800 rounded-lg shadow-lg p-8 w-80">
           <input
