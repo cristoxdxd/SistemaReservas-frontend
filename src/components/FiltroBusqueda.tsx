@@ -98,10 +98,7 @@ export const FiltroBusquedas = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="bg-gray-900 bg-opacity-70 p-10 rounded-md shadow-md mx-auto mt-10">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-wrap justify-center gap-5"
-        >
+        <form onSubmit={ handleSubmit } className="flex flex-wrap justify-center gap-5">
           <div className="flex items-center">
             <label
               htmlFor="checkInDate"
@@ -160,8 +157,7 @@ export const FiltroBusquedas = () => {
 
           <div className="flex flex-col items-center">
             <div className="bg-gray-900 bg-opacity-70 p-4 rounded-md shadow-md mx-auto">
-              <form
-                onSubmit={handleSubmit}
+              <div
                 className="flex flex-wrap justify-center gap-5"
               >
                 <div className="flex items-center">
@@ -259,7 +255,7 @@ export const FiltroBusquedas = () => {
                     </div>
                   )}
                 </div>
-              </form>
+              </div>
             </div>
           </div>
 
