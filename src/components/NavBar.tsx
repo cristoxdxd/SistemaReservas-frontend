@@ -8,6 +8,7 @@ export const NavBar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loginFailed, setLoginFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const toggleMobileMenu = () => {
@@ -30,6 +31,7 @@ export const NavBar = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setLoginFailed(false);
   };
 
   const handleClickOutsideModal = (event: MouseEvent) => {
@@ -78,7 +80,14 @@ export const NavBar = () => {
                 {isModalOpen && (
                   <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
                     <div className=" p-4 rounded-md" ref={modalRef}>
-                      <Login />
+                      {loginFailed ? (
+                        <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">Login failed. Please try again.</p>
+                      ) : (
+                        <Login
+                          onSuccess={closeModal}
+                          onFailure={() => setLoginFailed(true)}
+                        />
+                      )}
                     </div>
                   </div>
                 )}
