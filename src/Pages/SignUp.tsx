@@ -19,9 +19,9 @@ export const SignUp = () => {
         registerForm.getValues("email"),
         registerForm.getValues("password")
       )
-        .then((response) => {
-          //console.log("response", response);
-        })
+        // .then((response) => {
+        //   console.log("response", response);
+        // })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
