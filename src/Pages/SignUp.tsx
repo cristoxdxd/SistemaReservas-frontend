@@ -3,6 +3,7 @@ import { NavBar } from "../components/NavBar";
 import { get, isEmpty } from "lodash";
 import { auth } from "../Firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useEffect } from "react";
 
 export const SignUp = () => {
   const registerForm = useForm({ mode: "onBlur" });
@@ -10,17 +11,16 @@ export const SignUp = () => {
   const onSubmit = () => {
     registerForm.trigger();
 
-    console.log(registerForm.formState.isValid);
+    //console.log(registerForm.formState.isValid);
 
     if (registerForm.formState.isValid) {
       createUserWithEmailAndPassword(
         auth,
-        registerForm.getValues().firstName,
-        registerForm.getValues().password
+        registerForm.getValues("email"),
+        registerForm.getValues("password")
       )
-        .then((userCredential) => {
-          const user = userCredential.user;
-          sessionStorage.setItem("user", JSON.stringify(user));
+        .then((response) => {
+          //console.log("response", response);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -29,6 +29,10 @@ export const SignUp = () => {
         });
     }
   };
+
+  useEffect(() => {
+    //console.log("El objeto Auth:", auth);
+  }, []);
 
   return (
     <>
