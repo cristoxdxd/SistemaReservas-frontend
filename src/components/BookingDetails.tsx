@@ -12,7 +12,13 @@ interface Reserva {
   costoTotal: number;
 }
 
-const TablaReservas: React.FC<{ reservas: Reserva[] }> = ({ reservas }) => (
+interface BookingDetailsProps {
+  reservas: Reserva[];
+  reservationId: number;
+  onClose: () => void;
+}
+
+const BookingDetails: React.FC<BookingDetailsProps> = ({ reservas, reservationId, onClose }) => (
   <div className="grid grid-cols-2 gap-4">
     {reservas.map((reserva, index) => (
       <div key={index} className="border border-gray-300 p-4 bg-white">
@@ -65,4 +71,4 @@ const TablaReservas: React.FC<{ reservas: Reserva[] }> = ({ reservas }) => (
   </div>
 );
 
-export default TablaReservas;
+export default BookingDetails;
