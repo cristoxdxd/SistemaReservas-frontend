@@ -1,11 +1,15 @@
 import { useForm } from "react-hook-form";
-import { NavBar } from "../components/NavBar";
 import { get, isEmpty } from "lodash";
 import { auth } from "../Firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useEffect } from "react";
 
-export const SignUp = () => {
+interface SignUpProps {
+  onSuccess: () => void;
+  onFailure: () => void;
+}
+
+export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
   const registerForm = useForm({ mode: "onBlur" });
 
   const onSubmit = () => {
@@ -19,13 +23,15 @@ export const SignUp = () => {
         registerForm.getValues("email"),
         registerForm.getValues("password")
       )
-        // .then((response) => {
-        //   console.log("response", response);
-        // })
+        .then((response) => {
+          console.log("response", response);
+          onSuccess();
+        })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode, errorMessage);
+          onFailure;
         });
     }
   };
@@ -36,11 +42,9 @@ export const SignUp = () => {
 
   return (
     <>
-      <NavBar />
-      <br />
-      <div className="flex flex-col items-center justify-center animate-fade-left">
-        <h1 className="text-2xl font-bold mb-4 text-white">Register</h1>
+      <div className="flex flex-col items-center justify-center animate-fade-down">
         <div className="flex flex-col items-center bg-gray-800 rounded-lg shadow-lg p-8 w-80">
+          <h1 className="text-2xl font-bold mb-4 text-white">Register</h1>
           <input
             {...registerForm.register("firstName", {
               required: "Este campo es requerido.",

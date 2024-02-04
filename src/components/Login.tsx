@@ -46,7 +46,7 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
     <>
       <div className="flex flex-col items-center justify-center animate-fade-down">
         <div className="flex flex-col items-center bg-gray-800 rounded-lg shadow-lg p-8 w-80">
-          {/* <h1 className="text-2xl font-bold mb-4 text-white">Login</h1> */}
+          <h1 className="text-2xl font-bold mb-4 text-white">Login</h1>
           <input
             {...loginForm.register("email", {
               required: "Este campo es requerido.",
