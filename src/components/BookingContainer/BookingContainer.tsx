@@ -2,11 +2,11 @@ import { BookingCard } from '../BookingCard';
 import { useBookingContainer } from './State/useBookingContainer';
 import { Booking } from '../../models/Booking.interface';
 
-export interface IComicContainerProps {
+export interface IBookingContainerProps {
     listBooking: Booking[];
 }
 
-export const BookingContainer = ({ listBooking }: IComicContainerProps) => {
+export const BookingContainer = ({ listBooking }: IBookingContainerProps) => {
     const { bookingList } = useBookingContainer(listBooking);
 
     return(
