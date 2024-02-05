@@ -16,6 +16,7 @@ export const BookingContainer = ({ listBooking }: IBookingContainerProps) => {
                     <>
                     {bookingList.map((booking) => (
                         <BookingCard 
+                            id={booking.id}
                             name={booking.name}  
                             description={booking.description}
                             price={booking.price}

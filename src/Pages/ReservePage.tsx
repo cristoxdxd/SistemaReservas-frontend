@@ -1,16 +1,40 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { Login } from "../components/Login";
-import { SignUp } from "../components/SignUp"; // Import SignUp component
+import { SignUp } from "../components/SignUp";
 import { useEffect, useRef, useState } from "react";
+import { auth } from "../Firebase";
+import { getCabinDetails } from "../constants/cabanias";
+import { getRoomDetails } from "../constants/habitaciones";
+import { BookingPreview } from "../components/BookingPreview";
 
 export const ReservationForm = () => {
-  const isLoggedIn = false; // Replace with your authentication logic
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
+  const isLoggedIn = !!auth.currentUser;
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const [bookingDetails, setBookingDetails] = useState<any>(null); //
+
+  useEffect(() => {
+    if (id?.endsWith("c")) {
+      const bookingDetails = getCabinDetails(id);
+      setBookingDetails(bookingDetails);
+      console.log(bookingDetails);
+    } 
+    if (id?.endsWith("h")){
+      const bookingDetails = getRoomDetails(id);
+      setBookingDetails(bookingDetails);
+      console.log(bookingDetails);
+    }
+    else {
+      console.error("Invalid id");
+    }
+  }, [id]);
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
@@ -58,7 +82,7 @@ export const ReservationForm = () => {
         <ChevronLeftIcon className="h-5 w-5" />
         <p className="font-bold">Back</p>
       </Link>
-      <div>
+      <div >
         <div className="flex flex-col">
           <form
             onSubmit={handleSubmit}
@@ -74,10 +98,22 @@ export const ReservationForm = () => {
             </label>
             <input type="date" id="salida" name="salida" required />
           </form>
+
+          <div className="flex justify-center items-center mt-6">
+            <BookingPreview
+              name={bookingDetails?.name}
+              description={bookingDetails?.description}
+              price={bookingDetails?.price}
+              capacity={bookingDetails?.capacity}
+              image={bookingDetails?.image}
+            />
+          </div>
           {isLoggedIn ? (
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Reservar
-            </button>
+            <div className="flex justify-center items-center mt-10">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max">
+                Reservar
+              </button>
+            </div>
           ) : (
             <div className="mt-8">
               <div className="flex justify-center">

@@ -52,10 +52,10 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
               required: "Este campo es requerido.",
               pattern: {
                 value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
-                message: "Porfavor ingresa un correo válido.",
+                message: "`",
               },
             })}
-            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded"
+            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded text-black"
             type="text"
             placeholder="Ingrese correo"
           />
@@ -73,7 +73,7 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
                   "La contraseña debe tener al menos 8 caracteres.",
               },
             })}
-            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded"
+            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded text-black"
             type="password"
             placeholder="Ingrese contrase&ntilde;a"
           />

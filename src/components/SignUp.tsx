@@ -53,7 +53,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
                 message: "Porfavor solo ingresa letras.",
               },
             })}
-            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded"
+            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded text-black"
             type="text"
             placeholder="Ingrese Nombre"
           />
@@ -76,7 +76,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
                 message: "Porfavor ingresa un correo valido.",
               },
             })}
-            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded"
+            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded text-black"
             type="email"
             placeholder="Ingrese correo electronico"
           />
@@ -99,7 +99,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
                 message: "La contrasenia debe tener al menos 8 caracteres.",
               },
             })}
-            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded"
+            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded text-black"
             type="password"
             placeholder="Ingrese contrase&ntilde;a"
           />
