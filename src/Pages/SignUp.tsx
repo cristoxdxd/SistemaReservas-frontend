@@ -3,6 +3,7 @@ import { NavBar } from "../components/NavBar";
 import { get, isEmpty } from "lodash";
 import { auth } from "../Firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useEffect } from "react";
 
 export const SignUp = () => {
   const registerForm = useForm({ mode: "onBlur" });
@@ -10,18 +11,17 @@ export const SignUp = () => {
   const onSubmit = () => {
     registerForm.trigger();
 
-    console.log(registerForm.formState.isValid);
+    //console.log(registerForm.formState.isValid);
 
     if (registerForm.formState.isValid) {
       createUserWithEmailAndPassword(
         auth,
-        registerForm.getValues().firstName,
-        registerForm.getValues().password
+        registerForm.getValues("email"),
+        registerForm.getValues("password")
       )
-        .then((userCredential) => {
-          const user = userCredential.user;
-          sessionStorage.setItem("user", JSON.stringify(user));
-        })
+        // .then((response) => {
+        //   console.log("response", response);
+        // })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
@@ -30,11 +30,15 @@ export const SignUp = () => {
     }
   };
 
+  useEffect(() => {
+    //console.log("El objeto Auth:", auth);
+  }, []);
+
   return (
     <>
       <NavBar />
       <br />
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center animate-fade-left">
         <h1 className="text-2xl font-bold mb-4 text-white">Register</h1>
         <div className="flex flex-col items-center bg-gray-800 rounded-lg shadow-lg p-8 w-80">
           <input
@@ -61,6 +65,29 @@ export const SignUp = () => {
             </p>
           )}
           <input
+            {...registerForm.register("email", {
+              required: "Este campo es requerido.",
+              pattern: {
+                value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+                message: "Porfavor ingresa un correo valido.",
+              },
+            })}
+            className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded"
+            type="email"
+            placeholder="Ingrese correo electronico"
+          />
+          {!isEmpty(registerForm.formState.errors) && (
+            <p className="text-red-500 mb-4">
+              {
+                get(
+                  registerForm,
+                  "formState.errors.email.message",
+                  ""
+                ) as string
+              }
+            </p>
+          )}
+          <input
             {...registerForm.register("password", {
               required: "Este campo es requerido.",
               minLength: {
@@ -70,7 +97,7 @@ export const SignUp = () => {
             })}
             className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded"
             type="password"
-            placeholder="Ingrese contrasenia"
+            placeholder="Ingrese contrase&ntilde;a"
           />
           {!isEmpty(registerForm.formState.errors) && (
             <p className="text-red-500 mb-4">

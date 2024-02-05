@@ -9,7 +9,7 @@ interface Reservation {
 }
 
 const BookingHistory: React.FC = () => {
-    const [reservations] = useState<Reservation[]>([
+    const [reservations, setReservations] = useState<Reservation[]>([
         {
             id: 1,
             roomName: 'Habitación 1',
@@ -33,12 +33,33 @@ const BookingHistory: React.FC = () => {
         },
     ]);
 
-    const handleModifyReservation = (_reservationId: number) => {//prefijo
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [reservationToCancel, setReservationToCancel] = useState<number | null>(null);
+
+    const handleModifyReservation = (_reservationId: number) => {
         // Lógica para modificar la reserva
     };
 
-    const handleCancelReservation = (_reservationId: number) => { //prefijo
-        // Lógica para cancelar la reserva
+    const handleCancelReservation = (reservationId: number) => {
+        setReservationToCancel(reservationId);
+        setShowConfirmation(true);
+    };
+
+    const confirmCancelReservation = (confirmed: boolean) => {
+        if (confirmed && reservationToCancel !== null) {
+            // Lógica para cancelar la reserva
+            const updatedReservations = reservations.map((reservation) => {
+                if (reservation.id === reservationToCancel) {
+                    return { ...reservation, status: 'cancelada' };
+                }
+                return reservation;
+            });
+            setReservations(updatedReservations);
+        }
+
+        // Reiniciar los estados después de procesar la cancelación
+        setReservationToCancel(null);
+        setShowConfirmation(false);
     };
 
     return (
@@ -85,6 +106,28 @@ const BookingHistory: React.FC = () => {
                     </table>
                 )}
             </div>
+            {/* Ventana emergente de confirmación */}
+            {showConfirmation && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-8 rounded shadow-md">
+                        <p className="mb-4">¿Seguro que quieres cancelar la reserva?</p>
+                        <div className="flex justify-end">
+                            <button
+                                onClick={() => confirmCancelReservation(true)}
+                                className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+                            >
+                                Sí
+                            </button>
+                            <button
+                                onClick={() => confirmCancelReservation(false)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded"
+                            >
+                                No
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };

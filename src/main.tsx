@@ -4,31 +4,40 @@ import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Home } from "./Pages/Home";
 import UserProfile from "./Pages/UserProfile";
-import { Login } from "./Pages/Login";
 import { SignUp } from "./Pages/SignUp";
-import ReservePage from './Pages/ReservePage'
+import ReservePage from "./Pages/ReservePage";
+import { About } from "./Pages/About";
+import { NotFound } from "./Pages/NotFound";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+    errorElement: <NotFound />,
   },
-  // Add the userprofile route
   {
     path: "/userprofile",
     element: <UserProfile />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
+    errorElement: <NotFound />,
   },
   {
     path: "/signup",
     element: <SignUp />,
+    errorElement: <NotFound />,
   },
   {
-    path: '/reservepage',
+    path: "/reservepage",
     element: <ReservePage />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "/about",
+    element: <About />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 
