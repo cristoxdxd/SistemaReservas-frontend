@@ -15,7 +15,7 @@ export interface IHabitacion {
 
 export const Habitacion: IHabitacion[] = [
     {
-        id: '1',
+        id: '1h',
         name: 'Habitación Individual',
         description: 'Habitación individual con baño privado y vistas al exterior.',
         price: 50,
@@ -23,7 +23,7 @@ export const Habitacion: IHabitacion[] = [
         image: image1
     },
     {
-        id: '2',
+        id: '2h',
         name: 'Habitación Doble',
         description: 'Habitación doble con baño privado y vistas al exterior.',
         price: 80,
@@ -31,7 +31,7 @@ export const Habitacion: IHabitacion[] = [
         image: image2
     },
     {
-        id: '3',
+        id: '3h',
         name: 'Habitación Triple',
         description: 'Habitación triple con baño privado y vistas al exterior.',
         price: 100,
@@ -39,7 +39,7 @@ export const Habitacion: IHabitacion[] = [
         image: image3
     },
     {
-        id: '4',
+        id: '4h',
         name: 'Habitación Cuádruple',
         description: 'Habitación cuádruple con baño privado y vistas al exterior.',
         price: 120,
@@ -47,7 +47,7 @@ export const Habitacion: IHabitacion[] = [
         image: image4
     },
     {
-        id: '5',
+        id: '5h',
         name: 'Habitación Familiar',
         description: 'Habitación familiar con baño privado y vistas al exterior.',
         price: 140,
@@ -55,3 +55,7 @@ export const Habitacion: IHabitacion[] = [
         image: image5
     }
 ]
+
+export function getRoomDetails(id: string) {
+    return Habitacion.find(habitacion => habitacion.id === id);
+};
