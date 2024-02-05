@@ -47,7 +47,7 @@ const ModifyAttendees: React.FC<ModifyAttendeesProps> = ({ currentAttendees, onM
       </div>
       <div className="flex justify-end">
         <button onClick={handleModify} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">
-          Modificar
+          Confirmar
         </button>
         <button onClick={onCancel} className="bg-gray-300 text-gray-800 px-4 py-2 rounded">
           Cancelar
