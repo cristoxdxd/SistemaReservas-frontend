@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavBarUser } from "../components/NavBarUser";
+import { NavBar } from "../components/NavBar";
 import NavBarProfile from "../components/NavBarProfile";
 import BookingHistory from "../components/BookingHistory";
 import Profile from "./Profile";
@@ -18,7 +18,7 @@ export const UserProfile = () => {
 
     return (
         <div>
-            <NavBarUser />
+            <NavBar />
             <div style={{ display: 'flex' }}>
                 <NavBarProfile
                     onProfileClick={handleProfileClick}

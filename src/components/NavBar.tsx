@@ -3,13 +3,19 @@ import { Link } from "react-router-dom";
 import SnowFlakeLogo from "../assets/snowflake_nav.png";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { Login } from "./Login";
+import { SignUp } from "./SignUp";
+import { auth } from "../Firebase";
 
 export const NavBar = () => {
+  const isLoggedIn = !!auth.currentUser;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [signUpFailed, setSignUpFailed] = useState(false);
+  const loginModalRef = useRef<HTMLDivElement>(null);
+  const signUpModalRef = useRef<HTMLDivElement>(null);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -25,19 +31,38 @@ export const NavBar = () => {
     console.log("Search value:", searchValue);
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeLoginModal = () => {
+    setIsLoginModalOpen(false);
     setLoginFailed(false);
   };
 
+  const openSignUpModal = () => {
+    setIsSignUpModalOpen(true);
+  };
+
+  const closeSignUpModal = () => {
+    setIsSignUpModalOpen(false);
+    setSignUpFailed(false);
+  };
+
   const handleClickOutsideModal = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      closeModal();
+    if (
+      (loginModalRef.current &&
+        !loginModalRef.current.contains(event.target as Node)) ||
+      (signUpModalRef.current &&
+        !signUpModalRef.current.contains(event.target as Node))
+    ) {
+      closeLoginModal();
+      closeSignUpModal();
     }
+  };
+
+  const handleLogout = () => {
+    auth.signOut();
   };
 
   useEffect(() => {
@@ -74,26 +99,60 @@ export const NavBar = () => {
                 <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                   <Link to={"/about"}>About</Link>
                 </span>
-                <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                  <button onClick={openModal}>Login</button>
-                </span>
-                {isModalOpen && (
+                {isLoggedIn ? (
+                  <>
+                    <button
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
+                    <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                      <Link to={"/userprofile"}>Profile</Link>
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                      <button onClick={openLoginModal}>Login</button>
+                    </span>
+                    <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                      <button onClick={openSignUpModal}>Sign Up</button>
+                    </span>
+                  </>
+                )}
+                {isLoginModalOpen && (
                   <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
-                    <div className=" p-4 rounded-md" ref={modalRef}>
+                    <div className=" p-4 rounded-md" ref={loginModalRef}>
                       {loginFailed ? (
-                        <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">Login failed. Please try again.</p>
+                        <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
+                          Login failed. Please try again.
+                        </p>
                       ) : (
                         <Login
-                          onSuccess={closeModal}
+                          onSuccess={closeLoginModal}
                           onFailure={() => setLoginFailed(true)}
                         />
                       )}
                     </div>
                   </div>
                 )}
-                <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                  <Link to={"/signup"}>Sign Up</Link>
-                </span>
+                {isSignUpModalOpen && (
+                  <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+                    <div className=" p-4 rounded-md" ref={signUpModalRef}>
+                      {signUpFailed ? (
+                        <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
+                          Sign up failed. Please try again.
+                        </p>
+                      ) : (
+                        <SignUp
+                          onSuccess={closeSignUpModal}
+                          onFailure={() => setSignUpFailed(true)}
+                        />
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -144,12 +203,28 @@ export const NavBar = () => {
               <span className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
                 <Link to={"/about"}>About</Link>
               </span>
-              <span className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                <Link to={"/login"}>Login</Link>
-              </span>
-              <span className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                <Link to={"/signup"}>Sign Up</Link>
-              </span>
+              {isLoggedIn ? (
+                <>
+                  <button
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                  <a className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                    <Link to={"/userprofile"}>Profile</Link>
+                  </a>
+                </>
+              ) : (
+                <>
+                  <span className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                    <button onClick={openLoginModal}>Login</button>
+                  </span>
+                  <span className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                    <button onClick={openSignUpModal}>Sign Up</button>
+                  </span>
+                </>
+              )}
             </>
           )}
         </div>
