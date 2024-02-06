@@ -6,7 +6,6 @@ export const ActivitiesCard = ({ name, description, price, duration, image }: { 
             <p className="text-blue-400 mb-2">{description}</p>
             <p className="text-blue-400 mb-2">Price: {price}</p>
             <p className="text-blue-400 mb-2">Duration: {duration}</p>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Agendar</button>
         </div>
     );
 };
