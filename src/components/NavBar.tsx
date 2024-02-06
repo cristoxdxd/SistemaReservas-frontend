@@ -4,8 +4,10 @@ import SnowFlakeLogo from "../assets/snowflake_nav.png";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { Login } from "./Login";
 import { SignUp } from "./SignUp";
+import { auth } from "../Firebase";
 
 export const NavBar = () => {
+  const isLoggedIn = !!auth.currentUser;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -49,12 +51,18 @@ export const NavBar = () => {
 
   const handleClickOutsideModal = (event: MouseEvent) => {
     if (
-      (loginModalRef.current && !loginModalRef.current.contains(event.target as Node)) ||
-      (signUpModalRef.current && !signUpModalRef.current.contains(event.target as Node))
+      (loginModalRef.current &&
+        !loginModalRef.current.contains(event.target as Node)) ||
+      (signUpModalRef.current &&
+        !signUpModalRef.current.contains(event.target as Node))
     ) {
       closeLoginModal();
       closeSignUpModal();
     }
+  };
+
+  const handleLogout = () => {
+    auth.signOut();
   };
 
   useEffect(() => {
@@ -91,9 +99,28 @@ export const NavBar = () => {
                 <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                   <Link to={"/about"}>About</Link>
                 </span>
-                <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                  <button onClick={openLoginModal}>Login</button>
-                </span>
+                {isLoggedIn ? (
+                  <>
+                    <button
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
+                    <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                      <Link to={"/userprofile"}>Profile</Link>
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                      <button onClick={openLoginModal}>Login</button>
+                    </span>
+                    <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                      <button onClick={openSignUpModal}>Sign Up</button>
+                    </span>
+                  </>
+                )}
                 {isLoginModalOpen && (
                   <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
                     <div className=" p-4 rounded-md" ref={loginModalRef}>
@@ -110,9 +137,6 @@ export const NavBar = () => {
                     </div>
                   </div>
                 )}
-                <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                  <button onClick={openSignUpModal}>Sign Up</button>
-                </span>
                 {isSignUpModalOpen && (
                   <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
                     <div className=" p-4 rounded-md" ref={signUpModalRef}>
@@ -179,12 +203,28 @@ export const NavBar = () => {
               <span className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
                 <Link to={"/about"}>About</Link>
               </span>
-              <span className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                <button onClick={openLoginModal}>Login</button>
-              </span>
-              <span className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                <button onClick={openSignUpModal}>Sign Up</button>
-              </span>
+              {isLoggedIn ? (
+                <>
+                  <button
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                  <a className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                    <Link to={"/userprofile"}>Profile</Link>
+                  </a>
+                </>
+              ) : (
+                <>
+                  <span className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                    <button onClick={openLoginModal}>Login</button>
+                  </span>
+                  <span className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+                    <button onClick={openSignUpModal}>Sign Up</button>
+                  </span>
+                </>
+              )}
             </>
           )}
         </div>
