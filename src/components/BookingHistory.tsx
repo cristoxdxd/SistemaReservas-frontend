@@ -21,7 +21,7 @@ const BookingHistory: React.FC = () => {
   const [reservations, setReservations] = useState<Reservation[]>([
     {
       id: 1,
-      roomName: 'Habitación 1',
+      roomName: 'Cabaña en el Bosque',
       checkInDate: '2022-10-01',
       checkOutDate: '2022-10-05',
       status: 'confirmada',
@@ -35,11 +35,11 @@ const BookingHistory: React.FC = () => {
     },
     {
       id: 2,
-      roomName: 'Habitación 2',
+      roomName: 'Habitación Individual',
       checkInDate: '2022-11-15',
       checkOutDate: '2022-11-20',
       status: 'pendiente',
-      nombreApellido: 'María González',
+      nombreApellido: 'Juan Pérez',
       correoElectronico: '',
       tipoHabitacion: 'Doble',
       numAdultos: 2,
@@ -49,11 +49,11 @@ const BookingHistory: React.FC = () => {
     },
     {
       id: 3,
-      roomName: 'Habitación 3',
+      roomName: 'Habitación Familiar',
       checkInDate: '2022-12-10',
       checkOutDate: '2022-12-15',
       status: 'cancelada',
-      nombreApellido: 'Carlos Rodríguez',
+      nombreApellido: 'Juan Pérez',
       correoElectronico: '',
       tipoHabitacion: 'Doble',
       numAdultos: 2,
