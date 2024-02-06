@@ -8,6 +8,13 @@ interface Reservation {
   checkInDate: string;
   checkOutDate: string;
   status: string;
+  nombreApellido: string;
+  correoElectronico: string;
+  tipoHabitacion: string;
+  numAdultos: number;
+  numNinos: number;
+  serviciosAdicionales: string[];
+  costoTotal: number;
 }
 
 const BookingHistory: React.FC = () => {
@@ -18,6 +25,13 @@ const BookingHistory: React.FC = () => {
       checkInDate: '2022-10-01',
       checkOutDate: '2022-10-05',
       status: 'confirmada',
+      nombreApellido: 'Juan Pérez',
+      correoElectronico: '',
+      tipoHabitacion: 'Suite',
+      numAdultos: 2,
+      numNinos: 1,
+      serviciosAdicionales: ['Desayuno', 'Almuerzo'],
+      costoTotal: 600,
     },
     {
       id: 2,
@@ -25,6 +39,13 @@ const BookingHistory: React.FC = () => {
       checkInDate: '2022-11-15',
       checkOutDate: '2022-11-20',
       status: 'pendiente',
+      nombreApellido: 'María González',
+      correoElectronico: '',
+      tipoHabitacion: 'Doble',
+      numAdultos: 2,
+      numNinos: 0,
+      serviciosAdicionales: ['Desayuno'],
+      costoTotal: 400,
     },
     {
       id: 3,
@@ -32,6 +53,13 @@ const BookingHistory: React.FC = () => {
       checkInDate: '2022-12-10',
       checkOutDate: '2022-12-15',
       status: 'cancelada',
+      nombreApellido: 'Carlos Rodríguez',
+      correoElectronico: '',
+      tipoHabitacion: 'Doble',
+      numAdultos: 2,
+      numNinos: 1,
+      serviciosAdicionales: ['Desayuno', 'Cena'],
+      costoTotal: 500,
     },
   ]);
 
@@ -107,8 +135,10 @@ const BookingHistory: React.FC = () => {
           <>
             {viewingDetailsReservationId !== null ? (
               <BookingDetails
-                reservationId={viewingDetailsReservationId}
-                onClose={handleCloseDetails} reservas={[]} />
+              reservationId={viewingDetailsReservationId}
+              onClose={handleCloseDetails}
+              reservas={reservations}
+            />
             ) : (
               <div className="overflow-x-auto">
                 <table className="table-auto w-full bg-white">
