@@ -7,6 +7,7 @@ import { auth } from "../Firebase";
 import { getCabinDetails } from "../constants/cabanias";
 import { getRoomDetails } from "../constants/habitaciones";
 import { BookingPreview } from "../components/BookingPreview";
+import { Footer } from "../components/Footer";
 
 export const ReservationForm = () => {
   const location = useLocation();
@@ -25,13 +26,12 @@ export const ReservationForm = () => {
       const bookingDetails = getCabinDetails(id);
       setBookingDetails(bookingDetails);
       console.log(bookingDetails);
-    } 
-    if (id?.endsWith("h")){
+    }
+    if (id?.endsWith("h")) {
       const bookingDetails = getRoomDetails(id);
       setBookingDetails(bookingDetails);
       console.log(bookingDetails);
-    }
-    else {
+    } else {
       console.error("Invalid id");
     }
   }, [id]);
@@ -82,7 +82,7 @@ export const ReservationForm = () => {
         <ChevronLeftIcon className="h-5 w-5" />
         <p className="font-bold">Back</p>
       </Link>
-      <div >
+      <div>
         <div className="flex flex-col">
           <form
             onSubmit={handleSubmit}
@@ -166,6 +166,8 @@ export const ReservationForm = () => {
           )}
         </div>
       </div>
+      <div className="m-16"></div>
+      <Footer />
     </>
   );
 };
