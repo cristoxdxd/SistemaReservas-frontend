@@ -27,7 +27,7 @@ export const UserProfile = () => {
                 <div style={{ marginLeft: '20px', flex: 1 }}>
                     {selectedOption === 'profile' && (
                         // Aquí va el contenido de la vista del perfil de usuario
-                            <Profile username={""} email={""} />
+                        <Profile username={""} email={""} age={0} location={""} />
                     )}
                     {selectedOption === 'reservations' && (
                         // Aquí va el contenido del historial de reservas
