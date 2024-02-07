@@ -2,25 +2,21 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export const BookingCard = ({
+  id,
   name,
   description,
   price,
   capacity,
   image,
 }: {
+  id: string;
   name: string;
   description: string;
   price: string;
   capacity: string;
   image: string;
 }) => {
-  const queryParams = `?name=${encodeURIComponent(
-    name
-  )}&description=${encodeURIComponent(description)}&price=${encodeURIComponent(
-    price
-  )}&capacity=${encodeURIComponent(capacity)}&image=${encodeURIComponent(
-    image
-  )}`;
+  const queryParams = `?id=${encodeURIComponent(id)}`;
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleReservarClick = () => {
@@ -29,10 +25,9 @@ export const BookingCard = ({
       setIsAnimating(false);
     }, 1000);
   };
-
   return (
     <div
-      className={`bg-gray-900 rounded-lg shadow-lg p-4 sm:max-w-xs sm:min-w-xs md:max-w-sm md:min-w-sm lg:max-w-md lg:min-w-md xl:max-w-lg xl:min-w-lg card w-64 animate-fade-up`}
+      className={`bg-gray-900 rounded-lg shadow-lg p-4 sm:max-w-xs sm:min-w-xs md:max-w-sm md:min-w-sm lg:max-w-md lg:min-w-md xl:max-w-lg xl:min-w-lg card w-80 sm:w-72 animate-fade-up`}
     >
       <img
         src={image}

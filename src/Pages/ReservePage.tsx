@@ -1,51 +1,173 @@
-import { NavBar } from "../components/NavBar";
-import HotelOverview from "../assets/hotel-overview-1.jpg";
-import { BookingForm } from "../components/BookingForm";
+import { Link, useLocation } from "react-router-dom";
+import { ChevronLeftIcon } from "@heroicons/react/24/solid";
+import { Login } from "../components/Login";
+import { SignUp } from "../components/SignUp";
+import { useEffect, useRef, useState } from "react";
+import { auth } from "../Firebase";
+import { getCabinDetails } from "../constants/cabanias";
+import { getRoomDetails } from "../constants/habitaciones";
 import { BookingPreview } from "../components/BookingPreview";
-import { useLocation } from "react-router-dom";
+import { Footer } from "../components/Footer";
 
 export const ReservationForm = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
+  const isLoggedIn = !!auth.currentUser;
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [loginFailed, setLoginFailed] = useState(false);
+  const [signUpFailed, setSignUpFailed] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const [bookingDetails, setBookingDetails] = useState<any>(null); //
 
-  const name = queryParams.get("name") || "Nombre no disponible";
-  const description =
-    queryParams.get("description") || "Descripción no disponible";
-  const price = queryParams.get("price") || "Precio no disponible";
-  const capacity = queryParams.get("capacity") || "Capacidad no disponible";
-  const image = queryParams.get("image") || "Imagen no disponible";
+  useEffect(() => {
+    if (id?.endsWith("c")) {
+      const bookingDetails = getCabinDetails(id);
+      setBookingDetails(bookingDetails);
+      console.log(bookingDetails);
+    }
+    if (id?.endsWith("h")) {
+      const bookingDetails = getRoomDetails(id);
+      setBookingDetails(bookingDetails);
+      console.log(bookingDetails);
+    } else {
+      console.error("Invalid id");
+    }
+  }, [id]);
+
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const closeLoginModal = () => {
+    setIsLoginModalOpen(false);
+    setLoginFailed(false);
+  };
+
+  const openSignUpModal = () => {
+    setIsSignUpModalOpen(true);
+  };
+
+  const closeSignUpModal = () => {
+    setIsSignUpModalOpen(false);
+    setSignUpFailed(false);
+  };
+
+  const handleClickOutsideModal = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      closeLoginModal();
+      closeSignUpModal();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutsideModal);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideModal);
+    };
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission logic here
+  };
 
   return (
     <>
-      <NavBar />
-      <div
-        className="py-20 relative"
-        style={{
-          backgroundImage: `url(${HotelOverview})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+      <Link
+        to={"/"}
+        className="absolute flex flex-row text-white font-bold py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-400"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-70">
-            <h2 className="text-3xl font-extrabold tracking-tight text-blue-500 sm:text-4xl">
-              Reserva de Habitacion
-            </h2>
-          </div>
-        </div>
-        <div className="absolute inset-0 border-2 border-blue-500"></div>
-      </div>
+        <ChevronLeftIcon className="h-5 w-5" />
+        <p className="font-bold">Back</p>
+      </Link>
+      <div>
+        <div className="flex flex-col">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col items-center mt-14"
+          >
+            <label htmlFor="llegada" className="text-white mt-6 mb-2">
+              Llegada:
+            </label>
+            <input type="date" id="llegada" name="llegada" required />
 
-      <div className="flex max-w-7x1 mx-auto">
-        <BookingForm />
-        <BookingPreview
-          name={name}
-          description={description}
-          price={price}
-          capacity={capacity}
-          image={image}
-        />
+            <label htmlFor="salida" className="text-white mt-6 mb-2">
+              Salida:
+            </label>
+            <input type="date" id="salida" name="salida" required />
+          </form>
+
+          <div className="flex justify-center items-center mt-6">
+            <BookingPreview
+              name={bookingDetails?.name}
+              description={bookingDetails?.description}
+              price={bookingDetails?.price}
+              capacity={bookingDetails?.capacity}
+              image={bookingDetails?.image}
+            />
+          </div>
+          {isLoggedIn ? (
+            <div className="flex justify-center items-center mt-10">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max">
+                Reservar
+              </button>
+            </div>
+          ) : (
+            <div className="mt-8">
+              <div className="flex justify-center">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={openSignUpModal} // Open SignUp modal on click
+                >
+                  Sign Up
+                </button>
+              </div>
+              <p className="text-center text-white mt-4">
+                Already have an account?{" "}
+                <button onClick={openLoginModal} className="text-blue-500">
+                  Log in
+                </button>
+                {isLoginModalOpen && (
+                  <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+                    <div className=" p-4 rounded-md" ref={modalRef}>
+                      {loginFailed ? (
+                        <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
+                          Login failed. Please try again.
+                        </p>
+                      ) : (
+                        <Login
+                          onSuccess={closeLoginModal}
+                          onFailure={() => setLoginFailed(true)}
+                        />
+                      )}
+                    </div>
+                  </div>
+                )}
+                {isSignUpModalOpen && (
+                  <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+                    <div className=" p-4 rounded-md" ref={modalRef}>
+                      {signUpFailed ? (
+                        <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
+                          Sign up failed. Please try again.
+                        </p>
+                      ) : (
+                        <SignUp
+                          onSuccess={closeSignUpModal}
+                          onFailure={() => setSignUpFailed(true)}
+                        />
+                      )}
+                    </div>
+                  </div>
+                )}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
+      <div className="m-16"></div>
+      <Footer />
     </>
   );
 };

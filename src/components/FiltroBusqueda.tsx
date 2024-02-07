@@ -13,6 +13,11 @@ export const FiltroBusquedas = () => {
     setCheckOutDate(e.target.value);
     setShowCheckOutLabel(true);
   };
+  // Obtener la fecha actual y sumar un día
+  const today = new Date();
+  today.setDate(today.getDate() + 1);
+  const minDate = today.toISOString().split('T')[0];
+
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
   const [numAdults, setNumAdults] = useState<number>(1);
@@ -128,32 +133,32 @@ export const FiltroBusquedas = () => {
           </div>
 
           <div className="flex items-center">
-            <label
-              htmlFor="checkOutDate"
-              className={`block text-sm font-semibold text-white animate-jump ${
-                showCheckOutLabel ? "" : "hidden"
-              }`}
-              onClick={() => setShowCheckOutLabel(false)}
-            >
-              Salida
-            </label>
-            <>
-              {!showCheckOutLabel && (
-                <input
-                  type="date"
-                  id="checkOutDate"
-                  value={checkOutDate}
-                  onChange={handleCheckOutDateChange}
-                  className="ml-2 block w-40 px-6 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                  min={checkInDate}
-                  required
-                />
-              )}
-              {checkOutDate && (
-                <span className="ml-2 text-sm text-white">{checkOutDate}</span>
-              )}
-            </>
-          </div>
+          <label
+            htmlFor="checkOutDate"
+            className={`block text-sm font-semibold text-white animate-jump ${
+              showCheckOutLabel ? '' : 'hidden'
+            }`}
+            onClick={() => setShowCheckOutLabel(false)}
+          >
+            Salida
+          </label>
+          <>
+            {!showCheckOutLabel && (
+              <input
+                type="date"
+                id="checkOutDate"
+                value={checkOutDate}
+                onChange={handleCheckOutDateChange}
+                className="ml-2 block w-40 px-6 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
+                min={minDate}
+                required
+              />
+            )}
+            {checkOutDate && (
+              <span className="ml-2 text-sm text-white">{checkOutDate}</span>
+            )}
+          </>
+        </div>
 
           <div className="flex flex-col items-center">
             <div className="bg-gray-900 bg-opacity-70 p-4 rounded-md shadow-md mx-auto">

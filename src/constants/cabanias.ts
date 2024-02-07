@@ -15,7 +15,7 @@ export interface ICabania {
 
 export const Cabania: ICabania[] = [
     {
-        id: "1",
+        id: "1c",
         name: "Cabaña de Montaña",
         description: "Una acogedora cabaña en medio de las montañas",
         price: 30,
@@ -23,7 +23,7 @@ export const Cabania: ICabania[] = [
         image: images1
     },
     {
-        id: "2",
+        id: "2c",
         name: "Cabaña junto al Lago",
         description: "Una hermosa cabaña con vista al lago",
         price: 40,
@@ -31,7 +31,7 @@ export const Cabania: ICabania[] = [
         image: images2
     },
     {
-        id: "3",
+        id: "3c",
         name: "Cabaña en el Bosque",
         description: "Una encantadora cabaña rodeada de árboles",
         price: 60,
@@ -39,7 +39,7 @@ export const Cabania: ICabania[] = [
         image: images3
     },
     {
-        id: "4",
+        id: "4c",
         name: "Cabaña en la Playa",
         description: "Una relajante cabaña cerca del mar",
         price: 50,
@@ -47,7 +47,7 @@ export const Cabania: ICabania[] = [
         image: images4
     },
     {
-        id: "5",
+        id: "5c",
         name: "Cabaña en la Ciudad",
         description: "Una moderna cabaña en el corazón de la ciudad",
         price: 40,
@@ -55,3 +55,7 @@ export const Cabania: ICabania[] = [
         image: images5
     }
 ]
+
+export function getCabinDetails(id: string) {
+    return Cabania.find(cabania => cabania.id === id);
+};
