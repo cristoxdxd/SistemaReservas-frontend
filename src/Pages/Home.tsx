@@ -15,11 +15,14 @@ import { Booking } from "../models/Booking.interface";
 import { FiltroBusquedas } from "../components/FiltroBusqueda";
 import { useEffect, useState } from "react";
 import { Footer } from "../components/Footer";
+import queryString from "query-string"; // Importa queryString para parsear y stringify los parámetros de consulta
 
 const images = [HotelOverview, HotelOverview2, HotelOverview3, HotelOverview4, HotelOverview5, HotelOverview6, HotelOverview7, HotelOverview8];
 
 export const Home = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [checkInDate, setCheckInDate] = useState(""); // Estado para la fecha de llegada
+  const [checkOutDate, setCheckOutDate] = useState(""); // Estado para la fecha de salida
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -48,6 +51,21 @@ export const Home = () => {
       }))
     );
 
+  // Función para actualizar las fechas de llegada y salida
+  const handleDateChange = (checkIn: string, checkOut: string) => {
+    setCheckInDate(checkIn);
+    setCheckOutDate(checkOut);
+  };
+
+  // Función para redirigir a la página de reserva con las fechas seleccionadas
+  const goToReservationPage = () => {
+    // Construye la URL de la página de reserva con las fechas de llegada y salida como query parameters
+    const queryParams = queryString.stringify({ checkInDate, checkOutDate });
+    const url = `/reservation?${queryParams}`;
+    // Navega a la página de reserva
+    window.location.href = url;
+  };
+
   return (
     <>
       <NavBar />
@@ -72,7 +90,17 @@ export const Home = () => {
         </div>
         <div className="absolute inset-0 border-2 border-blue-500"></div>
       </div>
-      <FiltroBusquedas />
+      {/* Paso las funciones para actualizar las fechas */}
+      <FiltroBusquedas onDateChange={handleDateChange} />
+      <br />
+      {/* Botón para ir a la página de reserva */}
+      <button
+        onClick={goToReservationPage}
+        className="bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4"
+        disabled={!checkInDate || !checkOutDate} // Deshabilita el botón si no hay fechas seleccionadas
+      >
+        Ir a Reserva
+      </button>
       <br />
       <h1 className="text-center text-3xl font-extrabold text-white sm:text-4xl">
         Cabañas

@@ -1,3 +1,4 @@
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { Login } from "../components/Login";
@@ -9,7 +10,7 @@ import { getRoomDetails } from "../constants/habitaciones";
 import { BookingPreview } from "../components/BookingPreview";
 import { Footer } from "../components/Footer";
 
-export const ReservationForm = () => {
+export const ReservationForm = ({ checkInDate, checkOutDate }: { checkInDate: string, checkOutDate: string }) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
@@ -19,7 +20,7 @@ export const ReservationForm = () => {
   const [loginFailed, setLoginFailed] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [bookingDetails, setBookingDetails] = useState<any>(null); //
+  const [bookingDetails, setBookingDetails] = useState<any>(null);
 
   useEffect(() => {
     if (id?.endsWith("c")) {
@@ -91,12 +92,12 @@ export const ReservationForm = () => {
             <label htmlFor="llegada" className="text-white mt-6 mb-2">
               Llegada:
             </label>
-            <input type="date" id="llegada" name="llegada" required />
+            <input type="text" id="llegada" name="llegada" value={checkInDate} disabled />
 
             <label htmlFor="salida" className="text-white mt-6 mb-2">
               Salida:
             </label>
-            <input type="date" id="salida" name="salida" required />
+            <input type="text" id="salida" name="salida" value={checkOutDate} disabled />
           </form>
 
           <div className="flex justify-center items-center mt-6">
