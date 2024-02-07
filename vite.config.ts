@@ -8,6 +8,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'https://service-booking-auu3.onrender.com/',
+        secure: false,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
