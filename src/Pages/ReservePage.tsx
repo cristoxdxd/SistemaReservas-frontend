@@ -8,6 +8,7 @@ import { getCabinDetails } from "../constants/cabanias";
 import { getRoomDetails } from "../constants/habitaciones";
 import { BookingPreview } from "../components/BookingPreview";
 import { Footer } from "../components/Footer";
+import { putAvailability } from "../services/putAvailability";
 
 export const ReservationForm = () => {
   const location = useLocation();
@@ -68,13 +69,31 @@ export const ReservationForm = () => {
     };
   }, []);
 
+  async function update_booking() {
+    const res = await putAvailability(bookingDetails);
+
+    if (res.status === 200) {
+      console.log("Booking updated successfully");
+    } else {
+      console.error("Error updating booking");
+    }
+  }
+
+  const handleUpdateBooking = () => {
+    if (isLoggedIn) {
+      update_booking();
+    } else {
+      openLoginModal();
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
   };
 
   return (
-    <>
+    <main className="w-[100dvw] h-[100dvh] border border-white flex flex-col">
       <Link
         to={"/"}
         className="absolute flex flex-row text-white font-bold py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-400"
@@ -83,7 +102,7 @@ export const ReservationForm = () => {
         <p className="font-bold">Back</p>
       </Link>
       <div>
-        <div className="flex flex-col">
+        <div className="flex flex-colh-full">
           <form
             onSubmit={handleSubmit}
             className="flex flex-col items-center mt-14"
@@ -110,7 +129,10 @@ export const ReservationForm = () => {
           </div>
           {isLoggedIn ? (
             <div className="flex justify-center items-center mt-10">
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max"
+                onClick={handleUpdateBooking}
+              >
                 Reservar
               </button>
             </div>
@@ -166,9 +188,8 @@ export const ReservationForm = () => {
           )}
         </div>
       </div>
-      <div className="m-16"></div>
       <Footer />
-    </>
+    </main>
   );
 };
 
