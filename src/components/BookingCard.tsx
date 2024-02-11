@@ -27,20 +27,20 @@ export const BookingCard = ({
   };
   return (
     <div
-      className={`bg-gray-900 rounded-lg shadow-lg p-4 sm:max-w-xs sm:min-w-xs md:max-w-sm md:min-w-sm lg:max-w-md lg:min-w-md xl:max-w-lg xl:min-w-lg card w-80 sm:w-72 animate-fade-up`}
+      className={`bg-cyan-600 bg-opacity-30 rounded-lg shadow-lg p-4 sm:max-w-xs sm:min-w-xs md:max-w-sm md:min-w-sm lg:max-w-md lg:min-w-md xl:max-w-lg xl:min-w-lg card w-80 sm:w-72 animate-fade-up`}
     >
       <img
         src={image}
         alt={name}
         className="w-full h-32 object-cover mb-4 rounded-lg"
       />
-      <h2 className="text-white text-xl font-bold mb-2">{name}</h2>
-      <p className="text-blue-400 mb-2">{description}</p>
-      <p className="text-blue-400 mb-2">Price: {price}</p>
-      <p className="text-blue-400 mb-2">Capacity: {capacity}</p>
+      <h2 className="text-gray-900  text-xl font-bold mb-2">{name}</h2>
+      <p className="text-blue-900 mb-2">{description}</p>
+      <p className="text-blue-900 mb-2">Price: {price}</p>
+      <p className="text-blue-900 mb-2">Capacity: {capacity}</p>
       <Link to={`/reservepage${queryParams}`}>
         <button
-          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
+          className={`bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ${
             isAnimating ? "animate-jump" : ""
           }`}
           onClick={handleReservarClick}

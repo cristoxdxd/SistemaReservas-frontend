@@ -26,11 +26,11 @@ export const Home = () => {
       setCurrentImageIndex((prevIndex) =>
         prevIndex === images.length - 1 ? 0 : prevIndex + 1
       );
-    }, 3000);
+    }, 5000); // Increase the interval to 5000 milliseconds (5 seconds)
 
     return () => clearInterval(interval);
   }, []);
-  
+
   const { bookingList: cabaniasList }: { bookingList: Booking[] } =
     useBookingContainer(
       Cabania.map((cabania) => ({
@@ -51,18 +51,22 @@ export const Home = () => {
   return (
     <>
       <NavBar />
-      
+
       <div
         className="py-20 relative animate-fade-down"
         style={{
           backgroundImage: `url(${images[currentImageIndex]})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
+          height: "80vh", // Increase the height for a better view
+          position: "relative", // Add this line to make the image position relative
+          zIndex: -1, // Add this line to set the z-index of the image to -1
         }}
       >
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-70">
-            <h2 className="text-3xl font-extrabold tracking-tight text-blue-500 sm:text-4xl">
+          <div className="text-center absolute inset-0 flex flex-col justify-center items-center bg-gray-900 bg-opacity-70">
+            <h2 className="text-3xl font-extrabold tracking-tight text-blue-100 sm:text-4xl">
               Bienvenidos al Hotel Copo de Nieve
             </h2>
             <p className="mt-3 max-w-2xl mx-auto text-xl text-blue-300 sm:mt-4">
@@ -70,7 +74,6 @@ export const Home = () => {
             </p>
           </div>
         </div>
-        <div className="absolute inset-0 border-2 border-blue-500"></div>
       </div>
       <FiltroBusquedas />
       <br />
@@ -88,6 +91,7 @@ export const Home = () => {
       <BookingContainer listBooking={habitacionesList} />
       <br />
       <Footer />
+
     </>
   );
 };

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import SnowFlakeLogo from "../assets/snowflake_nav.png";
+import SnowFlakeLogo from "../assets/snowflake_logo2_preview_rev_1.png";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { Login } from "./Login";
 import { SignUp } from "./SignUp";
@@ -73,19 +73,19 @@ export const NavBar = () => {
   }, []);
 
   return (
-    <nav className="bg-gray-800 w-full top-0 z-10 sticky">
+    <nav className="bg-gray-900 bg-opacity-90  w-full top-0 z-10 sticky">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex-shrink-0">
               <span>
                 <img
-                  className="block lg:hidden h-12 w-auto"
+                  className="block lg:hidden h-12 w-auto bg-transparent"
                   src={SnowFlakeLogo}
                   alt="SnowFlake"
                 />
                 <img
-                  className="hidden lg:block h-12 w-auto"
+                  className="hidden lg:block h-12 w-auto bg-transparent"
                   src={SnowFlakeLogo}
                   alt="SnowFlake"
                 />
@@ -93,7 +93,7 @@ export const NavBar = () => {
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex">
-                <span className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">
+                <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                   <Link to={"/"}>Home</Link>
                 </span>
                 <span className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
