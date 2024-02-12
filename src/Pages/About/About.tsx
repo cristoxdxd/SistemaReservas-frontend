@@ -1,10 +1,19 @@
+import { useEffect, useState } from "react";
 import { ActivityContainer } from "../../components/ActivityContainer/ActivityContainer";
 import { NavBar } from "../../components/NavBar";
 import { useAbout } from "./State/useAbout";
 
 export const About = () => {
   const { listActivities } = useAbout();
+  const [isListActivitiesFetched, setIsListActivitiesFetched] = useState(false);
+  
+  useEffect(() => {
+    if (listActivities.length !== 0) {
+      setIsListActivitiesFetched(true);
+    }
+  }, [listActivities]);
   console.log(listActivities);
+
   return (
     <>
       <NavBar />
@@ -20,10 +29,17 @@ export const About = () => {
             ha creado esta extraordinaria solución de software para hacer que tu
             experiencia de reserva sea fluida e inolvidable.
           </div>
-          <div className="text-white text-4xl font-bold text-center mb-8 animate-pulse">
+          <br />
+          <div className="text-white text-4xl font-bold text-center mb-8">
             Actividades
           </div>
-          <ActivityContainer listActivities={listActivities} />
+          {isListActivitiesFetched ? (
+            <ActivityContainer listActivities={listActivities} />
+          ) : (
+            <div className="flex justify-center items-center">
+              <h1 className="text-2xl text-white animate-pulse">Cargando Actividades...</h1>
+            </div>
+          )}
         </div>
       </div>
     </>
