@@ -16,7 +16,8 @@ export const FiltroBusquedas = () => {
   // Obtener la fecha actual y sumar un día
   const today = new Date();
   today.setDate(today.getDate() + 1);
-  const minDate = today.toISOString().split('T')[0];
+
+  const minDate = today.toISOString().split("T")[0];
 
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
@@ -103,7 +104,10 @@ export const FiltroBusquedas = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="bg-gray-900 bg-opacity-70 p-10 rounded-md shadow-md mx-auto mt-10">
-        <form onSubmit={ handleSubmit } className="flex flex-wrap justify-center gap-5">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-wrap justify-center gap-5"
+        >
           <div className="flex items-center">
             <label
               htmlFor="checkInDate"
@@ -122,7 +126,7 @@ export const FiltroBusquedas = () => {
                   value={checkInDate}
                   onChange={handleCheckInDateChange}
                   min={new Date().toISOString().split("T")[0]}
-                  className="ml-2 block w-40 px-6 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
+                  className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                   required
                 />
               )}
@@ -131,40 +135,36 @@ export const FiltroBusquedas = () => {
               )}
             </>
           </div>
-
           <div className="flex items-center">
-          <label
-            htmlFor="checkOutDate"
-            className={`block text-sm font-semibold text-white animate-jump ${
-              showCheckOutLabel ? '' : 'hidden'
-            }`}
-            onClick={() => setShowCheckOutLabel(false)}
-          >
-            Salida
-          </label>
-          <>
-            {!showCheckOutLabel && (
-              <input
-                type="date"
-                id="checkOutDate"
-                value={checkOutDate}
-                onChange={handleCheckOutDateChange}
-                className="ml-2 block w-40 px-6 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                min={minDate}
-                required
-              />
-            )}
-            {checkOutDate && (
-              <span className="ml-2 text-sm text-white">{checkOutDate}</span>
-            )}
-          </>
-        </div>
-
+            <label
+              htmlFor="checkOutDate"
+              className={`block text-sm font-semibold text-white animate-jump ${
+                showCheckOutLabel ? "" : "hidden"
+              }`}
+              onClick={() => setShowCheckOutLabel(false)}
+            >
+              Salida
+            </label>
+            <>
+              {!showCheckOutLabel && (
+                <input
+                  type="date"
+                  id="checkOutDate"
+                  value={checkOutDate}
+                  onChange={handleCheckOutDateChange}
+                  className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                  min={minDate}
+                  required
+                />
+              )}
+              {checkOutDate && (
+                <span className="ml-2 text-sm text-white">{checkOutDate}</span>
+              )}
+            </>
+          </div>
           <div className="flex flex-col items-center">
             <div className="bg-gray-900 bg-opacity-70 p-4 rounded-md shadow-md mx-auto">
-              <div
-                className="flex flex-wrap justify-center gap-5"
-              >
+              <div className="flex flex-wrap justify-center gap-5">
                 <div className="flex items-center">
                   <label
                     htmlFor="quien"
@@ -196,7 +196,6 @@ export const FiltroBusquedas = () => {
                           required
                         />
                       </div>
-
                       <div className="flex items-center">
                         <label
                           htmlFor="numChildren"
@@ -217,7 +216,6 @@ export const FiltroBusquedas = () => {
                         />
                         <span className="ml-2 text-sm text-white">{`De 2 a ${MAX_CHILD_AGE} años`}</span>
                       </div>
-
                       <div className="flex items-center">
                         <label
                           htmlFor="numBabies"
@@ -238,7 +236,6 @@ export const FiltroBusquedas = () => {
                         />
                         <span className="ml-2 text-sm text-white">{`Menos de ${MAX_BABY_AGE} años`}</span>
                       </div>
-
                       <div className="flex items-center">
                         <label
                           htmlFor="isServiceAnimal"
@@ -263,7 +260,6 @@ export const FiltroBusquedas = () => {
               </div>
             </div>
           </div>
-
           <button
             type="submit"
             className={`bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4 h-12 ${

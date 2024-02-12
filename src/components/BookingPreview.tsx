@@ -1,29 +1,32 @@
-export const BookingPreview = ({
-  name,
-  description,
-  price,
-  capacity,
-  image,
-}: {
-  name: string;
-  description: string;
-  price: string;
-  capacity: string;
-  image: string;
-}) => {
+import { Booking } from "../models/Booking.interface";
+
+export const BookingPreview = (booking: Booking) => {
   return (
-    <div
-      className={`bg-gray-900 rounded-lg shadow-lg p-4 sm:max-w-xs sm:min-w-xs md:max-w-sm md:min-w-sm lg:max-w-md lg:min-w-md xl:max-w-lg xl:min-w-lg card w-80 sm:w-72 animate-fade-up`}
-    >
-      <img
-        src={image}
-        alt={name}
-        className="w-full h-32 object-cover mb-4 rounded-lg"
-      />
-      <h2 className="text-white text-xl font-bold mb-2">{name}</h2>
-      <p className="text-blue-400 mb-2">{description}</p>
-      <p className="text-blue-400 mb-2">Price: {price}</p>
-      <p className="text-blue-400 mb-2">Capacity: {capacity}</p>
-    </div>
+    <>
+      <div
+        className={`bg-gray-900 rounded-lg shadow-lg p-4 w-9/12 animate-fade-up`}
+      >
+        <div className="flex justify-center">
+          <img
+            src={booking.images[0]}
+            alt={booking.name}
+            className="w-full h-80 object-cover mb-4 rounded-lg"
+          />
+        </div>
+        <h2 className="text-white text-4xl font-bold mb-2">{booking.name}</h2>
+        <p className="text-blue-400 mb-2">{booking.description}</p>
+        <p className="text-blue-400 mb-2">Precio: {booking.price}</p>
+        <p className="text-blue-400 mb-2">Capacidad: {booking.capacity}</p>
+        <p className="text-blue-400 mb-2">Camas: {booking.beds}</p>
+        <p className="text-blue-400 mb-2">Baños: {booking.bathrooms}</p>
+      </div>
+      {/* <br />
+      <div className="">
+        {booking.reviews &&
+          booking.reviews.map((review) => (
+            <p className="text-blue-400 mb-2">{review}</p>
+          ))}
+      </div> */}
+    </>
   );
 };
