@@ -16,6 +16,7 @@ export const FiltroBusquedas = () => {
   // Obtener la fecha actual y sumar un día
   const today = new Date();
   today.setDate(today.getDate() + 1);
+
   const minDate = today.toISOString().split("T")[0];
 
   const [checkInDate, setCheckInDate] = useState("");

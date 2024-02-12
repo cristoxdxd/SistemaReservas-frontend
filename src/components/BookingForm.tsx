@@ -16,14 +16,89 @@ export const BookingForm = () => {
     });
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [formErrors, setFormErrors] = useState({
+        name: '',
+        email: '',
+        checkInDate: '',
+        checkOutDate: '',
+        apellido: '',
+        cedula: '',
+        thabitacion: '',
+        numninos: '',
+        numadul: '',
+        servicios: ''
+    });
 
     const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
+        let newValue = value;
+        let newErrors = { ...formErrors };
+    
+        // Realizar validación en tiempo real para campos específicos
+        if (name === 'numninos' || name === 'numadul') {
+            // Validar solo números para numninos y numadul
+            if (!/^\d*$/.test(value)) {
+                newValue = reservationData[name as keyof typeof reservationData];
+                newErrors = { ...newErrors, [name]: `El campo ${name} debe ser un número entero` };
+            } else {
+                newErrors = { ...newErrors, [name]: '' };
+            }
+        } else if (name === 'cedula') {
+            // Validar solo números para cédula
+            if (!/^\d*$/.test(value)) {
+                newValue = reservationData[name as keyof typeof reservationData];
+                newErrors = { ...newErrors, cedula: 'La cédula solo puede contener números' };
+            } else {
+                newErrors = { ...newErrors, cedula: '' };
+            }
+        } else if (name === 'email') {
+            // Validar estructura de correo electrónico
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                newValue = reservationData[name as keyof typeof reservationData];
+                newErrors = { ...newErrors, [name]: 'Ingresa un correo electrónico válido' };
+            } else {
+                newErrors = { ...newErrors, [name]: '' };
+            }
+        } else if (name === 'checkInDate') {
+            // Validar que la fecha de check-in no sea anterior a la fecha actual
+            const currentDate = new Date();
+            const selectedDate = new Date(value);
+    
+            if (selectedDate < currentDate) {
+                newValue = reservationData[name as keyof typeof reservationData];
+                newErrors = { ...newErrors, [name]: 'La fecha de check-in no puede ser anterior a la fecha actual' };
+            } else {
+                newErrors = { ...newErrors, [name]: '' };
+            }
+        } else if (name === 'checkOutDate') {
+            // Validar que la fecha de check-out sea posterior a la fecha de check-in
+            const checkInDate = new Date(reservationData.checkInDate);
+            const selectedDate = new Date(value);
+    
+            if (selectedDate <= checkInDate) {
+                newValue = reservationData[name as keyof typeof reservationData];
+                newErrors = { ...newErrors, [name]: 'La fecha de check-out debe ser posterior a la fecha de check-in' };
+            } else {
+                newErrors = { ...newErrors, [name]: '' };
+            }
+        } else {
+            // Validar solo letras para otros campos
+            if (!/^[a-zA-Z]+$/.test(value)) {
+                newValue = reservationData[name as keyof typeof reservationData];
+                newErrors = { ...newErrors, [name]: `El campo ${name} no puede contener números` };
+            } else {
+                newErrors = { ...newErrors, [name]: '' };
+            }
+        }
+    
+        setFormErrors(newErrors);
         setReservationData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [name]: newValue,
         }));
-    }, []);
+    }, [formErrors, reservationData]);  
+    
+    
 
     const handleReservationSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -59,17 +134,17 @@ export const BookingForm = () => {
             bottom: 'auto',
             marginRight: '-50%',
             transform: 'translate(-50%, -50%)',
-            border: 'none', // Puedes agregar más estilos según tus necesidades
+            border: 'none',
         },
         overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente detrás del modal
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
         },
     };
 
     return (
         <>
             <form onSubmit={handleReservationSubmit} className="max-w-6x1 mx-auto bg-white p-8 rounded-md shadow-md my-8 mx-8 w-1/2">
-                <div className="mb-4">
+            <div className="mb-4">
                     <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
                         Nombre
                     </label>
@@ -79,9 +154,12 @@ export const BookingForm = () => {
                         name="name"
                         value={reservationData.name}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.name ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.name && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="apellido" className="block text-gray-700 text-sm font-bold mb-2">
@@ -93,9 +171,12 @@ export const BookingForm = () => {
                         name="apellido"
                         value={reservationData.apellido}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.apellido ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.apellido && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.apellido}</p>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="cedula" className="block text-gray-700 text-sm font-bold mb-2">
@@ -107,9 +188,12 @@ export const BookingForm = () => {
                         name="cedula"
                         value={reservationData.cedula}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.cedula ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.cedula && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.cedula}</p>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="thabitacion" className="block text-gray-700 text-sm font-bold mb-2">
@@ -121,9 +205,12 @@ export const BookingForm = () => {
                         name="thabitacion"
                         value={reservationData.thabitacion}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.thabitacion ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.thabitacion && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.thabitacion}</p>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="numninos" className="block text-gray-700 text-sm font-bold mb-2">
@@ -135,9 +222,12 @@ export const BookingForm = () => {
                         name="numninos"
                         value={reservationData.numninos}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.numninos ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.numninos && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.numninos}</p>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="numadul" className="block text-gray-700 text-sm font-bold mb-2">
@@ -149,9 +239,12 @@ export const BookingForm = () => {
                         name="numadul"
                         value={reservationData.numadul}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.numadul ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.numadul && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.numadul}</p>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="servicios" className="block text-gray-700 text-sm font-bold mb-2">
@@ -163,9 +256,12 @@ export const BookingForm = () => {
                         name="servicios"
                         value={reservationData.servicios}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.servicios ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.servicios && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.servicios}</p>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
@@ -177,9 +273,12 @@ export const BookingForm = () => {
                         name="email"
                         value={reservationData.email}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.email ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.email && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="checkInDate" className="block text-gray-700 text-sm font-bold mb-2">
@@ -191,9 +290,12 @@ export const BookingForm = () => {
                         name="checkInDate"
                         value={reservationData.checkInDate}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.checkInDate ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.email && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.checkInDate}</p>
+                    )}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="checkOutDate" className="block text-gray-700 text-sm font-bold mb-2">
@@ -205,9 +307,12 @@ export const BookingForm = () => {
                         name="checkOutDate"
                         value={reservationData.checkOutDate}
                         onChange={handleInputChange}
-                        className="border rounded-md w-full py-2 px-3"
+                        className={`border rounded-md w-full py-2 px-3 ${formErrors.checkOutDate ? 'border-red-500' : ''}`}
                         required
                     />
+                    {formErrors.email && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.checkOutDate}</p>
+                    )}
                 </div>
                 <button
                     type="submit"
