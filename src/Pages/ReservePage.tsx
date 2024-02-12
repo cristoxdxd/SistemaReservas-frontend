@@ -4,11 +4,12 @@ import { Login } from "../components/Login";
 import { SignUp } from "../components/SignUp";
 import { useEffect, useRef, useState } from "react";
 import { auth } from "../Firebase";
-import { getCabinDetails } from "../constants/cabanias";
-import { getRoomDetails } from "../constants/habitaciones";
 import { BookingPreview } from "../components/BookingPreview";
 import { Footer } from "../components/Footer";
-import { putAvailability } from "../services/putAvailability";
+import { getOneBooking } from "../services/getOneBooking";
+import { Booking } from "../models/Booking.interface";
+import { createBooking } from "../services/createBooking";
+import { Availability } from "../models/Availability.interface";
 
 export const ReservationForm = () => {
   const location = useLocation();
@@ -20,21 +21,25 @@ export const ReservationForm = () => {
   const [loginFailed, setLoginFailed] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [bookingDetails, setBookingDetails] = useState<any>(null); //
+  const [bookingDetails, setBookingDetails] = useState<Booking | undefined>(
+    undefined
+  );
 
   useEffect(() => {
-    if (id?.endsWith("c")) {
-      const bookingDetails = getCabinDetails(id);
-      setBookingDetails(bookingDetails);
-      console.log(bookingDetails);
-    }
-    if (id?.endsWith("h")) {
-      const bookingDetails = getRoomDetails(id);
-      setBookingDetails(bookingDetails);
-      console.log(bookingDetails);
-    } else {
-      console.error("Invalid id");
-    }
+    const fetchData = async () => {
+      try {
+        if (id) {
+          const bookingDetails = getOneBooking(id);
+          setBookingDetails(await bookingDetails);
+          console.log(bookingDetails);
+        } else {
+          console.log("Invalid id");
+        }
+      } catch (error) {
+        console.log("Error fetching booking details", error);
+      }
+    };
+    fetchData();
   }, [id]);
 
   const openLoginModal = () => {
@@ -69,31 +74,37 @@ export const ReservationForm = () => {
     };
   }, []);
 
-  async function update_booking() {
-    const res = await putAvailability(bookingDetails);
+  async function create_booking() {
+    const arrivalDate =
+      (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
+    const departureDate =
+      (document.getElementById("salida") as HTMLInputElement)?.value ?? "";
+    const availability: Availability = {
+      booking_id: id ?? "",
+      start_date: arrivalDate,
+      end_date: departureDate,
+      user: auth.currentUser?.uid ?? "",
+    };
+    // const res = await createBooking(availability);
+    await createBooking(availability);
 
-    if (res.status === 200) {
-      console.log("Booking updated successfully");
-    } else {
-      console.error("Error updating booking");
-    }
+    // if (res.status === 200) {
+    //   console.log("Booking create successfully");
+    // } else {
+    //   console.error("Error creating booking");
+    // }
   }
 
-  const handleUpdateBooking = () => {
+  const handleCreateBooking = () => {
     if (isLoggedIn) {
-      update_booking();
+      create_booking();
     } else {
       openLoginModal();
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission logic here
-  };
-
   return (
-    <main className="w-[100dvw] h-[100dvh] border border-white flex flex-col">
+    <>
       <Link
         to={"/"}
         className="absolute flex flex-row text-white font-bold py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-400"
@@ -101,37 +112,48 @@ export const ReservationForm = () => {
         <ChevronLeftIcon className="h-5 w-5" />
         <p className="font-bold">Back</p>
       </Link>
-      <div>
-        <div className="flex flex-colh-full">
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col items-center mt-14"
-          >
+      <br />
+      <div className="w-full">
+        <div className="h-full">
+          <div className="flex justify-center items-center mt-6 w-screen">
+            {bookingDetails && (
+              <BookingPreview
+                _id={bookingDetails._id}
+                name={bookingDetails.name}
+                summary={bookingDetails.summary}
+                description={bookingDetails.description}
+                capacity={bookingDetails.capacity}
+                price={bookingDetails.price}
+                room_type={bookingDetails.room_type}
+                bed_type={bookingDetails.bed_type}
+                minimum_nights={bookingDetails.minimum_nights}
+                maximum_nights={bookingDetails.maximum_nights}
+                bedrooms={bookingDetails.bedrooms}
+                beds={bookingDetails.beds}
+                bathrooms={bookingDetails.bathrooms}
+                images={bookingDetails.images}
+                availability={bookingDetails.availability}
+                reviews={bookingDetails.reviews}
+              />
+            )}
+          </div>
+          <form className="flex flex-col items-center mt-14">
             <label htmlFor="llegada" className="text-white mt-6 mb-2">
               Llegada:
             </label>
-            <input type="date" id="llegada" name="llegada" required />
+            <input type="date" id="llegada" name="llegada" className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white" required />
 
             <label htmlFor="salida" className="text-white mt-6 mb-2">
               Salida:
             </label>
-            <input type="date" id="salida" name="salida" required />
+            <input type="date" id="salida" name="salida" className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white" required />
           </form>
 
-          <div className="flex justify-center items-center mt-6">
-            <BookingPreview
-              name={bookingDetails?.name}
-              description={bookingDetails?.description}
-              price={bookingDetails?.price}
-              capacity={bookingDetails?.capacity}
-              image={bookingDetails?.image}
-            />
-          </div>
           {isLoggedIn ? (
             <div className="flex justify-center items-center mt-10">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max"
-                onClick={handleUpdateBooking}
+                onClick={handleCreateBooking}
               >
                 Reservar
               </button>
@@ -188,8 +210,9 @@ export const ReservationForm = () => {
           )}
         </div>
       </div>
+      <br />
       <Footer />
-    </main>
+    </>
   );
 };
 

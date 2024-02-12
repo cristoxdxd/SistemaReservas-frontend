@@ -28,8 +28,8 @@ export const ActivityContainer = ({
           </>
         ) : (
           <div className="flex justify-center items-center">
-            <h1 className="text-2xl text-gray-600">
-              Error! Intente otra vez más tarde
+            <h1 className="text-2xl text-white">
+              Cargando...
             </h1>
           </div>
         )}
