@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { Booking } from "../models/Booking.interface";
+import { BookingContainer } from "./BookingContainer/BookingContainer";
 
+interface IFiltroBusquedasProps {
+  listBooking: Booking[]; // Cambia 'any' por el tipo correcto de tus datos de reserva
+}
 
-
-export const FiltroBusquedas = () => {
+export const FiltroBusquedas = ({
+  listBooking,
+}: IFiltroBusquedasProps) => {
 
   const [isAnimating] = useState(false);
 
@@ -14,7 +20,7 @@ export const FiltroBusquedas = () => {
     // Replace 'onDateChange' with the correct function name or define it if it doesn't exist
     // onDateChange(newCheckInDate, checkOutDate); // Utiliza la nueva fecha de llegada
   };
-  
+
   const handleCheckOutDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCheckOutDate = e.target.value;
     setCheckOutDate(newCheckOutDate);
@@ -22,7 +28,7 @@ export const FiltroBusquedas = () => {
     // Replace 'onDateChange' with the correct function name or define it if it doesn't exist
     // onDateChange(checkInDate, newCheckOutDate); // Utiliza la nueva fecha de salida
   };
-  
+
   // Obtener la fecha actual y sumar un día
   const today = new Date();
   today.setDate(today.getDate() + 1);
@@ -31,6 +37,7 @@ export const FiltroBusquedas = () => {
 
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
+
   const [numAdults, setNumAdults] = useState<number>(1);
   const [numChildren, setNumChildren] = useState<number>(0);
   const [numBabies, setNumBabies] = useState<number>(0);
@@ -105,6 +112,11 @@ export const FiltroBusquedas = () => {
     });
   };
 
+  const handleButtonClick = () => {
+    console.log("Se dio click en el botón de búsqueda")
+  };
+  
+
   const isFormValid = checkInDate && checkOutDate;
 
   const [showCheckInLabel, setShowCheckInLabel] = useState(true);
@@ -121,9 +133,8 @@ export const FiltroBusquedas = () => {
           <div className="flex items-center">
             <label
               htmlFor="checkInDate"
-              className={`block text-sm font-semibold text-white animate-jump ${
-                showCheckInLabel ? "" : "hidden"
-              }`}
+              className={`block text-sm font-semibold text-white animate-jump ${showCheckInLabel ? "" : "hidden"
+                }`}
               onClick={() => setShowCheckInLabel(false)}
             >
               Llegada
@@ -148,9 +159,8 @@ export const FiltroBusquedas = () => {
           <div className="flex items-center">
             <label
               htmlFor="checkOutDate"
-              className={`block text-sm font-semibold text-white animate-jump ${
-                showCheckOutLabel ? "" : "hidden"
-              }`}
+              className={`block text-sm font-semibold text-white animate-jump ${showCheckOutLabel ? "" : "hidden"
+                }`}
               onClick={() => setShowCheckOutLabel(false)}
             >
               Salida
@@ -178,9 +188,8 @@ export const FiltroBusquedas = () => {
                 <div className="flex items-center">
                   <label
                     htmlFor="quien"
-                    className={`block text-sm font-semibold text-white ${
-                      isAnimating ? "animate-fade-left" : "animate-jump"
-                    }`}
+                    className={`block text-sm font-semibold text-white ${isAnimating ? "animate-fade-left" : "animate-jump"
+                      }`}
                     onClick={() => setShowQuien(!showQuien)}
                   >
                     Quién
@@ -272,15 +281,18 @@ export const FiltroBusquedas = () => {
           </div>
           <button
             type="submit"
-            className={`bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4 h-12 ${
-              !isFormValid ? "cursor-not-allowed" : ""
-            } animate-jump`}
+            className={`bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4 h-12 ${!isFormValid ? "cursor-not-allowed" : ""
+              } animate-jump`}
             disabled={!isFormValid}
+            onClick={handleButtonClick} // Agrega esta línea
           >
             <MagnifyingGlassIcon className="h-5 w-5" />
           </button>
+
         </form>
       </div>
+      <BookingContainer listBooking={listBooking} checkin={checkInDate}
+        checkout={checkOutDate} />
     </div>
   );
 };

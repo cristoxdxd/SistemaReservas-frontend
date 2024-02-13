@@ -15,6 +15,8 @@ export const ReservationForm = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
+  const checkInDate = queryParams.get("checkin")?.toString() ?? "";
+  const checkOutDate = queryParams.get("checkout")?.toString() ?? "";
   const isLoggedIn = !!auth.currentUser;
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
@@ -78,7 +80,7 @@ export const ReservationForm = () => {
     const arrivalDate =
       (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
     const departureDate =
-      (document.getElementById("salida") as HTMLInputElement)?.value ?? "";
+      (document.getElementById("salida") as HTMLInputElement)?.value ?? checkOutDate;
     const availability: Availability = {
       booking_id: id ?? "",
       start_date: arrivalDate,
@@ -141,12 +143,12 @@ export const ReservationForm = () => {
             <label htmlFor="llegada" className="text-white mt-6 mb-2">
               Llegada:
             </label>
-            <input type="date" id="llegada" name="llegada" className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white" required />
+            <input type="date" id="llegada" name="llegada" className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white" required defaultValue={checkInDate} />
 
             <label htmlFor="salida" className="text-white mt-6 mb-2">
               Salida:
             </label>
-            <input type="date" id="salida" name="salida" className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white" required />
+            <input type="date" id="salida" name="salida" className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white" required defaultValue={checkOutDate}/>
           </form>
 
           {isLoggedIn ? (

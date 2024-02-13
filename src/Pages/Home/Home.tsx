@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { NavBar } from "../../components/NavBar";
-import { BookingContainer } from "../../components/BookingContainer/BookingContainer";
 import { useHome } from "./State/useHome";
 import HotelOverview from "../../assets/hotel-overview-1.jpg";
 import HotelOverview2 from "../../assets/hotel-overview-2.jpg";
@@ -80,11 +79,12 @@ export const Home = () => {
         </div>
         <div className="absolute inset-0 border-2 border-blue-500"></div>
       </div>
-      <FiltroBusquedas/>
       <br />
       <br />
       {isListBookingFetched ? (
-        <BookingContainer listBooking={listBooking} />
+        <FiltroBusquedas
+        listBooking={listBooking}
+      />
       ) : (
         <div className="flex justify-center items-center">
           <h1 className="text-2xl text-white animate-pulse">
