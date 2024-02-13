@@ -2,8 +2,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Booking } from "../models/Booking.interface";
 
-export const BookingCard = (booking: Booking) => {
-  const queryParams = `?id=${encodeURIComponent(booking._id)}`;
+export interface IBookingCardProps {
+  booking: Booking;
+  checkin: string; // Nueva: Fecha de check-in
+  checkout: string; // Nueva: Fecha de check-out
+}
+
+
+export const BookingCard = ({ booking, checkin, checkout }: IBookingCardProps) => {
+  const queryParams = `?id=${encodeURIComponent(booking._id)}&checkin=${encodeURIComponent(checkin
+    )}&checkout=${encodeURIComponent(checkout)}`;
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleReservarClick = () => {
@@ -11,6 +19,7 @@ export const BookingCard = (booking: Booking) => {
     setTimeout(() => {
       setIsAnimating(false);
     }, 1000);
+    console.log("Reservar");
   };
   return (
     <div

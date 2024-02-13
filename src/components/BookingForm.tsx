@@ -102,11 +102,6 @@ export const BookingForm = () => {
 
     const handleReservationSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Realizar alguna acción con los datos de la reserva, por ejemplo, enviarlos a un servidor
-        console.log('Datos de la reserva:', reservationData);
-
-        // Abrir el modal después de enviar la reserva
-        setModalIsOpen(true);
     }, [reservationData]);
 
     const closeModal = () => {

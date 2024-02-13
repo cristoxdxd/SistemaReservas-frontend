@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 
 export interface IBookingContainerProps {
   listBooking: Booking[];
+  checkin: string; // Nuevo: Fecha de check-in
+  checkout: string; // Nuevo: Fecha de check-out
 }
 
-export const BookingContainer = ({ listBooking }: IBookingContainerProps) => {
+export const BookingContainer = ({ listBooking, checkin, checkout }: IBookingContainerProps) => {
   const { bookingList } = useBookingContainer(listBooking);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,24 +30,11 @@ export const BookingContainer = ({ listBooking }: IBookingContainerProps) => {
           <>
             {bookingList.map((booking) => (
               <BookingCard
-                key={booking._id}
-                _id={booking._id}
-                name={booking.name}
-                summary={booking.summary}
-                description={booking.description}
-                capacity={booking.capacity}
-                price={booking.price}
-                room_type={booking.room_type}
-                bed_type={booking.bed_type}
-                minimum_nights={booking.minimum_nights}
-                maximum_nights={booking.maximum_nights}
-                bedrooms={booking.bedrooms}
-                beds={booking.beds}
-                bathrooms={booking.bathrooms}
-                images={booking.images}
-                availability={booking.availability}
-                reviews={booking.reviews}
-              />
+              booking={booking} // Propiedad de reserva
+              checkin={checkin} // Propiedad de fecha de check-in
+              checkout={checkout} // Propiedad de fecha de check-out
+            />
+            
             ))}
           </>
         )}
