@@ -11,7 +11,7 @@ import { Booking } from "../models/Booking.interface";
 import { createBooking } from "../services/createBooking";
 import { Availability } from "../models/Availability.interface";
 
-export const ReservationForm = ({ checkInDate, checkOutDate }: { checkInDate: string, checkOutDate: string }) => {
+export const ReservationForm = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");

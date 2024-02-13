@@ -102,12 +102,7 @@ export const BookingForm = () => {
 
     const handleReservationSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        if (validateForm()) {
-            console.log('Datos de la reserva:', reservationData);
-            setModalIsOpen(true);
-        }
-    }, [reservationData, validateForm]);
+    }, [reservationData]);
 
     const closeModal = () => {
         // Cerrar el modal y limpiar los campos después de cerrar el modal

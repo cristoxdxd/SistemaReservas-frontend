@@ -1,21 +1,26 @@
 import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
-export const FiltroBusquedas = ({ onDateChange }: { onDateChange: (checkInDate: string, checkOutDate: string) => void }) => {
+
+
+export const FiltroBusquedas = () => {
+
   const [isAnimating] = useState(false);
 
   const handleCheckInDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCheckInDate = e.target.value;
     setCheckInDate(newCheckInDate);
     setShowCheckInLabel(true);
-    onDateChange(newCheckInDate, checkOutDate); // Utiliza la nueva fecha de llegada
+    // Replace 'onDateChange' with the correct function name or define it if it doesn't exist
+    // onDateChange(newCheckInDate, checkOutDate); // Utiliza la nueva fecha de llegada
   };
   
   const handleCheckOutDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCheckOutDate = e.target.value;
     setCheckOutDate(newCheckOutDate);
     setShowCheckOutLabel(true);
-    onDateChange(checkInDate, newCheckOutDate); // Utiliza la nueva fecha de salida
+    // Replace 'onDateChange' with the correct function name or define it if it doesn't exist
+    // onDateChange(checkInDate, newCheckOutDate); // Utiliza la nueva fecha de salida
   };
   
   // Obtener la fecha actual y sumar un día
