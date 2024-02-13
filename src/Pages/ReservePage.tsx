@@ -26,6 +26,35 @@ export const ReservationForm = () => {
   const [bookingDetails, setBookingDetails] = useState<Booking | undefined>(
     undefined
   );
+  const [arrivalDate, setArrivalDate] = useState<string>("");
+  const [departureDate, setDepartureDate] = useState<string>("");
+  const [totalPrice, setTotalPrice] = useState<number | null>(null);
+
+  const arrivalDateInput =
+    (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
+  const departureDateInput =
+    (document.getElementById("salida") as HTMLInputElement)?.value ??
+    checkOutDate;
+
+  setArrivalDate(arrivalDateInput);
+  setDepartureDate(departureDateInput);
+
+  function calculateTotalPrice(arrivalDate: string, departureDate: string) {
+    const dateRange = new Date(departureDate).getTime() - new Date(arrivalDate).getTime();
+    const days = dateRange / (1000 * 60 * 60 * 24);
+    const totalPrice = (bookingDetails?.price ?? 0) * days;
+    return totalPrice;
+  }
+
+  useEffect(() => {
+    if (arrivalDate && departureDate) {
+      // Calculate the total price based on the arrival and departure dates
+      const newTotalPrice = calculateTotalPrice(arrivalDate, departureDate);
+      setTotalPrice(newTotalPrice);
+    } else {
+      setTotalPrice(null);
+    }
+  }, [arrivalDate, departureDate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,26 +109,35 @@ export const ReservationForm = () => {
     const arrivalDate =
       (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
     const departureDate =
-      (document.getElementById("salida") as HTMLInputElement)?.value ?? checkOutDate;
+      (document.getElementById("salida") as HTMLInputElement)?.value ??
+      checkOutDate;
     const availability: Availability = {
       booking_id: id ?? "",
       start_date: arrivalDate,
       end_date: departureDate,
       user: auth.currentUser?.uid ?? "",
     };
-    // const res = await createBooking(availability);
-    await createBooking(availability);
+    const res = await createBooking(availability);
 
-    // if (res.status === 200) {
-    //   console.log("Booking create successfully");
-    // } else {
-    //   console.error("Error creating booking");
-    // }
+    if (res.status === 200) {
+      console.log("Booking create successfully");
+    } else {
+      console.error("Error creating booking");
+    }
   }
 
   const handleCreateBooking = () => {
     if (isLoggedIn) {
-      create_booking();
+      const arrivalDate =
+        (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
+      const departureDate =
+        (document.getElementById("salida") as HTMLInputElement)?.value ??
+        checkOutDate;
+      if (arrivalDate && departureDate) {
+        create_booking();
+      } else {
+        console.log("Please select arrival and departure dates");
+      }
     } else {
       openLoginModal();
     }
@@ -139,17 +177,42 @@ export const ReservationForm = () => {
               />
             )}
           </div>
-          <form className="flex flex-col items-center mt-14">
+          <div className="flex justify-center items-center mt-10">
+            <p className="text-white text-2xl font-bold">Reserva tu estadia</p>
+          </div>
+          <form className="flex flex-col items-center mt-2">
             <label htmlFor="llegada" className="text-white mt-6 mb-2">
               Llegada:
             </label>
-            <input type="date" id="llegada" name="llegada" className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white" required defaultValue={checkInDate} />
+            <input
+              type="date"
+              id="llegada"
+              name="llegada"
+              className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+              required
+              defaultValue={checkInDate}
+            />
 
             <label htmlFor="salida" className="text-white mt-6 mb-2">
               Salida:
             </label>
-            <input type="date" id="salida" name="salida" className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white" required defaultValue={checkOutDate}/>
+            <input
+              type="date"
+              id="salida"
+              name="salida"
+              className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+              required
+              defaultValue={checkOutDate}
+            />
           </form>
+
+          {typeof totalPrice === "number" && !isNaN(totalPrice) && (
+            <div className="flex justify-center items-center mt-10">
+              <p className="text-white text-xl font-bold bg-gray-600 hover:bg-gray-700 py-2 px-4 rounded shadow-md">
+                Precio Total: ${totalPrice}
+              </p>
+            </div>
+          )}
 
           {isLoggedIn ? (
             <div className="flex justify-center items-center mt-10">

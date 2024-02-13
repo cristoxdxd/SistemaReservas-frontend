@@ -46,13 +46,13 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
     <>
       <div className="flex flex-col items-center justify-center animate-fade-down">
         <div className="flex flex-col items-center bg-gray-800 rounded-lg shadow-lg p-8 w-80">
-          <h1 className="text-2xl font-bold mb-4 text-white">Login</h1>
+          <h1 className="text-2xl font-bold mb-4 text-white">Entrar</h1>
           <input
             {...loginForm.register("email", {
               required: "Este campo es requerido.",
               pattern: {
                 value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
-                message: "`",
+                message: "Ingrese un correo válido",
               },
             })}
             className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded text-black"
@@ -67,11 +67,6 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
           <input
             {...loginForm.register("password", {
               required: "Este campo es requerido.",
-              minLength: {
-                value: 8,
-                message:
-                  "La contraseña debe tener al menos 8 caracteres.",
-              },
             })}
             className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded text-black"
             type="password"
@@ -94,11 +89,11 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
                 className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
                 onClick={onSubmit}
               >
-                Login
+                Entrar
               </button>
             ) : (
               <div className="px-4 py-2 mt-4 bg-blue-500 text-white rounded">
-                Loading...
+                Cargando...
               </div>
             )}
           </div>

@@ -29,8 +29,6 @@ export const Home = () => {
   const [isListBookingFetched, setIsListBookingFetched] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) =>
@@ -79,12 +77,8 @@ export const Home = () => {
         </div>
         <div className="absolute inset-0 border-2 border-blue-500"></div>
       </div>
-      <br />
-      <br />
       {isListBookingFetched ? (
-        <FiltroBusquedas
-        listBooking={listBooking}
-      />
+        <FiltroBusquedas listBooking={listBooking} />
       ) : (
         <div className="flex justify-center items-center">
           <h1 className="text-2xl text-white animate-pulse">
