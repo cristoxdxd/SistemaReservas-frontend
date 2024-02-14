@@ -13,23 +13,6 @@ export const FiltroBusquedas = ({
 
   const [isAnimating] = useState(false);
 
-  const handleCheckInDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCheckInDate = e.target.value;
-    setCheckInDate(newCheckInDate);
-    setShowCheckInLabel(true);
-    // Replace 'onDateChange' with the correct function name or define it if it doesn't exist
-    // onDateChange(newCheckInDate, checkOutDate); // Utiliza la nueva fecha de llegada
-  };
-
-  const handleCheckOutDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCheckOutDate = e.target.value;
-    setCheckOutDate(newCheckOutDate);
-    setShowCheckOutLabel(true);
-    // Replace 'onDateChange' with the correct function name or define it if it doesn't exist
-    // onDateChange(checkInDate, newCheckOutDate); // Utiliza la nueva fecha de salida
-  };
-
-  // Obtener la fecha actual y sumar un día
   const today = new Date();
   today.setDate(today.getDate() + 1);
 
@@ -37,6 +20,23 @@ export const FiltroBusquedas = ({
 
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
+
+  const handleCheckInDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newCheckInDate = e.target.value;
+    setCheckInDate(newCheckInDate);
+    // Al cambiar la fecha de check-in, asegúrate de que la fecha de check-out sea válida
+    if (checkOutDate < newCheckInDate) {
+      setCheckOutDate(newCheckInDate);
+    }
+  };
+
+  const handleCheckOutDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newCheckOutDate = e.target.value;
+    // Solo actualiza la fecha de check-out si es después de la fecha de check-in
+    if (newCheckOutDate >= checkInDate) {
+      setCheckOutDate(newCheckOutDate);
+    }
+  };
 
   const [numAdults, setNumAdults] = useState<number>(1);
   const [numChildren, setNumChildren] = useState<number>(0);
@@ -122,6 +122,7 @@ export const FiltroBusquedas = ({
   const [showCheckInLabel, setShowCheckInLabel] = useState(true);
   const [showCheckOutLabel, setShowCheckOutLabel] = useState(true);
   const [showQuien, setShowQuien] = useState(false);
+
 
   return (
     <div className="flex flex-col items-center">
