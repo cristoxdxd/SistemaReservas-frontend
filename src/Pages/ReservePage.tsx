@@ -9,7 +9,7 @@ import { Footer } from "../components/Footer";
 import { getOneBooking } from "../services/getOneBooking";
 import { Booking } from "../models/Booking.interface";
 import { createBooking } from "../services/createBooking";
-import { Availability } from "../models/Availability.interface";
+import { AvailabilityInput } from "../models/Availability.interface";
 
 export const ReservationForm = () => {
   const location = useLocation();
@@ -20,41 +20,13 @@ export const ReservationForm = () => {
   const isLoggedIn = !!auth.currentUser;
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const [bookingDetails, setBookingDetails] = useState<Booking | undefined>(
     undefined
   );
-  const [arrivalDate, setArrivalDate] = useState<string>("");
-  const [departureDate, setDepartureDate] = useState<string>("");
-  const [totalPrice, setTotalPrice] = useState<number | null>(null);
-
-  const arrivalDateInput =
-    (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
-  const departureDateInput =
-    (document.getElementById("salida") as HTMLInputElement)?.value ??
-    checkOutDate;
-
-  setArrivalDate(arrivalDateInput);
-  setDepartureDate(departureDateInput);
-
-  function calculateTotalPrice(arrivalDate: string, departureDate: string) {
-    const dateRange = new Date(departureDate).getTime() - new Date(arrivalDate).getTime();
-    const days = dateRange / (1000 * 60 * 60 * 24);
-    const totalPrice = (bookingDetails?.price ?? 0) * days;
-    return totalPrice;
-  }
-
-  useEffect(() => {
-    if (arrivalDate && departureDate) {
-      // Calculate the total price based on the arrival and departure dates
-      const newTotalPrice = calculateTotalPrice(arrivalDate, departureDate);
-      setTotalPrice(newTotalPrice);
-    } else {
-      setTotalPrice(null);
-    }
-  }, [arrivalDate, departureDate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,6 +63,10 @@ export const ReservationForm = () => {
     setSignUpFailed(false);
   };
 
+  const openSuccessModal = () => {
+    setIsSuccessModalOpen(true);
+  };
+
   const handleClickOutsideModal = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       closeLoginModal();
@@ -111,7 +87,7 @@ export const ReservationForm = () => {
     const departureDate =
       (document.getElementById("salida") as HTMLInputElement)?.value ??
       checkOutDate;
-    const availability: Availability = {
+    const availability: AvailabilityInput = {
       booking_id: id ?? "",
       start_date: arrivalDate,
       end_date: departureDate,
@@ -128,16 +104,8 @@ export const ReservationForm = () => {
 
   const handleCreateBooking = () => {
     if (isLoggedIn) {
-      const arrivalDate =
-        (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
-      const departureDate =
-        (document.getElementById("salida") as HTMLInputElement)?.value ??
-        checkOutDate;
-      if (arrivalDate && departureDate) {
-        create_booking();
-      } else {
-        console.log("Please select arrival and departure dates");
-      }
+      create_booking();
+      openSuccessModal();
     } else {
       openLoginModal();
     }
@@ -177,8 +145,10 @@ export const ReservationForm = () => {
               />
             )}
           </div>
-          <div className="flex justify-center items-center mt-10">
-            <p className="text-white text-2xl font-bold">Reserva tu estadia</p>
+          <div className="flex justify-center items-center">
+            <h1 className="text-white text-4xl font-bold mt-10">
+              Reserva tu estadia
+            </h1>
           </div>
           <form className="flex flex-col items-center mt-2">
             <label htmlFor="llegada" className="text-white mt-6 mb-2">
@@ -205,14 +175,6 @@ export const ReservationForm = () => {
               defaultValue={checkOutDate}
             />
           </form>
-
-          {typeof totalPrice === "number" && !isNaN(totalPrice) && (
-            <div className="flex justify-center items-center mt-10">
-              <p className="text-white text-xl font-bold bg-gray-600 hover:bg-gray-700 py-2 px-4 rounded shadow-md">
-                Precio Total: ${totalPrice}
-              </p>
-            </div>
-          )}
 
           {isLoggedIn ? (
             <div className="flex justify-center items-center mt-10">
@@ -275,6 +237,27 @@ export const ReservationForm = () => {
           )}
         </div>
       </div>
+      {isSuccessModalOpen && (
+        <>
+          <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+            <div className="bg-green-600 p-4 rounded-md flex flex-col items-center justify-center animate-jump-in">
+              <p className="text-white font-extrabold text-2xl">
+                Reserva realizada con éxito
+              </p>
+              <br />
+              <Link to={"/"}>
+                <button
+                  className="text-white font-bold py-2 px-4 rounded"
+                  onClick={() => setIsSuccessModalOpen(false)}
+                >
+                  Volver
+                </button>
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
+      <br />
       <br />
       <Footer />
     </>

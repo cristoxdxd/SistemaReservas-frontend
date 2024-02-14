@@ -34,7 +34,7 @@ export const BookingCard = ({ booking, checkin, checkout }: IBookingCardProps) =
       <p className="text-blue-400 mb-2">{booking.summary}</p>
       <p className="text-blue-400 mb-2">Price: {booking.price}</p>
       <p className="text-blue-400 mb-2">Capacity: {booking.capacity}</p>
-      <Link to={`/reservepage${queryParams}`}>
+      <Link to={`/reserve${queryParams}`}>
         <button
           className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
             isAnimating ? "animate-jump" : ""

@@ -24,7 +24,7 @@ export const BookingContainer = ({ listBooking, checkin, checkout }: IBookingCon
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
         {isLoading ? (
           <div className="flex justify-center items-center">
-            <h1 className="text-2xl text-white">Loading...</h1>
+            <h1 className="text-2xl text-white">Cargando...</h1>
           </div>
         ) : (
           <>

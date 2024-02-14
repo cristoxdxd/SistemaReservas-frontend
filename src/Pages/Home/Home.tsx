@@ -80,11 +80,15 @@ export const Home = () => {
       {isListBookingFetched ? (
         <FiltroBusquedas listBooking={listBooking} />
       ) : (
-        <div className="flex justify-center items-center">
-          <h1 className="text-2xl text-white animate-pulse">
-            Cargando Reservas...
-          </h1>
-        </div>
+        <>
+          <br />
+          <br />
+          <div className="flex justify-center items-center">
+            <h1 className="text-2xl text-white animate-pulse">
+              Cargando Reservas...
+            </h1>
+          </div>
+        </>
       )}
       <br />
       <br />

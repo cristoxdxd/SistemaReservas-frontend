@@ -116,7 +116,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
           )}
           <div className="flex justify-center">
             <button
-              className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="px-4 py-2 mt-4 bg-blue-800 text-gray-400 rounded hover:bg-blue-600"
               onClick={onSubmit}
             >
               Register

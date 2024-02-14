@@ -16,7 +16,7 @@ export const History = () => {
     }
     console.log(listAvailability);
   }, [listAvailability]);
-  
+
   useEffect(() => {
     if (listBooking && listBooking.length !== 0) {
       setIsListBookingFetched(true);
@@ -30,13 +30,24 @@ export const History = () => {
       <br />
       <br />
       {isListAvailabilityFetched && isListBookingFetched ? (
-        <HistoryContainer listBooking={listBooking} listAvailability={listAvailability} />
+        <>
+          <div className="">
+            <HistoryContainer
+              listBooking={listBooking}
+              listAvailability={listAvailability}
+            />
+          </div>
+        </>
       ) : (
-        <div className="flex justify-center items-center">
-          <h1 className="text-2xl text-white animate-pulse">
-            Cargando Historial...
-          </h1>
-        </div>
+        <>
+          <br />
+          <br />
+          <div className="flex justify-center items-center">
+            <h1 className="text-2xl text-white animate-pulse">
+              Cargando Historial...
+            </h1>
+          </div>
+        </>
       )}
       <br />
       <br />

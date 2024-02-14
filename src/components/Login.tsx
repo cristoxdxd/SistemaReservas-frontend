@@ -92,7 +92,7 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
                 Entrar
               </button>
             ) : (
-              <div className="px-4 py-2 mt-4 bg-blue-500 text-white rounded">
+              <div className="px-4 py-2 mt-4 bg-blue-800 text-gray-400 rounded">
                 Cargando...
               </div>
             )}

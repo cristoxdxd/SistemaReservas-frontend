@@ -1,6 +1,6 @@
-import { Availability } from "../models/Availability.interface";
+import { AvailabilityInput } from "../models/Availability.interface";
 
-export async function createBooking(availability: Availability) {
+export async function createBooking(availability: AvailabilityInput) {
   const response = await fetch("/api/availability/", {
     method: "POST",
     headers: {
