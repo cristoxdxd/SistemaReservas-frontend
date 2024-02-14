@@ -9,7 +9,7 @@ import { Footer } from "../components/Footer";
 import { getOneBooking } from "../services/getOneBooking";
 import { Booking } from "../models/Booking.interface";
 import { createBooking } from "../services/createBooking";
-import { Availability } from "../models/Availability.interface";
+import { AvailabilityInput } from "../models/Availability.interface";
 
 export const ReservationForm = () => {
   const location = useLocation();
@@ -20,6 +20,7 @@ export const ReservationForm = () => {
   const isLoggedIn = !!auth.currentUser;
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -62,6 +63,10 @@ export const ReservationForm = () => {
     setSignUpFailed(false);
   };
 
+  const openSuccessModal = () => {
+    setIsSuccessModalOpen(true);
+  };
+
   const handleClickOutsideModal = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       closeLoginModal();
@@ -80,26 +85,27 @@ export const ReservationForm = () => {
     const arrivalDate =
       (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
     const departureDate =
-      (document.getElementById("salida") as HTMLInputElement)?.value ?? checkOutDate;
-    const availability: Availability = {
+      (document.getElementById("salida") as HTMLInputElement)?.value ??
+      checkOutDate;
+    const availability: AvailabilityInput = {
       booking_id: id ?? "",
       start_date: arrivalDate,
       end_date: departureDate,
       user: auth.currentUser?.uid ?? "",
     };
-    // const res = await createBooking(availability);
-    await createBooking(availability);
+    const res = await createBooking(availability);
 
-    // if (res.status === 200) {
-    //   console.log("Booking create successfully");
-    // } else {
-    //   console.error("Error creating booking");
-    // }
+    if (res.status === 200) {
+      console.log("Booking create successfully");
+    } else {
+      console.error("Error creating booking");
+    }
   }
 
   const handleCreateBooking = () => {
     if (isLoggedIn) {
       create_booking();
+      openSuccessModal();
     } else {
       openLoginModal();
     }
@@ -139,16 +145,35 @@ export const ReservationForm = () => {
               />
             )}
           </div>
-          <form className="flex flex-col items-center mt-14">
+          <div className="flex justify-center items-center">
+            <h1 className="text-white text-4xl font-bold mt-10">
+              Reserva tu estadia
+            </h1>
+          </div>
+          <form className="flex flex-col items-center mt-2">
             <label htmlFor="llegada" className="text-white mt-6 mb-2">
               Llegada:
             </label>
-            <input type="date" id="llegada" name="llegada" className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white" required defaultValue={checkInDate} />
+            <input
+              type="date"
+              id="llegada"
+              name="llegada"
+              className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+              required
+              defaultValue={checkInDate}
+            />
 
             <label htmlFor="salida" className="text-white mt-6 mb-2">
               Salida:
             </label>
-            <input type="date" id="salida" name="salida" className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white" required defaultValue={checkOutDate}/>
+            <input
+              type="date"
+              id="salida"
+              name="salida"
+              className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+              required
+              defaultValue={checkOutDate}
+            />
           </form>
 
           {isLoggedIn ? (
@@ -212,6 +237,27 @@ export const ReservationForm = () => {
           )}
         </div>
       </div>
+      {isSuccessModalOpen && (
+        <>
+          <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+            <div className="bg-green-600 p-4 rounded-md flex flex-col items-center justify-center animate-jump-in">
+              <p className="text-white font-extrabold text-2xl">
+                Reserva realizada con éxito
+              </p>
+              <br />
+              <Link to={"/"}>
+                <button
+                  className="text-white font-bold py-2 px-4 rounded"
+                  onClick={() => setIsSuccessModalOpen(false)}
+                >
+                  Volver
+                </button>
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
+      <br />
       <br />
       <Footer />
     </>

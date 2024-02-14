@@ -292,6 +292,8 @@ export const FiltroBusquedas = ({
 
         </form>
       </div>
+      <br />
+      <br />
       <BookingContainer listBooking={listBooking} checkin={checkInDate}
         checkout={checkOutDate} />
     </div>

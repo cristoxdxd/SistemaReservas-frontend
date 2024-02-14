@@ -87,28 +87,28 @@ export const NavBar = () => {
                   className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
                   to={"/"}
                 >
-                  Home
+                  Inicio
                 </Link>
                 <Link
                   className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   to={"/about"}
                 >
-                  About
+                  Sobre Nosotros
                 </Link>
                 {isLoggedIn ? (
                   <>
                     <Link
                       className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                      to={"/profile"}
+                      to={"/history"}
                     >
-                      History
+                      Historial
                     </Link>
-                    <button
+                    <Link
                       className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                      onClick={handleLogout}
+                      to={"/"}
                     >
-                      Logout
-                    </button>
+                      <button onClick={handleLogout}>Cerrar Sesi&oacute;n</button>
+                    </Link>
                   </>
                 ) : (
                   <>
@@ -116,13 +116,13 @@ export const NavBar = () => {
                       className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                       onClick={openLoginModal}
                     >
-                      Login
+                      Iniciar Sesi&oacute;n
                     </button>
                     <button
                       className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                       onClick={openSignUpModal}
                     >
-                      Sign Up
+                      Registrarse
                     </button>
                   </>
                 )}
@@ -193,28 +193,28 @@ export const NavBar = () => {
                 className="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium"
                 to={"/"}
               >
-                Home
+                Inicio
               </Link>
               <Link
                 className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                 to={"/about"}
               >
-                About
+                Sobre Nosotros
               </Link>
               {isLoggedIn ? (
                 <>
-                  <button
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
-
                   <Link
                     className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                    to={"/profile"}
+                    onClick={handleLogout}
+                    to={"/"}
                   >
-                    <a>History</a>
+                    <button onClick={handleLogout}>Cerrar Sesi&oacute;n</button>
+                  </Link>
+                  <Link
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    to={"/history"}
+                  >
+                    <a>Historial</a>
                   </Link>
                 </>
               ) : (
@@ -223,13 +223,13 @@ export const NavBar = () => {
                     className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                     onClick={openLoginModal}
                   >
-                    Login
+                    Iniciar Sesi&oacute;n
                   </button>
                   <button
                     className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                     onClick={openSignUpModal}
                   >
-                    Sign Up
+                    Registrarse
                   </button>
                 </>
               )}
