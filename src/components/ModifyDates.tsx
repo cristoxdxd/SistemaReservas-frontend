@@ -16,11 +16,24 @@ const ModifyDates: React.FC<ModifyDatesProps> = ({
     const [checkInDate, setCheckInDate] = useState(initialCheckInDate);
     const [checkOutDate, setCheckOutDate] = useState(initialCheckOutDate);
 
-    const handleSave = () => {
-        // Realiza validaciones si es necesario antes de guardar
-        // Por ejemplo, puedes verificar que las nuevas fechas sean válidas
+    const handleCheckInChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedDate = e.target.value;
+        setCheckInDate(selectedDate);
+        // Actualiza la fecha de check-out para asegurarte de que sea válida
+        const nextDay = new Date(selectedDate);
+        nextDay.setDate(nextDay.getDate() + 1);
+        setCheckOutDate(nextDay.toISOString().split('T')[0]);
+    };
+    
+    const handleCheckOutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedDate = e.target.value;
+        // Solo actualiza la fecha de check-out si es después de la fecha de check-in
+        if (selectedDate >= checkInDate) {
+            setCheckOutDate(selectedDate);
+        }
+    };
 
-        // Luego, llama a la función onSave con las nuevas fechas
+    const handleSave = () => {
         onSave(checkInDate, checkOutDate);
     };
 
@@ -36,7 +49,8 @@ const ModifyDates: React.FC<ModifyDatesProps> = ({
                         type="date"
                         id="checkInDate"
                         value={checkInDate}
-                        onChange={(e) => setCheckInDate(e.target.value)}
+                        onChange={handleCheckInChange}
+                        min={new Date().toISOString().split('T')[0]} // Establece la fecha mínima como la fecha actual
                         className="border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
@@ -48,7 +62,8 @@ const ModifyDates: React.FC<ModifyDatesProps> = ({
                         type="date"
                         id="checkOutDate"
                         value={checkOutDate}
-                        onChange={(e) => setCheckOutDate(e.target.value)}
+                        onChange={handleCheckOutChange}
+                        min={checkInDate} // Establece la fecha mínima como la fecha seleccionada para el check-in
                         className="border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     />
                 </div>
