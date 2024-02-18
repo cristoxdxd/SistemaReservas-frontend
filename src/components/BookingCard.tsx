@@ -1,22 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Booking } from "../models/Booking.interface";
 
-export const BookingCard = ({
-  id,
-  name,
-  description,
-  price,
-  capacity,
-  image,
-}: {
-  id: string;
-  name: string;
-  description: string;
-  price: string;
-  capacity: string;
-  image: string;
-}) => {
-  const queryParams = `?id=${encodeURIComponent(id)}`;
+export interface IBookingCardProps {
+  booking: Booking;
+  checkin: string; // Nueva: Fecha de check-in
+  checkout: string; // Nueva: Fecha de check-out
+}
+
+
+export const BookingCard = ({ booking, checkin, checkout }: IBookingCardProps) => {
+  const queryParams = `?id=${encodeURIComponent(booking._id)}&checkin=${encodeURIComponent(checkin
+    )}&checkout=${encodeURIComponent(checkout)}`;
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleReservarClick = () => {
@@ -24,21 +19,22 @@ export const BookingCard = ({
     setTimeout(() => {
       setIsAnimating(false);
     }, 1000);
+    console.log("Reservar");
   };
   return (
     <div
       className={`bg-cyan-600 bg-opacity-30 rounded-lg shadow-lg p-4 sm:max-w-xs sm:min-w-xs md:max-w-sm md:min-w-sm lg:max-w-md lg:min-w-md xl:max-w-lg xl:min-w-lg card w-80 sm:w-72 animate-fade-up`}
     >
       <img
-        src={image}
-        alt={name}
-        className="w-full h-32 object-cover mb-4 rounded-lg"
+        src={booking.images[0]}
+        alt={booking.name}
+        className="w-full h-32 object-cover mb-4 rounded-lg text-white"
       />
-      <h2 className="text-gray-900  text-xl font-bold mb-2">{name}</h2>
-      <p className="text-blue-900 mb-2">{description}</p>
-      <p className="text-blue-900 mb-2">Price: {price}</p>
-      <p className="text-blue-900 mb-2">Capacity: {capacity}</p>
-      <Link to={`/reservepage${queryParams}`}>
+      <h2 className="text-white text-xl font-bold mb-2">{booking.name}</h2>
+      <p className="text-blue-400 mb-2">{booking.summary}</p>
+      <p className="text-blue-400 mb-2">Price: {booking.price}</p>
+      <p className="text-blue-400 mb-2">Capacity: {booking.capacity}</p>
+      <Link to={`/reserve${queryParams}`}>
         <button
           className={`bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ${
             isAnimating ? "animate-jump" : ""

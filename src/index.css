@@ -3,5 +3,6 @@
 @tailwind utilities;
 
 :root{
-  background-color: #faffff;
+  background-color: #242424;
+  scrollbar-width: none;
 }

@@ -1,25 +1,43 @@
 import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { Booking } from "../models/Booking.interface";
+import { BookingContainer } from "./BookingContainer/BookingContainer";
 
-export const FiltroBusquedas = () => {
+interface IFiltroBusquedasProps {
+  listBooking: Booking[]; // Cambia 'any' por el tipo correcto de tus datos de reserva
+}
+
+export const FiltroBusquedas = ({
+  listBooking,
+}: IFiltroBusquedasProps) => {
+
   const [isAnimating] = useState(false);
 
-  const handleCheckInDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckInDate(e.target.value);
-    setShowCheckInLabel(true);
-  };
-
-  const handleCheckOutDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckOutDate(e.target.value);
-    setShowCheckOutLabel(true);
-  };
-  // Obtener la fecha actual y sumar un día
   const today = new Date();
   today.setDate(today.getDate() + 1);
-  const minDate = today.toISOString().split('T')[0];
+
+  const minDate = today.toISOString().split("T")[0];
 
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
+
+  const handleCheckInDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newCheckInDate = e.target.value;
+    setCheckInDate(newCheckInDate);
+    // Al cambiar la fecha de check-in, asegúrate de que la fecha de check-out sea válida
+    if (checkOutDate < newCheckInDate) {
+      setCheckOutDate(newCheckInDate);
+    }
+  };
+
+  const handleCheckOutDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newCheckOutDate = e.target.value;
+    // Solo actualiza la fecha de check-out si es después de la fecha de check-in
+    if (newCheckOutDate >= checkInDate) {
+      setCheckOutDate(newCheckOutDate);
+    }
+  };
+
   const [numAdults, setNumAdults] = useState<number>(1);
   const [numChildren, setNumChildren] = useState<number>(0);
   const [numBabies, setNumBabies] = useState<number>(0);
@@ -94,22 +112,30 @@ export const FiltroBusquedas = () => {
     });
   };
 
+  const handleButtonClick = () => {
+    console.log("Se dio click en el botón de búsqueda")
+  };
+  
+
   const isFormValid = checkInDate && checkOutDate;
 
   const [showCheckInLabel, setShowCheckInLabel] = useState(true);
   const [showCheckOutLabel, setShowCheckOutLabel] = useState(true);
   const [showQuien, setShowQuien] = useState(false);
 
+
   return (
     <div className="flex flex-col items-center">
-      <div className="bg-gray-900 bg-opacity-90 p-10 rounded-md shadow-md mx-auto mt-10">
-        <form onSubmit={ handleSubmit } className="flex flex-wrap justify-center gap-5">
+      <div className="bg-gray-900 bg-opacity-70 p-10 rounded-md shadow-md mx-auto mt-10">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-wrap justify-center gap-5"
+        >
           <div className="flex items-center">
             <label
               htmlFor="checkInDate"
-              className={`block text-sm font-semibold text-white animate-jump ${
-                showCheckInLabel ? "" : "hidden"
-              }`}
+              className={`block text-sm font-semibold text-white animate-jump ${showCheckInLabel ? "" : "hidden"
+                }`}
               onClick={() => setShowCheckInLabel(false)}
             >
               Llegada
@@ -122,7 +148,7 @@ export const FiltroBusquedas = () => {
                   value={checkInDate}
                   onChange={handleCheckInDateChange}
                   min={new Date().toISOString().split("T")[0]}
-                  className="ml-2 block w-40 px-6 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
+                  className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                   required
                 />
               )}
@@ -131,46 +157,40 @@ export const FiltroBusquedas = () => {
               )}
             </>
           </div>
-
           <div className="flex items-center">
-          <label
-            htmlFor="checkOutDate"
-            className={`block text-sm font-semibold text-white animate-jump ${
-              showCheckOutLabel ? '' : 'hidden'
-            }`}
-            onClick={() => setShowCheckOutLabel(false)}
-          >
-            Salida
-          </label>
-          <>
-            {!showCheckOutLabel && (
-              <input
-                type="date"
-                id="checkOutDate"
-                value={checkOutDate}
-                onChange={handleCheckOutDateChange}
-                className="ml-2 block w-40 px-6 py-2 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                min={minDate}
-                required
-              />
-            )}
-            {checkOutDate && (
-              <span className="ml-2 text-sm text-white">{checkOutDate}</span>
-            )}
-          </>
-        </div>
-
+            <label
+              htmlFor="checkOutDate"
+              className={`block text-sm font-semibold text-white animate-jump ${showCheckOutLabel ? "" : "hidden"
+                }`}
+              onClick={() => setShowCheckOutLabel(false)}
+            >
+              Salida
+            </label>
+            <>
+              {!showCheckOutLabel && (
+                <input
+                  type="date"
+                  id="checkOutDate"
+                  value={checkOutDate}
+                  onChange={handleCheckOutDateChange}
+                  className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                  min={minDate}
+                  required
+                />
+              )}
+              {checkOutDate && (
+                <span className="ml-2 text-sm text-white">{checkOutDate}</span>
+              )}
+            </>
+          </div>
           <div className="flex flex-col items-center">
             <div className="bg-gray-900 bg-opacity-70 p-4 rounded-md shadow-md mx-auto">
-              <div
-                className="flex flex-wrap justify-center gap-5"
-              >
+              <div className="flex flex-wrap justify-center gap-5">
                 <div className="flex items-center">
                   <label
                     htmlFor="quien"
-                    className={`block text-sm font-semibold text-white ${
-                      isAnimating ? "animate-fade-left" : "animate-jump"
-                    }`}
+                    className={`block text-sm font-semibold text-white ${isAnimating ? "animate-fade-left" : "animate-jump"
+                      }`}
                     onClick={() => setShowQuien(!showQuien)}
                   >
                     Quién
@@ -196,7 +216,6 @@ export const FiltroBusquedas = () => {
                           required
                         />
                       </div>
-
                       <div className="flex items-center">
                         <label
                           htmlFor="numChildren"
@@ -217,7 +236,6 @@ export const FiltroBusquedas = () => {
                         />
                         <span className="ml-2 text-sm text-white">{`De 2 a ${MAX_CHILD_AGE} años`}</span>
                       </div>
-
                       <div className="flex items-center">
                         <label
                           htmlFor="numBabies"
@@ -238,7 +256,6 @@ export const FiltroBusquedas = () => {
                         />
                         <span className="ml-2 text-sm text-white">{`Menos de ${MAX_BABY_AGE} años`}</span>
                       </div>
-
                       <div className="flex items-center">
                         <label
                           htmlFor="isServiceAnimal"
@@ -263,18 +280,22 @@ export const FiltroBusquedas = () => {
               </div>
             </div>
           </div>
-
           <button
             type="submit"
-            className={`bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4 h-12 ${
-              !isFormValid ? "cursor-not-allowed" : ""
-            } animate-jump`}
+            className={`bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4 h-12 ${!isFormValid ? "cursor-not-allowed" : ""
+              } animate-jump`}
             disabled={!isFormValid}
+            onClick={handleButtonClick} // Agrega esta línea
           >
             <MagnifyingGlassIcon className="h-5 w-5" />
           </button>
+
         </form>
       </div>
+      <br />
+      <br />
+      <BookingContainer listBooking={listBooking} checkin={checkInDate}
+        checkout={checkOutDate} />
     </div>
   );
 };
