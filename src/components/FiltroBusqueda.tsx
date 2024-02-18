@@ -295,7 +295,7 @@ export const FiltroBusquedas = ({
       <br />
       <br />
       <BookingContainer listBooking={listBooking} checkin={checkInDate}
-        checkout={checkOutDate} />
+        checkout={checkOutDate} numAdults={numAdults} numChildren={numChildren} numBabies={numBabies} childAges={childAges} isServiceAnimal={isServiceAnimal} />
     </div>
   );
 };
