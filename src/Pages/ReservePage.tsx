@@ -14,9 +14,27 @@ import { AvailabilityInput } from "../models/Availability.interface";
 export const ReservationForm = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+
+
   const id = queryParams.get("id");
   const checkInDate = queryParams.get("checkin")?.toString() ?? "";
   const checkOutDate = queryParams.get("checkout")?.toString() ?? "";
+  const numAdults = queryParams.get("numAdults")?.toString() ?? "";
+  const numBabies = queryParams.get("numBabies")?.toString() ?? "";
+  const numChildren = queryParams.get("numChildren")?.toString() ?? "";
+  const childAges = queryParams.get("childAges")?.toString() ?? "";
+  const childAgesArray = childAges.split(',');
+  const isServiceAnimal = queryParams.get("isServiceAnimal")?.toString() ?? "";
+
+  console.log("id", id);
+  console.log("checkInDate", checkInDate);
+  console.log("checkOutDate", checkOutDate);
+  console.log("numAdults", numAdults);
+  console.log("numBabies", numBabies);
+  console.log("numChildren", numChildren);
+  console.log("childAgesArray", childAgesArray);
+  console.log("isServiceAnimal", isServiceAnimal);
+
   const isLoggedIn = !!auth.currentUser;
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);

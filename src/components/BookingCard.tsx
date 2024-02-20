@@ -6,12 +6,17 @@ export interface IBookingCardProps {
   booking: Booking;
   checkin: string; // Nueva: Fecha de check-in
   checkout: string; // Nueva: Fecha de check-out
+  numAdults: number; // Nueva: Número de adultos
+  numChildren: number; // Nueva: Número de niños
+  numBabies: number; // Nueva: Número de bebés
+  childAges: number[]; // Nueva: Edades de los niños
+  isServiceAnimal: boolean; // Nueva: ¿Lleva mascota de servicio?
 }
 
 
-export const BookingCard = ({ booking, checkin, checkout }: IBookingCardProps) => {
+export const BookingCard = ({ booking, checkin, checkout, numAdults, numChildren, numBabies, childAges, isServiceAnimal}: IBookingCardProps) => {
   const queryParams = `?id=${encodeURIComponent(booking._id)}&checkin=${encodeURIComponent(checkin
-    )}&checkout=${encodeURIComponent(checkout)}`;
+    )}&checkout=${encodeURIComponent(checkout)}&numAdults=${encodeURIComponent(numAdults)}&numChildren=${encodeURIComponent(numChildren)}&numBabies=${encodeURIComponent(numBabies)}&childAges=${encodeURIComponent(childAges.join(','))}&isServiceAnimal=${encodeURIComponent(isServiceAnimal)}`;
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleReservarClick = () => {
