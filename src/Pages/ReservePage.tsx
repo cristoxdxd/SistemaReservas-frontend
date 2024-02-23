@@ -129,6 +129,32 @@ export const ReservationForm = () => {
     }
   };
 
+  const [mostrarBotonesPago, setMostrarBotonesPago] = useState(false);
+  const [mostrarInterfazPaypal, setMostrarInterfazPaypal] = useState(false);
+  const [mostrarMensajeEfectivo, setMostrarMensajeEfectivo] = useState(false);
+
+  const handlePagarClick = () => {
+      setMostrarBotonesPago(true);
+  };
+
+  const handlePagarPaypal = () => {
+      setMostrarInterfazPaypal(true);
+      setMostrarMensajeEfectivo(false);
+  };
+
+  const handlePagarEfectivo = () => {
+      setMostrarMensajeEfectivo(true);
+      setMostrarInterfazPaypal(false);
+  };
+
+  const handleClosePaypalModal = () => {
+      setMostrarInterfazPaypal(false);
+  };
+
+  const handleCloseEfectivoModal = () => {
+      setMostrarMensajeEfectivo(false);
+  };
+
   return (
     <>
       <Link
@@ -194,6 +220,54 @@ export const ReservationForm = () => {
             />
           </form>
 
+          <br /><br />
+          <div className="container mx-auto flex justify-center">
+            <button onClick={handlePagarClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Forma de Pago
+            </button>
+            {mostrarBotonesPago && (
+              <div className="flex space-x-4">
+                <button onClick={handlePagarPaypal} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                  Pagar con PayPal
+                </button>
+                <button onClick={handlePagarEfectivo} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    Pagar en efectivo
+                </button>
+              </div>
+            )}
+          </div>
+          {mostrarInterfazPaypal && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+                  <div className="bg-gray-100 p-8 rounded shadow-md text-gray-800">
+                      <button onClick={handleClosePaypalModal} className="absolute top-2 right-2 text-gray-600">
+                          X
+                      </button>
+                      <h2 className="text-lg font-bold mb-4">Interfaz de pago de PayPal</h2>
+                      <Link to="/">
+                          <button onClick={handleClosePaypalModal} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                              Volver
+                          </button>
+                      </Link>
+                      {/* Aquí iría tu interfaz de pago con PayPal */}
+                  </div>
+              </div>
+          )}
+          {mostrarMensajeEfectivo && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+                  <div className="bg-gray-100 p-8 rounded shadow-md text-gray-800">
+                      <button onClick={handleCloseEfectivoModal} className="absolute top-2 right-2 text-gray-600">
+                          X
+                      </button>
+                      <p className="text-lg font-bold mb-4">¡Acerquese a nuestra ventanilla!</p>
+                      <Link to="/">
+                          <button onClick={handleCloseEfectivoModal} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                              Volver
+                          </button>
+                      </Link>
+                  </div>
+              </div>
+          )}
+          <br />
           {isLoggedIn ? (
             <div className="flex justify-center items-center mt-10">
               <button
@@ -275,6 +349,7 @@ export const ReservationForm = () => {
           </div>
         </>
       )}
+
       <br />
       <br />
       <Footer />
