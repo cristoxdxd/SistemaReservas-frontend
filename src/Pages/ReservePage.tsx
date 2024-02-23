@@ -10,6 +10,7 @@ import { getOneBooking } from "../services/getOneBooking";
 import { Booking } from "../models/Booking.interface";
 import { createBooking } from "../services/createBooking";
 import { AvailabilityInput } from "../models/Availability.interface";
+import { updateBookingDates } from "../services/updateBookingDates";
 
 export const ReservationForm = () => {
   const location = useLocation();
@@ -24,9 +25,7 @@ export const ReservationForm = () => {
   const [loginFailed, setLoginFailed] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [bookingDetails, setBookingDetails] = useState<Booking | undefined>(
-    undefined
-  );
+  const [bookingDetails, setBookingDetails] = useState<Booking>({} as Booking);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,8 +101,29 @@ export const ReservationForm = () => {
     }
   }
 
+  async function update_booking_dates() {
+    const bookingToUpdate: Booking = {
+      ...bookingDetails,
+      availability: [
+        ...(bookingDetails.availability || []),
+        (document.getElementById("llegada") as HTMLInputElement)?.value ??
+        "",
+        (document.getElementById("salida") as HTMLInputElement)?.value ??
+        "",
+      ],
+    }
+    
+    const res = await updateBookingDates(id ?? "", bookingToUpdate);
+    if (res.status === 200) {
+      console.log("Booking updated successfully");
+    } else {
+      console.error("Error updating booking");
+    }
+  }
+
   const handleCreateBooking = () => {
     if (isLoggedIn) {
+      update_booking_dates();
       create_booking();
       openSuccessModal();
     } else {
