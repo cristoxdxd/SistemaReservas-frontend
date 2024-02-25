@@ -2,18 +2,15 @@ import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 // Renders errors or successfull transactions on the screen.
-interface MessageProps {
-    content: string;
+function Message({ content }: { content: string }) {
+  return <p>{content}</p>;
 }
 
-function Message({ content }: MessageProps) {
-    return <p>{content}</p>;
-}
-
-function Paypal() {
+function PaypalButton() {
   const initialOptions = {
-    "client-id": "AYsimpRTsBexDOPGUsOeIhBQE_6RsDe_fD0FtlKPmavnPV5xudYqQIgMYKf5vfLmoSvTIubTkObFiyPS",
-    "enable-funding": "card",
+    "client-id": "test",
+    "enable-funding": "paylater,card",
+    "disable-funding": "",
     "data-sdk-integration-source": "integrationbuilder_sc",
   };
 
@@ -21,10 +18,10 @@ function Paypal() {
 
   return (
     <div className="App">
-    <PayPalScriptProvider options={{ ...initialOptions, clientId: initialOptions["client-id"] }}>
+      <PayPalScriptProvider options={{ ...initialOptions, clientId: "AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo" }}>
         <PayPalButtons
           style={{
-            shape: "pill",
+            shape: "rect",
             layout: "vertical",
           }}
           createOrder={async () => {
@@ -120,4 +117,4 @@ function Paypal() {
   );
 }
 
-export default Paypal;
+export default PaypalButton;
