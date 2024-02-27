@@ -222,16 +222,11 @@ export const ReservationForm = () => {
               <br></br>
               <script src="https://www.paypal.com/sdk/js?client-id=AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo&currency=USD"></script>
 
-              <PaypalButton />
+              {bookingDetails && (
+                <PaypalButton total_price = {bookingDetails.price} />
+              )}
 
-
-              
             </form>
-            
-
-
-
-
 
             {isLoggedIn ? (
               <div className="flex justify-center items-center mt-10">
