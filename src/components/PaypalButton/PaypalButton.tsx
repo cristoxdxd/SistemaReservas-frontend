@@ -5,12 +5,17 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 function Message({ content }: { content: string }) {
   return <p>{content}</p>;
 }
+//clientId: "AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo" }
 
-function PaypalButton() {
+interface PaypalButtonProps {
+  total_price: number;
+}
+
+function PaypalButton( {total_price}: PaypalButtonProps){
   const initialOptions = {
     "client-id": "test",
-    "enable-funding": "paylater,card",
-    "disable-funding": "",
+    "enable-funding": "card",
+    "disable-funding": "paylater,venmo",
     "data-sdk-integration-source": "integrationbuilder_sc",
   };
 
@@ -18,10 +23,12 @@ function PaypalButton() {
 
   return (
     <div className="App">
+
+
       <PayPalScriptProvider options={{ ...initialOptions, clientId: "AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo" }}>
         <PayPalButtons
           style={{
-            shape: "rect",
+            shape: "pill",
             layout: "vertical",
           }}
           createOrder={async () => {
@@ -36,14 +43,15 @@ function PaypalButton() {
                 body: JSON.stringify({
                   cart: [
                     {
-                      id: "YOUR_PRODUCT_ID",
-                      quantity: "YOUR_PRODUCT_QUANTITY",
+                      price: total_price ,
                     },
                   ],
                 }),
               });
 
               const orderData = await response.json();
+
+              
 
               if (orderData.id) {
                 return orderData.id;
