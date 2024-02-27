@@ -111,7 +111,6 @@ function PaypalButton( {total_price}: PaypalButtonProps){
                   orderData,
                   JSON.stringify(orderData, null, 2),
                 );
-                <EnviarCorreo />
               }
             } catch (error) {
               console.error(error);
@@ -122,6 +121,7 @@ function PaypalButton( {total_price}: PaypalButtonProps){
           }}
         />
       </PayPalScriptProvider>
+      <EnviarCorreo />
       <Message content={message} />
     </div>
   );
