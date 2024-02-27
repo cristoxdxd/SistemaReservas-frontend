@@ -1,3 +1,4 @@
+import { Availability } from './Availability.interface';
 export interface Booking {
     _id: string;
     name: string;
@@ -13,6 +14,6 @@ export interface Booking {
     beds: number;
     bathrooms: number;
     images: string[];
-    availability?: string[];
+    availability?: Availability[];
     reviews?: string[];
 }
