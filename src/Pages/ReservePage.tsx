@@ -12,9 +12,6 @@ import { createBooking } from "../services/createBooking";
 import { AvailabilityInput } from "../models/Availability.interface";
 import PaypalButton from "../components/PaypalButton/PaypalButton";
 
-
-
-
 export const ReservationForm = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -27,7 +24,6 @@ export const ReservationForm = () => {
   const childAges = queryParams.get("childAges")?.toString() ?? "";
   const childAgesArray = childAges.split(',');
   const isServiceAnimal = queryParams.get("isServiceAnimal")?.toString() ?? "";
-
   console.log("id", id);
   console.log("checkInDate", checkInDate);
   console.log("checkOutDate", checkOutDate);
@@ -36,7 +32,6 @@ export const ReservationForm = () => {
   console.log("numChildren", numChildren);
   console.log("childAgesArray", childAgesArray);
   console.log("isServiceAnimal", isServiceAnimal);
-
   const isLoggedIn = !!auth.currentUser;
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
@@ -64,44 +59,35 @@ export const ReservationForm = () => {
     };
     fetchData();
   }, [id]);
-
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
-
   const closeLoginModal = () => {
     setIsLoginModalOpen(false);
     setLoginFailed(false);
   };
-
   const openSignUpModal = () => {
     setIsSignUpModalOpen(true);
   };
-
   const closeSignUpModal = () => {
     setIsSignUpModalOpen(false);
     setSignUpFailed(false);
   };
-
   const openSuccessModal = () => {
     setIsSuccessModalOpen(true);
   };
-
   const handleClickOutsideModal = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       closeLoginModal();
       closeSignUpModal();
     }
   };
-
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutsideModal);
     return () => {
       document.removeEventListener("mousedown", handleClickOutsideModal);
     };
   }, []);
-
   async function create_booking() {
     const arrivalDate =
       (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
@@ -115,7 +101,6 @@ export const ReservationForm = () => {
       user: auth.currentUser?.uid ?? "",
     };
     const res = await createBooking(availability);
-
     if (res.status === 200) {
       console.log("Booking create successfully");
     } else {
@@ -138,10 +123,8 @@ export const ReservationForm = () => {
         to={"/"}
         className="absolute flex flex-row text-white font-bold py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-400"
       >
-
         <ChevronLeftIcon className="h-5 w-5" />
         <p className="font-bold">Regresar</p>
-
       </Link>
       <div className="w-full">
         <br></br>
@@ -187,7 +170,6 @@ export const ReservationForm = () => {
                 required
                 defaultValue={checkInDate}
               />
-
               <label htmlFor="salida" className="text-white mt-6 mb-2">
                 Salida:
               </label>
@@ -221,9 +203,8 @@ export const ReservationForm = () => {
               )}
               <br></br>
               <script src="https://www.paypal.com/sdk/js?client-id=AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo&currency=USD"></script>
-
               {bookingDetails && (
-                <PaypalButton total_price = {bookingDetails.price} />
+                <PaypalButton total_price={bookingDetails.price} />
               )}
 
             </form>
@@ -236,8 +217,6 @@ export const ReservationForm = () => {
                 >
                   Reservar
                 </button>
-
-
               </div>
             ) : (
               <div className="mt-8">
@@ -288,7 +267,6 @@ export const ReservationForm = () => {
                   )}
                 </p>
               </div>
-
             )}
           </div>
         </div>
@@ -321,5 +299,4 @@ export const ReservationForm = () => {
     </>
   );
 };
-
 export default ReservationForm;
