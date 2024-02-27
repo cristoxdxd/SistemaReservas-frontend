@@ -11,11 +11,13 @@ import { Booking } from "../models/Booking.interface";
 import { createBooking } from "../services/createBooking";
 import { AvailabilityInput } from "../models/Availability.interface";
 import PaypalButton from "../components/PaypalButton/PaypalButton";
-
+import { useForm } from "react-hook-form";
+import { updateBookingDates } from "../services/updateBookingDates";
 
 
 
 export const ReservationForm = () => {
+  const bookingForm = useForm({ mode: "onBlur" });
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
@@ -125,12 +127,35 @@ export const ReservationForm = () => {
 
   const handleCreateBooking = () => {
     if (isLoggedIn) {
+      update_booking_dates();
       create_booking();
       openSuccessModal();
     } else {
       openLoginModal();
     }
   };
+  async function update_booking_dates() {
+    if (bookingDetails) {
+      const bookingToUpdate: Booking = {
+        ...(bookingDetails || {}),
+        availability: [
+          ...(bookingDetails.availability || []),
+          (document.getElementById("llegada") as HTMLInputElement)?.value ?? "",
+          (document.getElementById("salida") as HTMLInputElement)?.value ?? "",
+        ],
+      };
+
+      const res = await updateBookingDates(id ?? "", bookingToUpdate);
+      if (res.status === 200) {
+        console.log("Booking updated successfully");
+      } else {
+        console.error("Error updating booking");
+      }
+    }
+  };
+
+  
+
 
   return (
     <>
@@ -180,6 +205,37 @@ export const ReservationForm = () => {
                 Llegada:
               </label>
               <input
+                {...bookingForm.register("llegada", {
+                  required: "Este campo es requerido.",
+                  validate: () => {
+                    if (bookingDetails?.availability) {
+                      const bookings = bookingDetails.availability;
+                      const arrivalDate = bookingForm.getValues("llegada");
+                      const departureDate = bookingForm.getValues("salida");
+
+                      const isBookingInRange = bookings.some((booking, index) => {
+                        if (index % 2 === 0) {
+                          const bookingStart = new Date(booking.toString());
+                          const bookingEnd = new Date(bookings[index + 1].toString());
+                          const arrival = new Date(arrivalDate);
+                          const departure = new Date(departureDate);
+
+                          return (
+                            (arrival >= bookingStart && arrival <= bookingEnd) ||
+                            (departure >= bookingStart && departure <= bookingEnd)
+                          );
+                        }
+                        return false;
+                      });
+
+                      if (isBookingInRange) {
+                        return "Booking already exists in the selected date range.";
+                      }
+                    }
+                    return "";
+                  },
+                })}
+
                 type="date"
                 id="llegada"
                 name="llegada"
@@ -223,7 +279,7 @@ export const ReservationForm = () => {
               <script src="https://www.paypal.com/sdk/js?client-id=AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo&currency=USD"></script>
 
               {bookingDetails && (
-                <PaypalButton total_price = {bookingDetails.price} />
+                <PaypalButton total_price={bookingDetails.price} />
               )}
 
             </form>
