@@ -11,8 +11,11 @@ import { Booking } from "../models/Booking.interface";
 import { createBooking } from "../services/createBooking";
 import { AvailabilityInput } from "../models/Availability.interface";
 import PaypalButton from "../components/PaypalButton/PaypalButton";
+import { useForm } from "react-hook-form";
+import { updateBookingDates } from "../services/updateBookingDates";
 
 export const ReservationForm = () => {
+  const bookingForm = useForm({ mode: "onBlur" });
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
@@ -22,7 +25,7 @@ export const ReservationForm = () => {
   const numBabies = queryParams.get("numBabies")?.toString() ?? "";
   const numChildren = queryParams.get("numChildren")?.toString() ?? "";
   const childAges = queryParams.get("childAges")?.toString() ?? "";
-  const childAgesArray = childAges.split(',');
+  const childAgesArray = childAges.split(",");
   const isServiceAnimal = queryParams.get("isServiceAnimal")?.toString() ?? "";
   console.log("id", id);
   console.log("checkInDate", checkInDate);
@@ -33,15 +36,14 @@ export const ReservationForm = () => {
   console.log("childAgesArray", childAgesArray);
   console.log("isServiceAnimal", isServiceAnimal);
   const isLoggedIn = !!auth.currentUser;
+  console.log(auth.currentUser?.email);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [bookingDetails, setBookingDetails] = useState<Booking | undefined>(
-    undefined
-  );
+  const [bookingDetails, setBookingDetails] = useState<Booking>({} as Booking);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,10 +108,31 @@ export const ReservationForm = () => {
     } else {
       console.error("Error creating booking");
     }
-  };
+  }
+
+  async function update_booking_dates() {
+    const bookingToUpdate: Booking = {
+      ...bookingDetails,
+      availability: [
+        ...(bookingDetails.availability || []),
+        (document.getElementById("llegada") as HTMLInputElement)?.value ??
+        "",
+        (document.getElementById("salida") as HTMLInputElement)?.value ??
+        "",
+      ],
+    }
+    
+    const res = await updateBookingDates(id ?? "", bookingToUpdate);
+    if (res.status === 200) {
+      console.log("Booking updated successfully");
+    } else {
+      console.error("Error updating booking");
+    }
+  }
 
   const handleCreateBooking = () => {
     if (isLoggedIn) {
+      update_booking_dates();
       create_booking();
       openSuccessModal();
     } else {
@@ -163,6 +186,36 @@ export const ReservationForm = () => {
                 Llegada:
               </label>
               <input
+                {...bookingForm.register("llegada", {
+                  required: "Este campo es requerido.",
+                  validate: () => {
+                    if (bookingDetails?.availability) {
+                      const bookings = bookingDetails.availability;
+                      const arrivalDate = bookingForm.getValues("llegada");
+                      const departureDate = bookingForm.getValues("salida");
+
+                      const isBookingInRange = bookings.some((booking, index) => {
+                        if (index % 2 === 0) {
+                          const bookingStart = new Date(booking.toString());
+                          const bookingEnd = new Date(bookings[index + 1].toString());
+                          const arrival = new Date(arrivalDate);
+                          const departure = new Date(departureDate);
+
+                          return (
+                            (arrival >= bookingStart && arrival <= bookingEnd) ||
+                            (departure >= bookingStart && departure <= bookingEnd)
+                          );
+                        }
+                        return false;
+                      });
+
+                      if (isBookingInRange) {
+                        return "Booking already exists in the selected date range.";
+                      }
+                    }
+                    return "";
+                  },
+                })}
                 type="date"
                 id="llegada"
                 name="llegada"
@@ -206,7 +259,6 @@ export const ReservationForm = () => {
               {bookingDetails && (
                 <PaypalButton total_price={bookingDetails.price} />
               )}
-
             </form>
 
             {isLoggedIn ? (
@@ -271,28 +323,26 @@ export const ReservationForm = () => {
           </div>
         </div>
       </div>
-      {
-        isSuccessModalOpen && (
-          <>
-            <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
-              <div className="bg-green-600 p-4 rounded-md flex flex-col items-center justify-center animate-jump-in">
-                <p className="text-white font-extrabold text-2xl">
-                  Reserva realizada con éxito
-                </p>
-                <br />
-                <Link to={"/"}>
-                  <button
-                    className="text-white font-bold py-2 px-4 rounded"
-                    onClick={() => setIsSuccessModalOpen(false)}
-                  >
-                    Volver
-                  </button>
-                </Link>
-              </div>
+      {isSuccessModalOpen && (
+        <>
+          <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+            <div className="bg-green-600 p-4 rounded-md flex flex-col items-center justify-center animate-jump-in">
+              <p className="text-white font-extrabold text-2xl">
+                Reserva realizada con éxito
+              </p>
+              <br />
+              <Link to={"/"}>
+                <button
+                  className="text-white font-bold py-2 px-4 rounded"
+                  onClick={() => setIsSuccessModalOpen(false)}
+                >
+                  Volver
+                </button>
+              </Link>
             </div>
-          </>
-        )
-      }
+          </div>
+        </>
+      )}
       <br />
       <br />
       <Footer />
