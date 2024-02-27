@@ -42,6 +42,7 @@ export const ReservationForm = () => {
   const [bookingDetails, setBookingDetails] = useState<Booking | undefined>(
     undefined
   );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -106,6 +107,7 @@ export const ReservationForm = () => {
       console.error("Error creating booking");
     }
   };
+
   const handleCreateBooking = () => {
     if (isLoggedIn) {
       create_booking();
@@ -114,6 +116,7 @@ export const ReservationForm = () => {
       openLoginModal();
     }
   };
+
   return (
     <>
       <Link

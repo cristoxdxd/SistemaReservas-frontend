@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://service-booking-auu3.onrender.com/$1"
-    }
-  ]
-}
