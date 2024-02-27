@@ -8,8 +8,8 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ username, email, age, location }) => {
-    
-    
+
+
     return (
         <div className="bg-white p-4 rounded-md shadow-md">
             <h1 className="text-2xl font-bold mb-4 text-blue-500">Mi Perfil</h1>

@@ -10,13 +10,12 @@ import { getOneBooking } from "../services/getOneBooking";
 import { Booking } from "../models/Booking.interface";
 import { createBooking } from "../services/createBooking";
 import { AvailabilityInput } from "../models/Availability.interface";
+import PaypalButton from "../components/PaypalButton/PaypalButton";
 import { updateBookingDates } from "../services/updateBookingDates";
 
 export const ReservationForm = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-
-
   const id = queryParams.get("id");
   const checkInDate = queryParams.get("checkin")?.toString() ?? "";
   const checkOutDate = queryParams.get("checkout")?.toString() ?? "";
@@ -91,6 +90,7 @@ export const ReservationForm = () => {
     }
   };
 
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutsideModal);
     return () => {
@@ -117,7 +117,7 @@ export const ReservationForm = () => {
     } else {
       console.error("Error creating booking");
     }
-  }
+  };
 
   async function update_booking_dates() {
     const bookingToUpdate: Booking = {
@@ -181,65 +181,98 @@ export const ReservationForm = () => {
         to={"/"}
         className="absolute flex flex-row text-white font-bold py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-400"
       >
+
         <ChevronLeftIcon className="h-5 w-5" />
-        <p className="font-bold">Back</p>
+        <p className="font-bold">Regresar</p>
+
       </Link>
-      <br />
       <div className="w-full">
-        <div className="h-full">
-          <div className="flex justify-center items-center mt-6 w-screen">
-            {bookingDetails && (
-              <BookingPreview
-                _id={bookingDetails._id}
-                name={bookingDetails.name}
-                summary={bookingDetails.summary}
-                description={bookingDetails.description}
-                capacity={bookingDetails.capacity}
-                price={bookingDetails.price}
-                room_type={bookingDetails.room_type}
-                bed_type={bookingDetails.bed_type}
-                minimum_nights={bookingDetails.minimum_nights}
-                maximum_nights={bookingDetails.maximum_nights}
-                bedrooms={bookingDetails.bedrooms}
-                beds={bookingDetails.beds}
-                bathrooms={bookingDetails.bathrooms}
-                images={bookingDetails.images}
-                availability={bookingDetails.availability}
-                reviews={bookingDetails.reviews}
+        <br></br>
+        <br></br>
+        <br></br>
+        <div className="h-full flex justify-center items-center">
+          {/* BookingPreview */}
+          {bookingDetails && (
+            <BookingPreview
+              _id={bookingDetails._id}
+              name={bookingDetails.name}
+              summary={bookingDetails.summary}
+              description={bookingDetails.description}
+              capacity={bookingDetails.capacity}
+              price={bookingDetails.price}
+              room_type={bookingDetails.room_type}
+              bed_type={bookingDetails.bed_type}
+              minimum_nights={bookingDetails.minimum_nights}
+              maximum_nights={bookingDetails.maximum_nights}
+              bedrooms={bookingDetails.bedrooms}
+              beds={bookingDetails.beds}
+              bathrooms={bookingDetails.bathrooms}
+              images={bookingDetails.images}
+              availability={bookingDetails.availability}
+              reviews={bookingDetails.reviews}
+            />
+          )}
+          <div className="ml-8">
+            <div className="flex justify-center items-center">
+              <h1 className="text-white text-4xl font-bold mt-10">
+                Reserva tu estadía
+              </h1>
+            </div>
+            <form className="flex flex-col items-center mt-2">
+              <label htmlFor="llegada" className="text-white mt-6 mb-2">
+                Llegada:
+              </label>
+              <input
+                type="date"
+                id="llegada"
+                name="llegada"
+                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                required
+                defaultValue={checkInDate}
               />
-            )}
-          </div>
-          <div className="flex justify-center items-center">
-            <h1 className="text-white text-4xl font-bold mt-10">
-              Reserva tu estadia
-            </h1>
-          </div>
-          <form className="flex flex-col items-center mt-2">
-            <label htmlFor="llegada" className="text-white mt-6 mb-2">
-              Llegada:
-            </label>
-            <input
-              type="date"
-              id="llegada"
-              name="llegada"
-              className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
-              required
-              defaultValue={checkInDate}
-            />
 
-            <label htmlFor="salida" className="text-white mt-6 mb-2">
-              Salida:
-            </label>
-            <input
-              type="date"
-              id="salida"
-              name="salida"
-              className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
-              required
-              defaultValue={checkOutDate}
-            />
-          </form>
+              <label htmlFor="salida" className="text-white mt-6 mb-2">
+                Salida:
+              </label>
+              <input
+                type="date"
+                id="salida"
+                name="salida"
+                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                required
+                defaultValue={checkOutDate}
+              />
+              {bookingDetails && (
+                <>
+                  <label htmlFor="huéspedes" className="text-white mt-6 mb-2">
+                    Huéspedes:
+                  </label>
+                  <select
+                    id="huéspedes"
+                    name="huéspedes"
+                    className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                    required
+                  >
+                    {/* Generar opciones dinámicamente según la disponibilidad */}
+                    {[...Array(bookingDetails.capacity).keys()].map((index) => (
+                      <option key={index + 1} value={index + 1}>
+                        {index + 1} huésped{index !== 0 && "es"}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              )}
+              <br></br>
+              <script src="https://www.paypal.com/sdk/js?client-id=AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo&currency=USD"></script>
 
+              {bookingDetails && (
+                <PaypalButton total_price = {bookingDetails.price} />
+              )}
+
+            </form>
+
+            {isLoggedIn ? (
+              <div className="flex justify-center items-center mt-10">
           <br /><br />
           <div className="container mx-auto flex justify-center">
             <button onClick={handlePagarClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -301,75 +334,89 @@ export const ReservationForm = () => {
             <div className="mt-8">
               <div className="flex justify-center">
                 <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={openSignUpModal} // Open SignUp modal on click
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max"
+                  onClick={handleCreateBooking}
                 >
-                  Sign Up
+                  Reservar
                 </button>
+
+
               </div>
-              <p className="text-center text-white mt-4">
-                Already have an account?{" "}
-                <button onClick={openLoginModal} className="text-blue-500">
-                  Log in
-                </button>
-                {isLoginModalOpen && (
-                  <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
-                    <div className=" p-4 rounded-md" ref={modalRef}>
-                      {loginFailed ? (
-                        <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
-                          Login failed. Please try again.
-                        </p>
-                      ) : (
-                        <Login
-                          onSuccess={closeLoginModal}
-                          onFailure={() => setLoginFailed(true)}
-                        />
-                      )}
+            ) : (
+              <div className="mt-8">
+                <div className="flex justify-center">
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={openSignUpModal} // Open SignUp modal on click
+                  >
+                    Sign Up
+                  </button>
+                </div>
+                <p className="text-center text-white mt-4">
+                  Already have an account?{" "}
+                  <button onClick={openLoginModal} className="text-blue-500">
+                    Log in
+                  </button>
+                  {isLoginModalOpen && (
+                    <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+                      <div className=" p-4 rounded-md" ref={modalRef}>
+                        {loginFailed ? (
+                          <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
+                            Login failed. Please try again.
+                          </p>
+                        ) : (
+                          <Login
+                            onSuccess={closeLoginModal}
+                            onFailure={() => setLoginFailed(true)}
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
-                {isSignUpModalOpen && (
-                  <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
-                    <div className=" p-4 rounded-md" ref={modalRef}>
-                      {signUpFailed ? (
-                        <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
-                          Sign up failed. Please try again.
-                        </p>
-                      ) : (
-                        <SignUp
-                          onSuccess={closeSignUpModal}
-                          onFailure={() => setSignUpFailed(true)}
-                        />
-                      )}
+                  )}
+                  {isSignUpModalOpen && (
+                    <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+                      <div className=" p-4 rounded-md" ref={modalRef}>
+                        {signUpFailed ? (
+                          <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
+                            Sign up failed. Please try again.
+                          </p>
+                        ) : (
+                          <SignUp
+                            onSuccess={closeSignUpModal}
+                            onFailure={() => setSignUpFailed(true)}
+                          />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </p>
-            </div>
-          )}
+                  )}
+                </p>
+              </div>
+
+            )}
+          </div>
         </div>
       </div>
-      {isSuccessModalOpen && (
-        <>
-          <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
-            <div className="bg-green-600 p-4 rounded-md flex flex-col items-center justify-center animate-jump-in">
-              <p className="text-white font-extrabold text-2xl">
-                Reserva realizada con éxito
-              </p>
-              <br />
-              <Link to={"/"}>
-                <button
-                  className="text-white font-bold py-2 px-4 rounded"
-                  onClick={() => setIsSuccessModalOpen(false)}
-                >
-                  Volver
-                </button>
-              </Link>
-            </div>
+      {
+        isSuccessModalOpen && (
+          <>
+            <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+              <div className="bg-green-600 p-4 rounded-md flex flex-col items-center justify-center animate-jump-in">
+                <p className="text-white font-extrabold text-2xl">
+                  Reserva realizada con éxito
+                </p>
+                <br />
+                <Link to={"/"}>
+                  <button
+                    className="text-white font-bold py-2 px-4 rounded"
+                    onClick={() => setIsSuccessModalOpen(false)}
+                  >
+                    Volver
+                  </button>
+                </Link>
+              </div>
           </div>
         </>
       )}
-
       <br />
       <br />
       <Footer />
