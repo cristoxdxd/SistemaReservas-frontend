@@ -11,7 +11,6 @@ import { Booking } from "../models/Booking.interface";
 import { createBooking } from "../services/createBooking";
 import { AvailabilityInput } from "../models/Availability.interface";
 import PaypalButton from "../components/PaypalButton/PaypalButton";
-import { updateBookingDates } from "../services/updateBookingDates";
 
 export const ReservationForm = () => {
   const location = useLocation();
@@ -25,7 +24,6 @@ export const ReservationForm = () => {
   const childAges = queryParams.get("childAges")?.toString() ?? "";
   const childAgesArray = childAges.split(',');
   const isServiceAnimal = queryParams.get("isServiceAnimal")?.toString() ?? "";
-
   console.log("id", id);
   console.log("checkInDate", checkInDate);
   console.log("checkOutDate", checkOutDate);
@@ -34,7 +32,6 @@ export const ReservationForm = () => {
   console.log("numChildren", numChildren);
   console.log("childAgesArray", childAgesArray);
   console.log("isServiceAnimal", isServiceAnimal);
-
   const isLoggedIn = !!auth.currentUser;
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
@@ -42,8 +39,9 @@ export const ReservationForm = () => {
   const [loginFailed, setLoginFailed] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [bookingDetails, setBookingDetails] = useState<Booking>({} as Booking);
-
+  const [bookingDetails, setBookingDetails] = useState<Booking | undefined>(
+    undefined
+  );
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,44 +58,35 @@ export const ReservationForm = () => {
     };
     fetchData();
   }, [id]);
-
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
-
   const closeLoginModal = () => {
     setIsLoginModalOpen(false);
     setLoginFailed(false);
   };
-
   const openSignUpModal = () => {
     setIsSignUpModalOpen(true);
   };
-
   const closeSignUpModal = () => {
     setIsSignUpModalOpen(false);
     setSignUpFailed(false);
   };
-
   const openSuccessModal = () => {
     setIsSuccessModalOpen(true);
   };
-
   const handleClickOutsideModal = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       closeLoginModal();
       closeSignUpModal();
     }
   };
-
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutsideModal);
     return () => {
       document.removeEventListener("mousedown", handleClickOutsideModal);
     };
   }, []);
-
   async function create_booking() {
     const arrivalDate =
       (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
@@ -111,80 +100,28 @@ export const ReservationForm = () => {
       user: auth.currentUser?.uid ?? "",
     };
     const res = await createBooking(availability);
-
     if (res.status === 200) {
       console.log("Booking create successfully");
     } else {
       console.error("Error creating booking");
     }
   };
-
-  async function update_booking_dates() {
-    const bookingToUpdate: Booking = {
-      ...bookingDetails,
-      availability: [
-        ...(bookingDetails.availability || []),
-        (document.getElementById("llegada") as HTMLInputElement)?.value ??
-        "",
-        (document.getElementById("salida") as HTMLInputElement)?.value ??
-        "",
-      ],
-    }
-    
-    const res = await updateBookingDates(id ?? "", bookingToUpdate);
-    if (res.status === 200) {
-      console.log("Booking updated successfully");
-    } else {
-      console.error("Error updating booking");
-    }
-  }
-
   const handleCreateBooking = () => {
     if (isLoggedIn) {
-      update_booking_dates();
       create_booking();
       openSuccessModal();
     } else {
       openLoginModal();
     }
   };
-
-  const [mostrarBotonesPago, setMostrarBotonesPago] = useState(false);
-  const [mostrarInterfazPaypal, setMostrarInterfazPaypal] = useState(false);
-  const [mostrarMensajeEfectivo, setMostrarMensajeEfectivo] = useState(false);
-
-  const handlePagarClick = () => {
-      setMostrarBotonesPago(true);
-  };
-
-  const handlePagarPaypal = () => {
-      setMostrarInterfazPaypal(true);
-      setMostrarMensajeEfectivo(false);
-  };
-
-  const handlePagarEfectivo = () => {
-      setMostrarMensajeEfectivo(true);
-      setMostrarInterfazPaypal(false);
-  };
-
-  const handleClosePaypalModal = () => {
-      setMostrarInterfazPaypal(false);
-  };
-
-  const handleCloseEfectivoModal = () => {
-      setMostrarMensajeEfectivo(false);
-  };
-
   return (
     <>
       <Link
         to={"/"}
         className="absolute flex flex-row text-white font-bold py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-400"
       >
-
         <ChevronLeftIcon className="h-5 w-5" />
         <p className="font-bold">Regresar</p>
-
       </Link>
       <div className="w-full">
         <br></br>
@@ -230,7 +167,6 @@ export const ReservationForm = () => {
                 required
                 defaultValue={checkInDate}
               />
-
               <label htmlFor="salida" className="text-white mt-6 mb-2">
                 Salida:
               </label>
@@ -264,83 +200,20 @@ export const ReservationForm = () => {
               )}
               <br></br>
               <script src="https://www.paypal.com/sdk/js?client-id=AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo&currency=USD"></script>
-
               {bookingDetails && (
-                <PaypalButton total_price = {bookingDetails.price} />
+                <PaypalButton total_price={bookingDetails.price} />
               )}
 
             </form>
 
             {isLoggedIn ? (
               <div className="flex justify-center items-center mt-10">
-          <br /><br />
-          <div className="container mx-auto flex justify-center">
-            <button onClick={handlePagarClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Forma de Pago
-            </button>
-            {mostrarBotonesPago && (
-              <div className="flex space-x-4">
-                <button onClick={handlePagarPaypal} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                  Pagar con PayPal
-                </button>
-                <button onClick={handlePagarEfectivo} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                    Pagar en efectivo
-                </button>
-              </div>
-            )}
-          </div>
-          {mostrarInterfazPaypal && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-                  <div className="bg-gray-100 p-8 rounded shadow-md text-gray-800">
-                      <button onClick={handleClosePaypalModal} className="absolute top-2 right-2 text-gray-600">
-                          X
-                      </button>
-                      <h2 className="text-lg font-bold mb-4">Interfaz de pago de PayPal</h2>
-                      <Link to="/">
-                          <button onClick={handleClosePaypalModal} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                              Volver
-                          </button>
-                      </Link>
-                      {/* Aquí iría tu interfaz de pago con PayPal */}
-                  </div>
-              </div>
-          )}
-          {mostrarMensajeEfectivo && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-                  <div className="bg-gray-100 p-8 rounded shadow-md text-gray-800">
-                      <button onClick={handleCloseEfectivoModal} className="absolute top-2 right-2 text-gray-600">
-                          X
-                      </button>
-                      <p className="text-lg font-bold mb-4">¡Acerquese a nuestra ventanilla!</p>
-                      <Link to="/">
-                          <button onClick={handleCloseEfectivoModal} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                              Volver
-                          </button>
-                      </Link>
-                  </div>
-              </div>
-          )}
-          <br />
-          {isLoggedIn ? (
-            <div className="flex justify-center items-center mt-10">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max"
-                onClick={handleCreateBooking}
-              >
-                Reservar
-              </button>
-            </div>
-          ) : (
-            <div className="mt-8">
-              <div className="flex justify-center">
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max"
                   onClick={handleCreateBooking}
                 >
                   Reservar
                 </button>
-
-
               </div>
             ) : (
               <div className="mt-8">
@@ -391,7 +264,6 @@ export const ReservationForm = () => {
                   )}
                 </p>
               </div>
-
             )}
           </div>
         </div>
@@ -414,14 +286,14 @@ export const ReservationForm = () => {
                   </button>
                 </Link>
               </div>
-          </div>
-        </>
-      )}
+            </div>
+          </>
+        )
+      }
       <br />
       <br />
       <Footer />
     </>
   );
 };
-
 export default ReservationForm;
