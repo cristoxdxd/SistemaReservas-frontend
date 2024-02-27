@@ -186,6 +186,36 @@ export const ReservationForm = () => {
                 Llegada:
               </label>
               <input
+                {...bookingForm.register("llegada", {
+                  required: "Este campo es requerido.",
+                  validate: () => {
+                    if (bookingDetails?.availability) {
+                      const bookings = bookingDetails.availability;
+                      const arrivalDate = bookingForm.getValues("llegada");
+                      const departureDate = bookingForm.getValues("salida");
+
+                      const isBookingInRange = bookings.some((booking, index) => {
+                        if (index % 2 === 0) {
+                          const bookingStart = new Date(booking.toString());
+                          const bookingEnd = new Date(bookings[index + 1].toString());
+                          const arrival = new Date(arrivalDate);
+                          const departure = new Date(departureDate);
+
+                          return (
+                            (arrival >= bookingStart && arrival <= bookingEnd) ||
+                            (departure >= bookingStart && departure <= bookingEnd)
+                          );
+                        }
+                        return false;
+                      });
+
+                      if (isBookingInRange) {
+                        return "Booking already exists in the selected date range.";
+                      }
+                    }
+                    return "";
+                  },
+                })}
                 type="date"
                 id="llegada"
                 name="llegada"
