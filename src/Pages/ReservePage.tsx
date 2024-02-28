@@ -115,13 +115,11 @@ export const ReservationForm = () => {
       ...bookingDetails,
       availability: [
         ...(bookingDetails.availability || []),
-        (document.getElementById("llegada") as HTMLInputElement)?.value ??
-        "",
-        (document.getElementById("salida") as HTMLInputElement)?.value ??
-        "",
+        (document.getElementById("llegada") as HTMLInputElement)?.value ?? "",
+        (document.getElementById("salida") as HTMLInputElement)?.value ?? "",
       ],
-    }
-    
+    };
+
     const res = await updateBookingDates(id ?? "", bookingToUpdate);
     if (res.status === 200) {
       console.log("Booking updated successfully");
@@ -194,20 +192,26 @@ export const ReservationForm = () => {
                       const arrivalDate = bookingForm.getValues("llegada");
                       const departureDate = bookingForm.getValues("salida");
 
-                      const isBookingInRange = bookings.some((booking, index) => {
-                        if (index % 2 === 0) {
-                          const bookingStart = new Date(booking.toString());
-                          const bookingEnd = new Date(bookings[index + 1].toString());
-                          const arrival = new Date(arrivalDate);
-                          const departure = new Date(departureDate);
+                      const isBookingInRange = bookings.some(
+                        (booking, index) => {
+                          if (index % 2 === 0) {
+                            const bookingStart = new Date(booking.toString());
+                            const bookingEnd = new Date(
+                              bookings[index + 1].toString()
+                            );
+                            const arrival = new Date(arrivalDate);
+                            const departure = new Date(departureDate);
 
-                          return (
-                            (arrival >= bookingStart && arrival <= bookingEnd) ||
-                            (departure >= bookingStart && departure <= bookingEnd)
-                          );
+                            return (
+                              (arrival >= bookingStart &&
+                                arrival <= bookingEnd) ||
+                              (departure >= bookingStart &&
+                                departure <= bookingEnd)
+                            );
+                          }
+                          return false;
                         }
-                        return false;
-                      });
+                      );
 
                       if (isBookingInRange) {
                         return "Booking already exists in the selected date range.";
@@ -254,21 +258,15 @@ export const ReservationForm = () => {
                   </select>
                 </>
               )}
-              <br></br>
-              <script src="https://www.paypal.com/sdk/js?client-id=AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo&currency=USD"></script>
-              {bookingDetails && (
-                <PaypalButton total_price={bookingDetails.price} />
-              )}
             </form>
 
             {isLoggedIn ? (
               <div className="flex justify-center items-center mt-10">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max"
-                  onClick={handleCreateBooking}
-                >
-                  Reservar
-                </button>
+                <br></br>
+                <script src="https://www.paypal.com/sdk/js?client-id=AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo&currency=USD"></script>
+                  <button onClick={handleCreateBooking}>
+                    <PaypalButton total_price={bookingDetails.price} />
+                  </button>
               </div>
             ) : (
               <div className="mt-8">
