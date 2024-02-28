@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import EnviarCorreo from "../EnviarCorreo";
+import { auth } from "../../Firebase";
 
 // Renders errors or successfull transactions on the screen.
 function Message({ content }: { content: string }) {
@@ -22,6 +22,32 @@ function PaypalButton( {total_price}: PaypalButtonProps){
 
   const [message, setMessage] = useState("");
 
+  const email = auth.currentUser?.email;
+
+  console.log(email);
+  // Función para enviar el correo electrónico de confirmación
+  const sendConfirmationEmail = async () => {
+    try {
+      const response = await fetch("/api/send-email/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email, // Cambia esto por el correo del usuario autenticado
+          subject: "Confirmación de pago",
+          body: "¡Gracias por su pago! Su transacción ha sido procesada con éxito."
+        }),
+      });
+
+      const result = await response.json();
+      console.log(result); // Puedes manejar la respuesta según tus necesidades
+    } catch (error) {
+      console.error("Error sending confirmation email:", error);
+    }
+  };
+
+  
   return (
     <div className="App">
 
@@ -111,6 +137,7 @@ function PaypalButton( {total_price}: PaypalButtonProps){
                   orderData,
                   JSON.stringify(orderData, null, 2),
                 );
+                await sendConfirmationEmail();
               }
             } catch (error) {
               console.error(error);
@@ -121,7 +148,6 @@ function PaypalButton( {total_price}: PaypalButtonProps){
           }}
         />
       </PayPalScriptProvider>
-      <EnviarCorreo />
       <Message content={message} />
     </div>
   );
