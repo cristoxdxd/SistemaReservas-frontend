@@ -14,6 +14,8 @@ import PaypalButton from "../components/PaypalButton/PaypalButton";
 import { useForm } from "react-hook-form";
 import { updateBookingDates } from "../services/updateBookingDates";
 
+
+
 export const ReservationForm = () => {
   const bookingForm = useForm({ mode: "onBlur" });
   const location = useLocation();
@@ -25,8 +27,9 @@ export const ReservationForm = () => {
   const numBabies = queryParams.get("numBabies")?.toString() ?? "";
   const numChildren = queryParams.get("numChildren")?.toString() ?? "";
   const childAges = queryParams.get("childAges")?.toString() ?? "";
-  const childAgesArray = childAges.split(",");
+  const childAgesArray = childAges.split(',');
   const isServiceAnimal = queryParams.get("isServiceAnimal")?.toString() ?? "";
+
   console.log("id", id);
   console.log("checkInDate", checkInDate);
   console.log("checkOutDate", checkOutDate);
@@ -35,15 +38,17 @@ export const ReservationForm = () => {
   console.log("numChildren", numChildren);
   console.log("childAgesArray", childAgesArray);
   console.log("isServiceAnimal", isServiceAnimal);
+
   const isLoggedIn = !!auth.currentUser;
-  console.log(auth.currentUser?.email);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [bookingDetails, setBookingDetails] = useState<Booking>({} as Booking);
+  const [bookingDetails, setBookingDetails] = useState<Booking | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,35 +66,44 @@ export const ReservationForm = () => {
     };
     fetchData();
   }, [id]);
+
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
+
   const closeLoginModal = () => {
     setIsLoginModalOpen(false);
     setLoginFailed(false);
   };
+
   const openSignUpModal = () => {
     setIsSignUpModalOpen(true);
   };
+
   const closeSignUpModal = () => {
     setIsSignUpModalOpen(false);
     setSignUpFailed(false);
   };
+
   const openSuccessModal = () => {
     setIsSuccessModalOpen(true);
   };
+
   const handleClickOutsideModal = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       closeLoginModal();
       closeSignUpModal();
     }
   };
+
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutsideModal);
     return () => {
       document.removeEventListener("mousedown", handleClickOutsideModal);
     };
   }, []);
+
   async function create_booking() {
     const arrivalDate =
       (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
@@ -103,6 +117,7 @@ export const ReservationForm = () => {
       user: auth.currentUser?.uid ?? "",
     };
     const res = await createBooking(availability);
+
     if (res.status === 200) {
       console.log("Booking create successfully");
     } else {
@@ -137,6 +152,28 @@ export const ReservationForm = () => {
       openLoginModal();
     }
   };
+  async function update_booking_dates() {
+    if (bookingDetails) {
+      const bookingToUpdate: Booking = {
+        ...(bookingDetails || {}),
+        availability: [
+          ...(bookingDetails.availability || []),
+          (document.getElementById("llegada") as HTMLInputElement)?.value ?? "",
+          (document.getElementById("salida") as HTMLInputElement)?.value ?? "",
+        ],
+      };
+
+      const res = await updateBookingDates(id ?? "", bookingToUpdate);
+      if (res.status === 200) {
+        console.log("Booking updated successfully");
+      } else {
+        console.error("Error updating booking");
+      }
+    }
+  };
+
+  
+
 
   return (
     <>
@@ -144,8 +181,10 @@ export const ReservationForm = () => {
         to={"/"}
         className="absolute flex flex-row text-white font-bold py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-400"
       >
+
         <ChevronLeftIcon className="h-5 w-5" />
         <p className="font-bold">Regresar</p>
+
       </Link>
       <div className="w-full">
         <br></br>
@@ -220,6 +259,7 @@ export const ReservationForm = () => {
                     return "";
                   },
                 })}
+
                 type="date"
                 id="llegada"
                 name="llegada"
@@ -227,6 +267,7 @@ export const ReservationForm = () => {
                 required
                 defaultValue={checkInDate}
               />
+
               <label htmlFor="salida" className="text-white mt-6 mb-2">
                 Salida:
               </label>
@@ -317,34 +358,38 @@ export const ReservationForm = () => {
                   )}
                 </p>
               </div>
+
             )}
           </div>
         </div>
       </div>
-      {isSuccessModalOpen && (
-        <>
-          <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
-            <div className="bg-green-600 p-4 rounded-md flex flex-col items-center justify-center animate-jump-in">
-              <p className="text-white font-extrabold text-2xl">
-                Reserva realizada con éxito
-              </p>
-              <br />
-              <Link to={"/"}>
-                <button
-                  className="text-white font-bold py-2 px-4 rounded"
-                  onClick={() => setIsSuccessModalOpen(false)}
-                >
-                  Volver
-                </button>
-              </Link>
+      {
+        isSuccessModalOpen && (
+          <>
+            <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+              <div className="bg-green-600 p-4 rounded-md flex flex-col items-center justify-center animate-jump-in">
+                <p className="text-white font-extrabold text-2xl">
+                  Reserva realizada con éxito
+                </p>
+                <br />
+                <Link to={"/"}>
+                  <button
+                    className="text-white font-bold py-2 px-4 rounded"
+                    onClick={() => setIsSuccessModalOpen(false)}
+                  >
+                    Volver
+                  </button>
+                </Link>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )
+      }
       <br />
       <br />
       <Footer />
     </>
   );
 };
+
 export default ReservationForm;

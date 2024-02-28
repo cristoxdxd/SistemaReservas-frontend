@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import EnviarCorreo from "../EnviarCorreo";
 
 // Renders errors or successfull transactions on the screen.
 function Message({ content }: { content: string }) {
@@ -120,6 +121,7 @@ function PaypalButton( {total_price}: PaypalButtonProps){
           }}
         />
       </PayPalScriptProvider>
+      <EnviarCorreo />
       <Message content={message} />
     </div>
   );
