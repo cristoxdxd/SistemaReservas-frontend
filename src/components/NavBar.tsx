@@ -7,7 +7,7 @@ import { auth } from "../Firebase";
 
 export const NavBar = () => {
   const isLoggedIn = !!auth.currentUser;
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
@@ -15,9 +15,9 @@ export const NavBar = () => {
   const loginModalRef = useRef<HTMLDivElement>(null);
   const signUpModalRef = useRef<HTMLDivElement>(null);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  // const toggleMobileMenu = () => {
+  //   setIsMobileMenuOpen(!isMobileMenuOpen);
+  // };
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
