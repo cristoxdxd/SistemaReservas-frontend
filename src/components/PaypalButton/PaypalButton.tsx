@@ -12,9 +12,10 @@ function Message({ content }: { content: string }) {
 
 interface PaypalButtonProps {
   total_price: number;
+  onSuccess: () => void;
 }
 
-function PaypalButton( {total_price}: PaypalButtonProps){
+function PaypalButton({ total_price, onSuccess }: PaypalButtonProps){
   const initialOptions = {
     "client-id": "test",
     "enable-funding": "card",
@@ -130,6 +131,9 @@ function PaypalButton( {total_price}: PaypalButtonProps){
                   orderData,
                   JSON.stringify(orderData, null, 2),
                 );
+
+                // Llamada a la función onSuccess después de la confirmación exitosa
+                onSuccess();
                 send_email();
               }
             } catch (error) {

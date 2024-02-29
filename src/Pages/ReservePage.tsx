@@ -16,6 +16,7 @@ import { updateBookingDates } from "../services/updateBookingDates";
 
 
 
+
 export const ReservationForm = () => {
   const bookingForm = useForm({ mode: "onBlur" });
   const location = useLocation();
@@ -57,6 +58,9 @@ export const ReservationForm = () => {
   //Nuevo estado para las fechas de llegada y salida
   const [arrivalDate, setArrivalDate] = useState<string>(checkInDate);
   const [departureDate, setDepartureDate] = useState<string>(checkOutDate);
+
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -136,8 +140,7 @@ export const ReservationForm = () => {
   const handleCreateBooking = () => {
     if (isLoggedIn) {
       update_booking_dates();
-      create_booking();
-      openSuccessModal();
+      setIsBookingModalOpen(true); // Abre la ventana emergente
     } else {
       openLoginModal();
     }
@@ -199,6 +202,16 @@ export const ReservationForm = () => {
   }, [bookingDetails, checkInDate, checkOutDate, selectedGuests]
 
   );
+  const handlePaymentSuccess = () => {
+    // Realiza cualquier acción adicional que necesites después de un pago exitoso
+    setIsSuccessModalOpen(true); // Abre la ventana de éxito
+    setIsBookingModalOpen(false); // Cierra la ventana emergente de reserva
+  };
+
+  const closeBookingModal = () => {
+    setIsBookingModalOpen(false);
+    // Puedes realizar acciones adicionales después de cerrar la ventana emergente de reserva
+  };
 
 
 
@@ -331,7 +344,7 @@ export const ReservationForm = () => {
               <script src="https://www.paypal.com/sdk/js?client-id=AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo&currency=USD"></script>
 
 
-              {totalAmount && (
+              {/* {totalAmount && (
                 <>
                   <div className="flex justify-center mt-10">
                     <div className="border border-gray-300 p-4 mt-4 rounded-md">
@@ -346,7 +359,7 @@ export const ReservationForm = () => {
                   <br></br>
                   <PaypalButton total_price={totalAmount} />
                 </>
-              )}
+              )} */}
 
             </form>
 
@@ -358,6 +371,23 @@ export const ReservationForm = () => {
                 >
                   Reservar
                 </button>
+
+                {isBookingModalOpen && (
+                  <div className="bg-white p-4 rounded-md fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <h2 className="text-lg font-bold mb-2">Detalle de la reserva</h2>
+                    <p>Check-in: {arrivalDate}</p>
+                    <p>Check-out: {checkOutDate}</p>
+                    <p>Huéspedes: {selectedGuests}</p>
+                    <br></br>
+                    Total a pagar: ${totalAmount.toFixed(2)}
+                    <br></br>
+                    <PaypalButton total_price={totalAmount} onSuccess={() => {
+                      // Aquí puedes realizar la reserva después de un pago exitoso
+                      create_booking();
+                      openSuccessModal();
+                    }} />
+                  </div>
+                )}
 
 
               </div>
@@ -427,7 +457,10 @@ export const ReservationForm = () => {
                 <Link to={"/"}>
                   <button
                     className="text-white font-bold py-2 px-4 rounded"
-                    onClick={() => setIsSuccessModalOpen(false)}
+                    onClick={() => {
+                      setIsSuccessModalOpen(false);
+                      closeBookingModal(); // Puedes cerrar la ventana emergente de reserva si es necesario
+                    }}
                   >
                     Volver
                   </button>
