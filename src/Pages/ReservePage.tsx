@@ -30,6 +30,7 @@ export const ReservationForm = () => {
   const childAgesArray = childAges.split(',');
   const isServiceAnimal = queryParams.get("isServiceAnimal")?.toString() ?? "";
 
+
   console.log("id", id);
   console.log("checkInDate", checkInDate);
   console.log("checkOutDate", checkOutDate);
@@ -49,6 +50,13 @@ export const ReservationForm = () => {
   const [bookingDetails, setBookingDetails] = useState<Booking | undefined>(
     undefined
   );
+
+  //Nuevo estado para almacenar el total
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [selectedGuests, setSelectedGuests] = useState<number>(1); // Por defecto, 1 huésped
+  //Nuevo estado para las fechas de llegada y salida
+  const [arrivalDate, setArrivalDate] = useState<string>(checkInDate);
+  const [departureDate, setDepartureDate] = useState<string>(checkOutDate);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,6 +153,7 @@ export const ReservationForm = () => {
         ],
       };
 
+
       const res = await updateBookingDates(id ?? "", bookingToUpdate);
       if (res.status === 200) {
         console.log("Booking updated successfully");
@@ -154,7 +163,45 @@ export const ReservationForm = () => {
     }
   };
 
-  
+  // Lógica para calcular el total
+  const calculateTotal = () => {
+    if (bookingDetails) {
+      const arrivalDate = (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
+      const departureDate = (document.getElementById("salida") as HTMLInputElement)?.value ?? checkOutDate;
+
+      const startDate = new Date(arrivalDate);
+      const endDate = new Date(departureDate);
+      const numGuests = selectedGuests; // Usar el estado para obtener el valor actual
+
+      const nights = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+      const extraGuestsCost = 10; // Costo adicional por persona
+
+      // Cálculo del subtotal por persona (ajustado por huésped extra)
+      const basePricePerPerson = bookingDetails.price;
+      const adjustedPricePerPerson = basePricePerPerson + (numGuests - 1) * extraGuestsCost;
+
+      // Cálculo del total por noche
+      const total = nights * adjustedPricePerPerson;
+
+      setTotalAmount(total);
+    }
+  };
+
+  // Función para manejar el cambio en la cantidad de huéspedes seleccionados
+  const handleGuestsChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = parseInt(event.target.value, 10);
+    setSelectedGuests(selectedValue);
+  };
+
+  // Efecto para actualizar el total cuando cambian los valores relevantes
+  useEffect(() => {
+    calculateTotal();
+  }, [bookingDetails, checkInDate, checkOutDate, selectedGuests]
+
+  );
+
+
+
 
 
   return (
@@ -172,7 +219,7 @@ export const ReservationForm = () => {
         <br></br>
         <br></br>
         <br></br>
-        <div className="h-full flex justify-center items-center">
+        <div className="px-20 flex justify-self-auto items-center">
           {/* BookingPreview */}
           {bookingDetails && (
             <BookingPreview
@@ -194,14 +241,14 @@ export const ReservationForm = () => {
               reviews={bookingDetails.reviews}
             />
           )}
-          <div className="ml-8">
+          <div className="ml-auto mr-auto">
             <div className="flex justify-center items-center">
               <h1 className="text-white text-4xl font-bold mt-10">
                 Reserva tu estadía
               </h1>
             </div>
-            <form className="flex flex-col items-center mt-2">
-              <label htmlFor="llegada" className="text-white mt-6 mb-2">
+            <form className=" flex flex-col items-center mt-2">
+              <label htmlFor="llegada" className="text-white  mt-6 mb-2">
                 Llegada:
               </label>
               <input
@@ -241,7 +288,8 @@ export const ReservationForm = () => {
                 name="llegada"
                 className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                 required
-                defaultValue={checkInDate}
+                value={arrivalDate} // Usa el estado arrivalDate aquí
+                onChange={(e) => setArrivalDate(e.target.value)} // Actualiza el estado cuando cambia la fecha
               />
 
               <label htmlFor="salida" className="text-white mt-6 mb-2">
@@ -253,7 +301,8 @@ export const ReservationForm = () => {
                 name="salida"
                 className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                 required
-                defaultValue={checkOutDate}
+                value={departureDate} // Usa el estado departureDate aquí
+                onChange={(e) => setDepartureDate(e.target.value)} // Actualiza el estado cuando cambia la fecha
               />
               {bookingDetails && (
                 <>
@@ -263,6 +312,8 @@ export const ReservationForm = () => {
                   <select
                     id="huéspedes"
                     name="huéspedes"
+                    value={selectedGuests}
+                    onChange={handleGuestsChange} // Agregar el evento onChange
                     className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                     required
                   >
@@ -275,11 +326,26 @@ export const ReservationForm = () => {
                   </select>
                 </>
               )}
+
               <br></br>
               <script src="https://www.paypal.com/sdk/js?client-id=AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo&currency=USD"></script>
 
-              {bookingDetails && (
-                <PaypalButton total_price={bookingDetails.price} />
+
+              {totalAmount && (
+                <>
+                  <div className="flex justify-center mt-10">
+                    <div className="border border-gray-300 p-4 mt-4 rounded-md">
+                      <h2 className="text-lg font-bold mb-2">Detalle de la reserva</h2>
+                      <p>Check-in: {arrivalDate}</p>
+                      <p>Check-out: {checkOutDate}</p>
+                      <p>Huéspedes: {selectedGuests}</p>
+                      <br></br>
+                      Total a pagar: ${totalAmount.toFixed(2)}
+                    </div>
+                  </div>
+                  <br></br>
+                  <PaypalButton total_price={totalAmount} />
+                </>
               )}
 
             </form>
@@ -306,16 +372,16 @@ export const ReservationForm = () => {
                   </button>
                 </div>
                 <p className="text-center text-white mt-4">
-                  Already have an account?{" "}
+                  Ya tienes una cuenta?{" "}
                   <button onClick={openLoginModal} className="text-blue-500">
-                    Log in
+                    Iniciar Sesión
                   </button>
                   {isLoginModalOpen && (
                     <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
                       <div className=" p-4 rounded-md" ref={modalRef}>
                         {loginFailed ? (
                           <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
-                            Login failed. Please try again.
+                            Falló inicio de sesión. Por favor intenta de nuevo.
                           </p>
                         ) : (
                           <Login

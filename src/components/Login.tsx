@@ -3,6 +3,7 @@ import { get, isEmpty } from "lodash";
 import { auth } from "../Firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { IAppState, useAppStore } from "../Storage";
+import SnowFlakeLogo from "../assets/snowflake_nav.svg";
 
 interface LoginProps {
   onSuccess: () => void;
@@ -46,7 +47,15 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
     <>
       <div className="flex flex-col items-center justify-center animate-fade-down">
         <div className="flex flex-col items-center bg-gray-800 rounded-lg shadow-lg p-8 w-80">
-          <h1 className="text-2xl font-bold mb-4 text-white">Entrar</h1>
+          <div className="flex justify-center mb-8">
+            <img
+              className="hidden lg:block h-12 w-auto"
+              src={SnowFlakeLogo}
+              alt="SnowFlake"
+            />
+          </div>
+          <h1 className="text-2xl font-bold mb-4 text-white">Iniciar Sesión</h1>
+          <label className="justify-start text-sm text-white">Correo Electrónico</label>
           <input
             {...loginForm.register("email", {
               required: "Este campo es requerido.",
@@ -64,6 +73,7 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
               {get(loginForm, "formState.errors.email.message", "") as string}
             </p>
           )}
+          <label className="justify-start text-sm text-white">Contrase&ntilde;a</label>
           <input
             {...loginForm.register("password", {
               required: "Este campo es requerido.",
