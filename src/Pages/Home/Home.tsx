@@ -69,7 +69,7 @@ export const Home = () => {
               />
             </span>
             <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-              Bienvenidos al Hotel Copo de Nieve
+              ¡Bienvenidos!
             </h2>
             <p className="mt-3 max-w-2xl mx-auto text-xl text-blue-300 sm:mt-4">
               El mejor hotel para disfrutar de la nieve
