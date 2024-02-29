@@ -393,7 +393,7 @@ export const ReservationForm = () => {
                       <h2 className="text-2xl font-bold mb-4 text-blue-500">Detalle de la reserva</h2>
                       <div className="mb-4">
                         <p className="text-gray-700">Check-in: {arrivalDate}</p>
-                        <p className="text-gray-700">Check-out: {checkOutDate}</p>
+                        <p className="text-gray-700">Check-out: {departureDate}</p>
                         <p className="text-gray-700">Huéspedes: {selectedGuests}</p>
                       </div>
                       <hr className="border-t border-gray-300 mb-4" />
