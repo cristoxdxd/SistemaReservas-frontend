@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSackDollar, faClock } from '@fortawesome/free-solid-svg-icons';
+
 export const ActivityCard = ({
   name,
   description,
@@ -22,8 +25,10 @@ export const ActivityCard = ({
       />
       <h2 className="text-white text-xl font-bold mb-2">{name}</h2>
       <p className="text-blue-400 mb-2">{description}</p>
-      <p className="text-blue-400 mb-2">Price: {price}</p>
-      <p className="text-blue-400 mb-2">Duration: {duration}</p>
+      <p className="text-blue-400 mb-2">
+      <FontAwesomeIcon icon={faSackDollar} className="h-5 w-5 mr-2" />Precio: ${price}</p>
+      <p className="text-blue-400 mb-2">
+      <FontAwesomeIcon icon={faClock} /> Duración: {duration}</p>
     </div>
   );
 };
