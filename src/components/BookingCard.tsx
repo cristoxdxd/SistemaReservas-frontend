@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Booking } from "../models/Booking.interface";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSackDollar, faUsers} from '@fortawesome/free-solid-svg-icons';
+
 
 export interface IBookingCardProps {
   booking: Booking;
@@ -36,9 +39,12 @@ export const BookingCard = ({ booking, checkin, checkout, numAdults, numChildren
         className="w-full h-32 object-cover mb-4 rounded-lg text-white"
       />
       <h2 className="text-white text-xl font-bold mb-2">{booking.name}</h2>
-      <p className="text-blue-400 mb-2">{booking.summary}</p>
-      <p className="text-blue-400 mb-2">Price: {booking.price}</p>
-      <p className="text-blue-400 mb-2">Capacity: {booking.capacity}</p>
+      <p className="text-blue-400 mb-2">
+      {booking.summary}</p>
+      <p className="text-blue-400 mb-2">
+      <FontAwesomeIcon icon={faSackDollar} className="h-5 w-5 mr-2" />Precio: ${booking.price}</p>
+      <p className="text-blue-400 mb-2">
+      <FontAwesomeIcon icon={faUsers} className="h-5 w-5 mr-2" />Capacidad: {booking.capacity} personas</p>
       <Link to={`/reserve${queryParams}`}>
         <button
           className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
