@@ -13,9 +13,8 @@ import { AvailabilityInput } from "../models/Availability.interface";
 import PaypalButton from "../components/PaypalButton/PaypalButton";
 import { useForm } from "react-hook-form";
 import { updateBookingDates } from "../services/updateBookingDates";
-
-
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 
 export const ReservationForm = () => {
   const bookingForm = useForm({ mode: "onBlur" });
@@ -105,6 +104,7 @@ export const ReservationForm = () => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       closeLoginModal();
       closeSignUpModal();
+      closeBookingModal();
     }
   };
 
@@ -202,15 +202,26 @@ export const ReservationForm = () => {
   }, [bookingDetails, checkInDate, checkOutDate, selectedGuests]
 
   );
- 
+
 
   const closeBookingModal = () => {
     setIsBookingModalOpen(false);
-    // Puedes realizar acciones adicionales después de cerrar la ventana emergente de reserva
   };
 
+  const calculateNights = () => {
 
+    if (bookingDetails) {
 
+      const startDate = (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
+      const endDate = (document.getElementById("salida") as HTMLInputElement)?.value ?? checkOutDate;
+
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)); // Use Math.ceil to round up to the nearest whole number
+      return nights;
+    }
+    return 0;
+  };
 
 
   return (
@@ -369,19 +380,62 @@ export const ReservationForm = () => {
                 </button>
 
                 {isBookingModalOpen && (
-                  <div className="bg-white p-4 rounded-md fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <h2 className="text-lg font-bold mb-2">Detalle de la reserva</h2>
-                    <p>Check-in: {arrivalDate}</p>
-                    <p>Check-out: {checkOutDate}</p>
-                    <p>Huéspedes: {selectedGuests}</p>
-                    <br></br>
-                    Total a pagar: ${totalAmount.toFixed(2)}
-                    <br></br>
-                    <PaypalButton total_price={totalAmount} onSuccess={() => {
-                      //reserva después de un pago exitoso
-                      create_booking();
-                      openSuccessModal();
-                    }} />
+                  <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+
+                    <div className="bg-white  w-1/3 p-4 rounded-md fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-m">
+
+                      <button
+                        onClick={closeBookingModal}
+                        className="absolute top-0 right-0 m-4 text-red-500"
+                      >
+                        <FontAwesomeIcon icon={faCircleXmark} />
+                      </button>
+                      <h2 className="text-2xl font-bold mb-4 text-blue-500">Detalle de la reserva</h2>
+                      <div className="mb-4">
+                        <p className="text-gray-700">Check-in: {arrivalDate}</p>
+                        <p className="text-gray-700">Check-out: {checkOutDate}</p>
+                        <p className="text-gray-700">Huéspedes: {selectedGuests}</p>
+                      </div>
+                      <hr className="border-t border-gray-300 mb-4" />
+
+                      <div className="mb-4">
+                        <p className="text-sm text-gray-500">Precio base</p>
+                        <p className="text-lg font-semibold text-blue-500">${bookingDetails?.price.toFixed(2)}</p>
+                      </div>
+
+                      {selectedGuests > 1 && (
+                        <div className="mb-4">
+                          <p className="text-sm text-gray-500">+ Recargo por {selectedGuests - 1} huésped(es) extra</p>
+                          <p className="text-lg font-semibold text-blue-500">${((selectedGuests - 1) * 10).toFixed(2)}</p>
+                        </div>
+                      )}
+
+                      <div className="mb-4">
+                        <p className="text-sm text-gray-500">Subtotal por huéspedes</p>
+                        <p className="text-lg font-semibold text-blue-500">${(bookingDetails?.price ?? 0) + (selectedGuests - 1) * 10}</p>
+                      </div>
+
+                      <hr className="border-t border-gray-300 mb-4" />
+
+                      <div className="flex justify-between items-center mb-4">
+                        <div>
+                          <p className="text-sm text-gray-500">x {calculateNights()} noches</p>
+                        </div>
+                        <div>
+                          <p className="text-xl font-semibold text-blue-500">Total a pagar:</p>
+                          <p className="text-xl font-bold text-blue-700">${totalAmount.toFixed(2)}</p>
+                        </div>
+                      </div>
+                      <br></br>
+
+                      <div className="w-min max-w-xs mx-auto">
+                        <PaypalButton total_price={totalAmount} onSuccess={() => {
+                          //reserva después de un pago exitoso
+                          create_booking();
+                          openSuccessModal();
+                        }} />
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -407,7 +461,7 @@ export const ReservationForm = () => {
                       <div className=" p-4 rounded-md" ref={modalRef}>
                         {loginFailed ? (
                           <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
-                            Falló inicio de sesión. Por favor intenta de nuevo.
+                            Por favor intenta de nuevo.
                           </p>
                         ) : (
                           <Login
