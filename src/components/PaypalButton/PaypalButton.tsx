@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { auth } from "../../Firebase";
+import { email } from "../../models/email.interface";
+import { sendEmail } from "../../services/sendEmail";
 
 // Renders errors or successfull transactions on the screen.
 function Message({ content }: { content: string }) {
@@ -22,31 +24,22 @@ function PaypalButton( {total_price}: PaypalButtonProps){
 
   const [message, setMessage] = useState("");
 
-  const email = auth.currentUser?.email;
-
-  console.log(email);
   // Función para enviar el correo electrónico de confirmación
-  const sendConfirmationEmail = async () => {
-    try {
-      const response = await fetch("/api/send-email/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email, // Cambia esto por el correo del usuario autenticado
-          subject: "Confirmación de pago",
-          body: "¡Gracias por su pago! Su transacción ha sido procesada con éxito."
-        }),
-      });
+  
 
-      const result = await response.json();
-      console.log(result); // Puedes manejar la respuesta según tus necesidades
-    } catch (error) {
-      console.error("Error sending confirmation email:", error);
+  async function send_email() {
+    const email: email = {
+      email: auth.currentUser?.email ?? "",
+      subject: "Reservation Confirmation",
+      body: "Thank you for your reservation. We will be waiting for you. \n"
+    };
+    const res = await sendEmail(email);
+    if (res.status == 200) {
+      console.log("Email sent successfully");
+    } else {
+      console.error("Error sending email");
     }
   };
-
   
   return (
     <div className="App">
@@ -137,7 +130,7 @@ function PaypalButton( {total_price}: PaypalButtonProps){
                   orderData,
                   JSON.stringify(orderData, null, 2),
                 );
-                await sendConfirmationEmail();
+                send_email();
               }
             } catch (error) {
               console.error(error);
