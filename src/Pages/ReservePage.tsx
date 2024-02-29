@@ -202,11 +202,7 @@ export const ReservationForm = () => {
   }, [bookingDetails, checkInDate, checkOutDate, selectedGuests]
 
   );
-  const handlePaymentSuccess = () => {
-    // Realiza cualquier acción adicional que necesites después de un pago exitoso
-    setIsSuccessModalOpen(true); // Abre la ventana de éxito
-    setIsBookingModalOpen(false); // Cierra la ventana emergente de reserva
-  };
+ 
 
   const closeBookingModal = () => {
     setIsBookingModalOpen(false);
@@ -382,7 +378,7 @@ export const ReservationForm = () => {
                     Total a pagar: ${totalAmount.toFixed(2)}
                     <br></br>
                     <PaypalButton total_price={totalAmount} onSuccess={() => {
-                      // Aquí puedes realizar la reserva después de un pago exitoso
+                      //reserva después de un pago exitoso
                       create_booking();
                       openSuccessModal();
                     }} />
@@ -451,6 +447,8 @@ export const ReservationForm = () => {
             <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
               <div className="bg-green-600 p-4 rounded-md flex flex-col items-center justify-center animate-jump-in">
                 <p className="text-white font-extrabold text-2xl">
+                  Su pago fue completado
+                  <br />
                   Reserva realizada con éxito
                 </p>
                 <br />
