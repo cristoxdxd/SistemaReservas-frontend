@@ -12,9 +12,10 @@ function Message({ content }: { content: string }) {
 
 interface PaypalButtonProps {
   total_price: number;
+  onSuccess: () => void;
 }
 
-function PaypalButton( {total_price}: PaypalButtonProps){
+function PaypalButton({ total_price, onSuccess }: PaypalButtonProps){
   const initialOptions = {
     "client-id": "test",
     "enable-funding": "card",
@@ -120,16 +121,19 @@ function PaypalButton( {total_price}: PaypalButtonProps){
               } else {
                 // (3) Successful transaction -> Show confirmation or thank you message
                 // Or go to another URL:  actions.redirect('thank_you.html');
-                const transaction =
-                  orderData.purchase_units[0].payments.captures[0];
-                setMessage(
-                  `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`,
-                );
+                // const transaction =
+                //   orderData.purchase_units[0].payments.captures[0];
+                // setMessage(
+                //   `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`,
+                // );
                 console.log(
                   "Capture result",
                   orderData,
                   JSON.stringify(orderData, null, 2),
                 );
+
+                // Llamada a la función onSuccess después de la confirmación exitosa
+                onSuccess();
                 send_email();
               }
             } catch (error) {
