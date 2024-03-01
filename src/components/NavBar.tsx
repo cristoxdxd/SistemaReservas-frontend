@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import SnowFlakeLogo from "../assets/snowflake_nav.svg";
 import { Login } from "./Login";
 import { SignUp } from "./SignUp";
@@ -14,6 +14,7 @@ export const NavBar = () => {
   const [signUpFailed, setSignUpFailed] = useState(false);
   const loginModalRef = useRef<HTMLDivElement>(null);
   const signUpModalRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -48,11 +49,15 @@ export const NavBar = () => {
       closeSignUpModal();
     }
   };
-
-  const handleLogout = () => {
-    auth.signOut();
+  
+  const handleLogout = async () => {
+    await auth.signOut();
+    if (isMobileMenuOpen) {
+      // Si el menú móvil está abierto, recarga la página para cerrar sesión.
+      window.location.reload();
+    }
   };
-
+  
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutsideModal);
     return () => {
@@ -61,7 +66,7 @@ export const NavBar = () => {
   }, []);
 
   return (
-    <nav className="bg-gray-900 bg-opacity-90  w-full top-0 z-10 sticky">
+    <nav className="bg-gray-900 bg-opacity-90 w-full top-0 z-10 sticky">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
@@ -84,13 +89,21 @@ export const NavBar = () => {
             <div className="hidden sm:block sm:ml-6">
               <div className="flex">
                 <Link
-                  className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                  // Línea 42: Reemplaza la línea siguiente
+                  className={`${
+                    location.pathname === "/" ? "bg-gray-700" : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  } px-3 py-2 rounded-md text-sm font-medium`}
                   to={"/"}
                 >
                   Inicio
                 </Link>
                 <Link
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  // Línea 51: Reemplaza la línea siguiente
+                  className={`${
+                    location.pathname === "/about"
+                      ? "bg-gray-700"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  } px-3 py-2 rounded-md text-sm font-medium`}
                   to={"/about"}
                 >
                   Sobre Nosotros
@@ -98,28 +111,44 @@ export const NavBar = () => {
                 {isLoggedIn ? (
                   <>
                     <Link
-                      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                      // Línea 60: Reemplaza la línea siguiente
+                      className={`${
+                        location.pathname === "/history"
+                          ? "bg-gray-700"
+                          : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                      } px-3 py-2 rounded-md text-sm font-medium`}
                       to={"/history"}
                     >
                       Historial
                     </Link>
-                    <Link
+                    {/* Línea 62: Reemplaza la línea siguiente */}
+                    <button
                       className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                      to={"/"}
+                      onClick={handleLogout}
                     >
-                      <button onClick={handleLogout}>Cerrar Sesi&oacute;n</button>
-                    </Link>
+                      Cerrar Sesi&oacute;n
+                    </button>
                   </>
                 ) : (
                   <>
+                    {/* Línea 67: Reemplaza la línea siguiente */}
                     <button
-                      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                      className={`${
+                        location.pathname === "/login"
+                          ? "bg-gray-700"
+                          : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                      } px-3 py-2 rounded-md text-sm font-medium`}
                       onClick={openLoginModal}
                     >
                       Iniciar Sesi&oacute;n
                     </button>
+                    {/* Línea 70: Reemplaza la línea siguiente */}
                     <button
-                      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                      className={`${
+                        location.pathname === "/signup"
+                          ? "bg-gray-700"
+                          : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                      } px-3 py-2 rounded-md text-sm font-medium`}
                       onClick={openSignUpModal}
                     >
                       Registrarse
@@ -190,13 +219,21 @@ export const NavBar = () => {
           {isMobileMenuOpen && (
             <>
               <Link
-                className="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium"
+                // Línea 115: Reemplaza la línea siguiente
+                className={`${
+                  location.pathname === "/" ? "bg-gray-700" : "bg-gray-900"
+                } text-white block px-3 py-2 rounded-md text-base font-medium`}
                 to={"/"}
               >
                 Inicio
               </Link>
               <Link
-                className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                // Línea 121: Reemplaza la línea siguiente
+                className={`${
+                  location.pathname === "/about"
+                    ? "bg-gray-700"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                } block px-3 py-2 rounded-md text-base font-medium`}
                 to={"/about"}
               >
                 Sobre Nosotros
@@ -204,14 +241,24 @@ export const NavBar = () => {
               {isLoggedIn ? (
                 <>
                   <Link
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    // Línea 129: Reemplaza la línea siguiente
+                    className={`${
+                      location.pathname === "/history"
+                        ? "bg-gray-700"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    } block px-3 py-2 rounded-md text-base font-medium`}
                     onClick={handleLogout}
                     to={"/"}
                   >
                     <button onClick={handleLogout}>Cerrar Sesi&oacute;n</button>
                   </Link>
                   <Link
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    // Línea 133: Reemplaza la línea siguiente
+                    className={`${
+                      location.pathname === "/"
+                        ? "bg-gray-700"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    } block px-3 py-2 rounded-md text-base font-medium`}
                     to={"/history"}
                   >
                     <a>Historial</a>
@@ -219,14 +266,24 @@ export const NavBar = () => {
                 </>
               ) : (
                 <>
+                  {/* Línea 138: Reemplaza la línea siguiente */}
                   <button
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    className={`${
+                      location.pathname === "/login"
+                        ? "bg-gray-700"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    } block px-3 py-2 rounded-md text-base font-medium`}
                     onClick={openLoginModal}
                   >
                     Iniciar Sesi&oacute;n
                   </button>
+                  {/* Línea 141: Reemplaza la línea siguiente */}
                   <button
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    className={`${
+                      location.pathname === "/signup"
+                        ? "bg-gray-700"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    } block px-3 py-2 rounded-md text-base font-medium`}
                     onClick={openSignUpModal}
                   >
                     Registrarse
