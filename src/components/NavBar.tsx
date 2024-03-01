@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import SnowFlakeLogo from "../assets/snowflake_nav.svg";
 import { Login } from "./Login";
 import { SignUp } from "./SignUp";
@@ -48,11 +48,15 @@ export const NavBar = () => {
       closeSignUpModal();
     }
   };
-
-  const handleLogout = () => {
-    auth.signOut();
+  
+  const handleLogout = async () => {
+    await auth.signOut();
+    if (isMobileMenuOpen) {
+      // Si el menú móvil está abierto, recarga la página para cerrar sesión.
+      window.location.reload();
+    }
   };
-
+  
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutsideModal);
     return () => {
