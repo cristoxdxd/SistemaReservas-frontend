@@ -8,6 +8,8 @@ import { updateAvailability } from "../services/updateAvailability";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { deleteAvailability } from "../services/deleteAvailability";
+import { getOneBooking } from "../services/getOneBooking";
+import { updateBookingDates } from "../services/updateBookingDates";
 
 interface HistoryCardProps {
   booking: Booking;
@@ -19,6 +21,9 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
   availability,
 }) => {
   const id = availability._id;
+  const [bookingDetails, setBookingDetails] = useState<Booking | undefined>(
+    undefined
+  );
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalopen] = useState(false);
   const updateModalRef = useRef<HTMLDivElement>(null);
@@ -33,6 +38,48 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
 
   const [checkInDate, setCheckInDate] = useState(availability.start_date);
   const [checkOutDate, setCheckOutDate] = useState(availability.end_date);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (availability.booking_id) {
+          const bookingDetails = getOneBooking(availability.booking_id);
+          setBookingDetails(await bookingDetails);
+          console.log(bookingDetails);
+        } else {
+          console.log("Invalid id");
+        }
+      } catch (error) {
+        console.log("Error fetching booking details", error);
+      }
+    };
+    fetchData();
+  }, [availability.booking_id]);
+
+  async function update_booking_dates() {
+    if (bookingDetails && bookingDetails.availability) {
+      const updatedAvailability = bookingDetails.availability.filter(
+        (avail: string) => {
+          return !(
+            avail === availability.start_date || avail === availability.end_date
+          );
+        }
+      );
+      updatedAvailability.push(checkInDate, checkOutDate);
+
+      const bookingToUpdate: Booking = {
+        ...bookingDetails,
+        availability: updatedAvailability,
+      };
+
+      const res = await updateBookingDates(availability.booking_id ?? "", bookingToUpdate);
+      if (res.status === 200) {
+        console.log("Booking updated successfully");
+      } else {
+        console.error("Error updating booking");
+      }
+    }
+  };
 
   const handleCheckInDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCheckInDate = e.target.value;
@@ -78,7 +125,30 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
   }
 
   const handleUpdatingAvailability = () => {
+    update_booking_dates();
     update_availability();
+  };
+
+  async function update_booking_dates_delete() {
+    if (bookingDetails && bookingDetails.availability) {
+      const updatedAvailability = bookingDetails.availability.filter(
+        (avail: string) => {
+          return !(avail === availability.start_date || avail === availability.end_date);
+        }
+      );
+
+      const bookingToUpdate: Booking = {
+        ...bookingDetails,
+        availability: updatedAvailability,
+      };
+
+      const res = await updateBookingDates(availability.booking_id ?? "", bookingToUpdate);
+      if (res.status === 200) {
+        console.log("Booking updated successfully");
+      } else {
+        console.error("Error updating booking");
+      }
+    }
   };
 
   async function delete_availability() {
@@ -93,6 +163,7 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
   }
 
   const handleDeleteAvailability = () => {
+    update_booking_dates_delete();
     delete_availability();
   };
 
