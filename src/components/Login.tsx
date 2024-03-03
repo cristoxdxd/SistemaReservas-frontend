@@ -4,7 +4,6 @@ import { auth } from "../Firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { IAppState, useAppStore } from "../Storage";
 import SnowFlakeLogo from "../assets/snowflake_nav.svg";
-import { SignUp } from "./SignUp";
 
 interface LoginProps {
   onSuccess: () => void;
