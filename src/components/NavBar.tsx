@@ -260,13 +260,13 @@ export const NavBar = () => {
             {isLoggedIn ? (
               <>
                 <Link
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-400 easy-in-out"
                   to={"/history"}
                 >
                   Historial
                 </Link>
                 <Link
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-400 easy-in-out"
                   to={"/"}
                 >
                   <button onClick={handleLogout}>Cerrar Sesi&oacute;n</button>
@@ -275,13 +275,13 @@ export const NavBar = () => {
             ) : (
               <>
                 <button
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-400 easy-in-out"
                   onClick={openLoginModal}
                 >
                   Iniciar Sesi&oacute;n
                 </button>
                 <button
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-400 easy-in-out"
                   onClick={openSignUpModal}
                 >
                   Registrarse
@@ -361,7 +361,7 @@ export const NavBar = () => {
             <ul className="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-sm">
               <li>
                 <Link
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-400 easy-in-out"
                   to={"/"}
                 >
                   Inicio
@@ -369,7 +369,7 @@ export const NavBar = () => {
               </li>
               <li>
                 <Link
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-400 easy-in-out"
                   to={"/about"}
                 >
                   Sobre Nosotros

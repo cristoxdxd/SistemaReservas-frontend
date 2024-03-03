@@ -126,7 +126,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
           </div>
         </div>
       </div> */}
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+      <div className="mx-auto flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
           <img
             className="w-16 h-16 mr-2"  // Ajuste del tamaño del logo
@@ -135,15 +135,15 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
           />
         </a>
 
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div className="mx-auto w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
 
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to your account
+              Bienvenido a Copo de Nieve
             </h1>
             <form className="space-y-4 md:space-y-6" action="#">
               <div>
-                <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your name</label>
+                <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Escriba su nombre</label>
                 <input{...registerForm.register("firstName", {
                   required: "Este campo es requerido.",
                   pattern: {
@@ -164,7 +164,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
                 )}
               </div>
               <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Escriba su e-mail</label>
                 <input{...registerForm.register("email", {
                   required: "Este campo es requerido.",
                   pattern: {
@@ -185,14 +185,14 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
                 )}
               </div>
               <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Escriba su contraseña</label>
                 <input {...registerForm.register("password", {
                   required: "Este campo es requerido.",
                   minLength: {
                     value: 8,
                     message: "La contrasenia debe tener al menos 8 caracteres.",
                   },
-                })} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                })} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 " />
                 {!isEmpty(registerForm.formState.errors) && (
                   <p className="text-red-500 mb-4">
                     {
@@ -205,7 +205,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
                   </p>
                 )}
               </div>
-              <button onClick={onSubmit} type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
+              <button onClick={onSubmit} type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 transition duration-400 easy-in-out">Registrar</button>
             </form>
           </div>
         </div>

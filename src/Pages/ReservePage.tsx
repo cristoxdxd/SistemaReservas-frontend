@@ -228,7 +228,7 @@ export const ReservationForm = () => {
     <>
       <Link
         to={"/"}
-        className="absolute flex flex-row text-white font-bold py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-400"
+        className="absolute bg-blue-400 flex flex-row text-white font-bold py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-700 transition duration-400 easy-in-out "
       >
 
         <ChevronLeftIcon className="h-5 w-5" />
@@ -239,7 +239,7 @@ export const ReservationForm = () => {
         <br></br>
         <br></br>
         <br></br>
-        <div className="px-20 flex justify-self-auto items-center">
+        <div className="w-auto h-auto px-20 bg-gray-700 flex justify-self-auto items-center ml-10 mr-10 p-5 rounded-xl animate-fade-up">
           {/* BookingPreview */}
           {bookingDetails && (
             <BookingPreview
@@ -306,7 +306,7 @@ export const ReservationForm = () => {
                 type="date"
                 id="llegada"
                 name="llegada"
-                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white hover:bg-blue-700 transition duration-400 easy-in-out"
                 required
                 value={arrivalDate} // Usa el estado arrivalDate aquí
                 onChange={(e) => setArrivalDate(e.target.value)} // Actualiza el estado cuando cambia la fecha
@@ -319,14 +319,14 @@ export const ReservationForm = () => {
                 type="date"
                 id="salida"
                 name="salida"
-                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white hover:bg-blue-700 transition duration-400 easy-in-out"
                 required
                 value={departureDate} // Usa el estado departureDate aquí
                 onChange={(e) => setDepartureDate(e.target.value)} // Actualiza el estado cuando cambia la fecha
               />
               {bookingDetails && (
                 <>
-                  <label htmlFor="huéspedes" className="text-white mt-6 mb-2">
+                  <label htmlFor="huéspedes" className="text-black mt-6 mb-2">
                     Huéspedes:
                   </label>
                   <select
@@ -334,7 +334,7 @@ export const ReservationForm = () => {
                     name="huéspedes"
                     value={selectedGuests}
                     onChange={handleGuestsChange} // Agregar el evento onChange
-                    className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                    className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white hover:bg-blue-700 transition duration-400 easy-in-out"
                     required
                   >
                     {/* Generar opciones dinámicamente según la disponibilidad */}
@@ -445,7 +445,7 @@ export const ReservationForm = () => {
               <div className="mt-8">
                 <div className="flex justify-center">
                   <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-400 easy-in-out "
                     onClick={openSignUpModal} // Open SignUp modal on click
                   >
                     Sign Up
@@ -453,7 +453,7 @@ export const ReservationForm = () => {
                 </div>
                 <p className="text-center text-white mt-4">
                   Ya tienes una cuenta?{" "}
-                  <button onClick={openLoginModal} className="text-blue-500">
+                  <button onClick={openLoginModal} className="text-blue-500 hover:text-blue-700 transition duration-400 easy-in-out ">
                     Iniciar Sesión
                   </button>
                   {isLoginModalOpen && (

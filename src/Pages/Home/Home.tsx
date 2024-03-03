@@ -45,8 +45,6 @@ export const Home = () => {
     }
   }, [listBooking]);
 
-  console.log(listBooking);
-
   return (
     <>
       <NavBar />
@@ -79,7 +77,7 @@ export const Home = () => {
         <div className="absolute inset-0 "></div>
       </div>
       {isListBookingFetched ? (
-        <FiltroBusquedas listBooking={listBooking} />
+        <FiltroBusquedas listBooking={listBooking}/>
       ) : (
         <>
           <br />
