@@ -11,13 +11,14 @@ import { Booking } from "../models/Booking.interface";
 import { createBooking } from "../services/createBooking";
 import { AvailabilityInput } from "../models/Availability.interface";
 import PaypalButton from "../components/PaypalButton/PaypalButton";
-import { useForm } from "react-hook-form";
 import { updateBookingDates } from "../services/updateBookingDates";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const ReservationForm = () => {
-  const bookingForm = useForm({ mode: "onBlur" });
+  // const bookingForm = useForm({ mode: "onBlur" });
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
@@ -33,7 +34,7 @@ export const ReservationForm = () => {
   const today = new Date();
   today.setDate(today.getDate() + 1);
 
-  const minDate = today.toISOString().split("T")[0];
+  // const minDate = today.toISOString().split("T")[0];
 
   console.log("id", id);
   console.log("checkInDate", checkInDate);
@@ -57,15 +58,22 @@ export const ReservationForm = () => {
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [selectedGuests, setSelectedGuests] = useState<number>(1); // Por defecto, 1 huésped
   //Nuevo estado para las fechas de llegada y salida
-  const [arrivalDate, setArrivalDate] = useState<string>(checkInDate);
-  const [departureDate, setDepartureDate] = useState<string>(checkOutDate);
+  const [arrivalDate, setArrivalDate] = useState<Date | undefined>(
+    checkInDate ? new Date(checkInDate) : undefined
+  );
+  const [departureDate, setDepartureDate] = useState<Date | undefined>(
+    checkOutDate ? new Date(checkOutDate) : undefined
+  );
+
+  const restrictedDates =
+    bookingDetails.availability?.map((date) => new Date(date)) ?? [];
+
+  const isDateSelectable = (date: Date) =>
+    !restrictedDates.some(
+      (restrictedDate) => new Date(date).getDate() === restrictedDate.getDate()
+    ) && new Date(date) >= today;
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-
-  const validateDate = () => {
-    console.log("Validating date");
-    bookingForm.trigger();
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -122,15 +130,14 @@ export const ReservationForm = () => {
   }, []);
 
   async function create_booking() {
-    const arrivalDate =
-      (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
-    const departureDate =
-      (document.getElementById("salida") as HTMLInputElement)?.value ??
-      checkOutDate;
+    const arrivalDateCreate =
+      arrivalDate?.toISOString().split('T')[0] ?? "";
+    const departureDateCreate =
+      departureDate?.toISOString().split('T')[0] ?? "";
     const availability: AvailabilityInput = {
       booking_id: id ?? "",
-      start_date: arrivalDate,
-      end_date: departureDate,
+      start_date: arrivalDateCreate,
+      end_date: departureDateCreate,
       user: auth.currentUser?.uid ?? "",
     };
     const res = await createBooking(availability);
@@ -162,25 +169,8 @@ export const ReservationForm = () => {
     }
   }
 
-  const handleCheckInDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCheckInDate = e.target.value;
-    setArrivalDate(newCheckInDate);
-    // Al cambiar la fecha de check-in, asegúrate de que la fecha de check-out sea válida
-    if (checkOutDate < newCheckInDate) {
-      setDepartureDate(newCheckInDate);
-    }
-  };
-
-  const handleCheckOutDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCheckOutDate = e.target.value;
-    // Solo actualiza la fecha de check-out si es después de la fecha de check-in
-    if (newCheckOutDate >= checkInDate) {
-      setDepartureDate(newCheckOutDate);
-    }
-  };
-
   const handleCreateBooking = () => {
-    if (isLoggedIn && bookingForm.formState.isValid) {
+    if (isLoggedIn) {
       setIsBookingModalOpen(true);
     } else {
       openLoginModal();
@@ -233,11 +223,8 @@ export const ReservationForm = () => {
 
   const calculateNights = () => {
     if (bookingDetails) {
-      const startDate =
-        (document.getElementById("llegada") as HTMLInputElement)?.value ?? "";
-      const endDate =
-        (document.getElementById("salida") as HTMLInputElement)?.value ??
-        checkOutDate;
+      const startDate = arrivalDate?.toString() ?? "";
+      const endDate = departureDate?.toString() ?? checkOutDate;
 
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -247,32 +234,6 @@ export const ReservationForm = () => {
       return nights;
     }
     return 0;
-  };
-
-  const validateBookingDate = (value: string, departureDate: string) => {
-    if (bookingDetails?.availability) {
-      const bookings = bookingDetails.availability;
-
-      const isBookingInRange = bookings.some((booking, index) => {
-        if (index % 2 === 0) {
-          const bookingStart = new Date(booking.toString());
-          const bookingEnd = new Date(bookings[index + 1].toString());
-          const arrival = new Date(value);
-          const departure = new Date(departureDate);
-
-          return (
-            (arrival >= bookingStart && arrival <= bookingEnd) ||
-            (departure >= bookingStart && departure <= bookingEnd)
-          );
-        }
-        return false;
-      });
-
-      if (isBookingInRange) {
-        return "Una reserva previa existe en ese rango de fechas. Por favor, elige otras fechas.";
-      }
-    }
-    return "";
   };
 
   return (
@@ -320,47 +281,27 @@ export const ReservationForm = () => {
               <label htmlFor="llegada" className="text-white  mt-6 mb-2">
                 Llegada:
               </label>
-              <input
-                {...bookingForm.register("llegada", {
-                  required: "Este campo es requerido.",
-                  setValueAs: (value) => {
-                    bookingForm.setValue("llegada", value);
-                    validateDate();
-                  },
-                  validate: (value) =>
-                    validateBookingDate(value, bookingForm.getValues("salida")),
-                })}
-                type="date"
+              <DatePicker
                 id="llegada"
                 name="llegada"
-                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                 required
-                value={arrivalDate} // Usa el estado arrivalDate aquí
-                onChange={handleCheckInDateChange} // Actualiza el estado cuando cambia la fecha
-                min={new Date().toISOString().split("T")[0]}
+                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                selected={arrivalDate}
+                onChange={(date) => setArrivalDate(date || new Date())}
+                filterDate={(date) => isDateSelectable(date || new Date())}
               />
 
               <label htmlFor="salida" className="text-white mt-6 mb-2">
                 Salida:
               </label>
-              <input
-                // {...bookingForm.register("salida", {
-                //   required: "Este campo es requerido.",
-                //   setValueAs: (value) => {
-                //     bookingForm.setValue("salida", value);
-                //     validateDate();
-                //   },
-                //   validate: (value) =>
-                //     validateBookingDate(value, bookingForm.getValues("llegada")),
-                // })}
-                type="date"
+              <DatePicker
                 id="salida"
                 name="salida"
-                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                 required
-                value={departureDate} // Usa el estado departureDate aquí
-                onChange={handleCheckOutDateChange} // Actualiza el estado cuando cambia la fecha
-                min={minDate}
+                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                selected={departureDate}
+                onChange={(date) => setDepartureDate(date || new Date())}
+                filterDate={(date) => isDateSelectable(date || new Date())}
               />
               {bookingDetails && (
                 <>
@@ -428,10 +369,16 @@ export const ReservationForm = () => {
                         Detalle de la reserva
                       </h2>
                       <div className="mb-4">
-                        <p className="text-gray-700">Check-in: {arrivalDate}</p>
-                        <p className="text-gray-700">
-                          Check-out: {departureDate}
-                        </p>
+                        {arrivalDate && (
+                          <p className="text-gray-700">
+                            Check-in: {arrivalDate.toISOString().split('T')[0]}
+                          </p>
+                        )}
+                        {departureDate && (
+                          <p className="text-gray-700">
+                            Check-out: {departureDate.toISOString().split('T')[0]}
+                          </p>
+                        )}
                         <p className="text-gray-700">
                           Huéspedes: {selectedGuests}
                         </p>
