@@ -82,7 +82,13 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
             className="w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded text-black"
             type="password"
             placeholder="Ingrese contrase&ntilde;a"
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                onSubmit();
+              }
+            }}
           />
+
           {!isEmpty(loginForm.formState.errors) && (
             <p className="text-red-500 mb-4">
               {
