@@ -65,13 +65,56 @@ export const ReservationForm = () => {
     checkOutDate ? new Date(checkOutDate) : undefined
   );
 
-  const restrictedDates =
-    bookingDetails.availability?.map((date) => new Date(date)) ?? [];
+  const restrictedDates = bookingDetails.availability;
+  const dateRanges: Date[][] = [];
 
-  const isDateSelectable = (date: Date) =>
-    !restrictedDates.some(
-      (restrictedDate) => new Date(date).getDate() === restrictedDate.getDate()
-    ) && new Date(date) >= today;
+  for (let i = 0; i < (restrictedDates ?? []).length; i += 2) {
+    const startDate = new Date(restrictedDates?.[i] ?? "");
+    const endDate = new Date(restrictedDates?.[i + 1] ?? "");
+
+    if (startDate && endDate) {
+      const range = [];
+      const currentDate = new Date(startDate);
+
+      while (currentDate <= endDate) {
+        const dateOfMonthYear = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate()
+        );
+        range.push(dateOfMonthYear);
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      dateRanges.push(range);
+    }
+  }
+
+  const flattenedDateRanges = dateRanges.flat();
+  const useRestrictedDates = flattenedDateRanges.map((date) => date.toString());
+  console.log("restrictedDates", useRestrictedDates);
+
+  const isDateSelectableArrival = (date: Date) =>
+    !(useRestrictedDates ?? []).some(
+      (restrictedDate) =>
+        new Date(date).getDate() === new Date(restrictedDate).getDate() &&
+        new Date(date).getFullYear() ===
+          new Date(restrictedDate).getFullYear() &&
+        new Date(date).getMonth() === new Date(restrictedDate).getMonth()
+    ) &&
+    (departureDate === undefined || new Date(date) < departureDate) &&
+    new Date(date) > today;
+
+  const isDateSelectableDeparture = (date: Date) =>
+    !(useRestrictedDates ?? []).some(
+      (restrictedDate) =>
+        new Date(date).getDate() === new Date(restrictedDate).getDate() &&
+        new Date(date).getFullYear() ===
+          new Date(restrictedDate).getFullYear() &&
+        new Date(date).getMonth() === new Date(restrictedDate).getMonth()
+    ) &&
+    (arrivalDate === undefined || new Date(date) > arrivalDate) &&
+    new Date(date) > today;
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
@@ -130,10 +173,9 @@ export const ReservationForm = () => {
   }, []);
 
   async function create_booking() {
-    const arrivalDateCreate =
-      arrivalDate?.toISOString().split('T')[0] ?? "";
+    const arrivalDateCreate = arrivalDate?.toISOString().split("T")[0] ?? "";
     const departureDateCreate =
-      departureDate?.toISOString().split('T')[0] ?? "";
+      departureDate?.toISOString().split("T")[0] ?? "";
     const availability: AvailabilityInput = {
       booking_id: id ?? "",
       start_date: arrivalDateCreate,
@@ -155,8 +197,8 @@ export const ReservationForm = () => {
         ...(bookingDetails || {}),
         availability: [
           ...(bookingDetails.availability || []),
-          (document.getElementById("llegada") as HTMLInputElement)?.value ?? "",
-          (document.getElementById("salida") as HTMLInputElement)?.value ?? "",
+          arrivalDate?.toISOString().split("T")[0] ?? "",
+          departureDate?.toISOString().split("T")[0] ?? "",
         ],
       };
 
@@ -288,7 +330,9 @@ export const ReservationForm = () => {
                 className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                 selected={arrivalDate}
                 onChange={(date) => setArrivalDate(date || new Date())}
-                filterDate={(date) => isDateSelectable(date || new Date())}
+                filterDate={(date) =>
+                  isDateSelectableArrival(date || new Date())
+                }
               />
 
               <label htmlFor="salida" className="text-white mt-6 mb-2">
@@ -301,7 +345,9 @@ export const ReservationForm = () => {
                 className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                 selected={departureDate}
                 onChange={(date) => setDepartureDate(date || new Date())}
-                filterDate={(date) => isDateSelectable(date || new Date())}
+                filterDate={(date) =>
+                  isDateSelectableDeparture(date || new Date())
+                }
               />
               {bookingDetails && (
                 <>
@@ -371,12 +417,13 @@ export const ReservationForm = () => {
                       <div className="mb-4">
                         {arrivalDate && (
                           <p className="text-gray-700">
-                            Check-in: {arrivalDate.toISOString().split('T')[0]}
+                            Check-in: {arrivalDate.toISOString().split("T")[0]}
                           </p>
                         )}
                         {departureDate && (
                           <p className="text-gray-700">
-                            Check-out: {departureDate.toISOString().split('T')[0]}
+                            Check-out:{" "}
+                            {departureDate.toISOString().split("T")[0]}
                           </p>
                         )}
                         <p className="text-gray-700">
