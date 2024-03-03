@@ -14,7 +14,7 @@ export interface IBookingContainerProps {
   isServiceAnimal: boolean; // Nueva: ¿Lleva mascota de servicio?
 }
 
-export const BookingContainer = ({ listBooking, checkin, checkout , numAdults, numChildren, numBabies, childAges, isServiceAnimal}: IBookingContainerProps) => {
+export const BookingContainer = ({ listBooking, checkin, checkout, numAdults, numChildren, numBabies, childAges, isServiceAnimal }: IBookingContainerProps) => {
   const { bookingList } = useBookingContainer(listBooking);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -23,6 +23,13 @@ export const BookingContainer = ({ listBooking, checkin, checkout , numAdults, n
       setIsLoading(false);
     }
   }, [bookingList]);
+
+
+  // Función para filtrar las reservas según la cantidad de personas
+  const filterBookingsByCapacity = (booking: Booking) => {
+    const totalPersons = numAdults + numChildren;
+    return booking.capacity >= totalPersons;
+  };
 
   return (
     <div className="flex justify-center items-center">
@@ -33,19 +40,21 @@ export const BookingContainer = ({ listBooking, checkin, checkout , numAdults, n
           </div>
         ) : (
           <>
-            {bookingList.map((booking) => (
-              <BookingCard
-              booking={booking} // Propiedad de reserva
-              checkin={checkin} // Propiedad de fecha de check-in
-              checkout={checkout} // Propiedad de fecha de check-out
-              numAdults={numAdults} // Propiedad de número de adultos
-              numChildren={numChildren} // Propiedad de número de niños
-              numBabies={numBabies} // Propiedad de número de bebés
-              childAges={childAges} // Propiedad de edades de los niños
-              isServiceAnimal={isServiceAnimal} // Propiedad de ¿Lleva mascota de servicio?
-            />
-            
-            ))}
+            {bookingList
+              .filter(filterBookingsByCapacity)
+              .map((booking) => (
+                <BookingCard
+                  booking={booking} // Propiedad de reserva
+                  checkin={checkin} // Propiedad de fecha de check-in
+                  checkout={checkout} // Propiedad de fecha de check-out
+                  numAdults={numAdults} // Propiedad de número de adultos
+                  numChildren={numChildren} // Propiedad de número de niños
+                  numBabies={numBabies} // Propiedad de número de bebés
+                  childAges={childAges} // Propiedad de edades de los niños
+                  isServiceAnimal={isServiceAnimal} // Propiedad de ¿Lleva mascota de servicio?
+                />
+
+              ))}
           </>
         )}
       </div>
