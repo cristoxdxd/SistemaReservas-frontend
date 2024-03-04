@@ -51,7 +51,6 @@ export const ReservationForm = () => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
   const [signUpFailed, setSignUpFailed] = useState(false);
-  const [loginPaypalModal, setLoginPaypalModal] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const [bookingDetails, setBookingDetails] = useState<Booking>({} as Booking);
 
@@ -156,10 +155,6 @@ export const ReservationForm = () => {
 
   const openSuccessModal = () => {
     setIsSuccessModalOpen(true);
-  };
-
-  const handleLoginPaypalModal = () => {
-    setLoginPaypalModal(true);
   };
 
   const handleClickOutsideModal = (event: MouseEvent) => {
