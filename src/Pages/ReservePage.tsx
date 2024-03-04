@@ -212,11 +212,7 @@ export const ReservationForm = () => {
   }
 
   const handleCreateBooking = () => {
-    if (isLoggedIn) {
-      setIsBookingModalOpen(true);
-    } else {
-      openLoginModal();
-    }
+    setIsBookingModalOpen(true);
   };
 
   // Lógica para calcular el total
@@ -374,177 +370,168 @@ export const ReservationForm = () => {
 
               <br></br>
               <script src="https://www.paypal.com/sdk/js?client-id=AY2f43SwdopSTs-DomykC8YVjiONxiabKoYQqEzrlFZRSriocLQqEUKjXVAas2FyK0iqhhXnJOXhE8Oo&currency=USD"></script>
-
-              {/* {totalAmount && (
-                <>
-                  <div className="flex justify-center mt-10">
-                    <div className="border border-gray-300 p-4 mt-4 rounded-md">
-                      <h2 className="text-lg font-bold mb-2">Detalle de la reserva</h2>
-                      <p>Check-in: {arrivalDate}</p>
-                      <p>Check-out: {checkOutDate}</p>
-                      <p>Huéspedes: {selectedGuests}</p>
-                      <br></br>
-                      Total a pagar: ${totalAmount.toFixed(2)}
-                    </div>
-                  </div>
-                  <br></br>
-                  <PaypalButton total_price={totalAmount} />
-                </>
-              )} */}
             </form>
 
-            {isLoggedIn ? (
-              <div className="flex justify-center items-center mt-10">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max"
-                  onClick={handleCreateBooking}
-                >
-                  Reservar
-                </button>
+            <div className="flex justify-center items-center mt-10">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max"
+                onClick={handleCreateBooking}
+              >
+                Reservar
+              </button>
 
-                {isBookingModalOpen && (
-                  <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
-                    <div className="bg-white  w-1/3 p-4 rounded-md fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-m">
-                      <button
-                        onClick={closeBookingModal}
-                        className="absolute top-0 right-0 m-4 text-red-500"
-                      >
-                        <FontAwesomeIcon icon={faCircleXmark} />
-                      </button>
-                      <h2 className="text-2xl font-bold mb-4 text-blue-500">
-                        Detalle de la reserva
-                      </h2>
-                      <div className="mb-4">
-                        {arrivalDate && (
-                          <p className="text-gray-700">
-                            Check-in: {arrivalDate.toISOString().split("T")[0]}
-                          </p>
-                        )}
-                        {departureDate && (
-                          <p className="text-gray-700">
-                            Check-out:{" "}
-                            {departureDate.toISOString().split("T")[0]}
-                          </p>
-                        )}
+              {isBookingModalOpen && (
+                <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+                  <div className="bg-white  w-1/3 p-4 rounded-md fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-m">
+                    <button
+                      onClick={closeBookingModal}
+                      className="absolute top-0 right-0 m-4 text-red-500"
+                    >
+                      <FontAwesomeIcon icon={faCircleXmark} />
+                    </button>
+                    <h2 className="text-2xl font-bold mb-4 text-blue-500">
+                      Detalle de la reserva
+                    </h2>
+                    <div className="mb-4">
+                      {arrivalDate && (
                         <p className="text-gray-700">
-                          Huéspedes: {selectedGuests}
+                          Check-in: {arrivalDate.toISOString().split("T")[0]}
                         </p>
-                      </div>
-                      <hr className="border-t border-gray-300 mb-4" />
-
-                      <div className="mb-4">
-                        <p className="text-sm text-gray-500">Precio base</p>
-                        <p className="text-lg font-semibold text-blue-500">
-                          ${bookingDetails?.price.toFixed(2)}
-                        </p>
-                      </div>
-
-                      {selectedGuests > 1 && (
-                        <div className="mb-4">
-                          <p className="text-sm text-gray-500">
-                            + Recargo por {selectedGuests - 1} huésped(es) extra
-                          </p>
-                          <p className="text-lg font-semibold text-blue-500">
-                            ${((selectedGuests - 1) * 10).toFixed(2)}
-                          </p>
-                        </div>
                       )}
+                      {departureDate && (
+                        <p className="text-gray-700">
+                          Check-out: {departureDate.toISOString().split("T")[0]}
+                        </p>
+                      )}
+                      <p className="text-gray-700">
+                        Huéspedes: {selectedGuests}
+                      </p>
+                    </div>
+                    <hr className="border-t border-gray-300 mb-4" />
 
+                    <div className="mb-4">
+                      <p className="text-sm text-gray-500">Precio base</p>
+                      <p className="text-lg font-semibold text-blue-500">
+                        ${bookingDetails?.price.toFixed(2)}
+                      </p>
+                    </div>
+
+                    {selectedGuests > 1 && (
                       <div className="mb-4">
                         <p className="text-sm text-gray-500">
-                          Subtotal por huéspedes
+                          + Recargo por {selectedGuests - 1} huésped(es) extra
                         </p>
                         <p className="text-lg font-semibold text-blue-500">
-                          $
-                          {(bookingDetails?.price ?? 0) +
-                            (selectedGuests - 1) * 10}
+                          ${((selectedGuests - 1) * 10).toFixed(2)}
                         </p>
                       </div>
+                    )}
 
-                      <hr className="border-t border-gray-300 mb-4" />
+                    <div className="mb-4">
+                      <p className="text-sm text-gray-500">
+                        Subtotal por huéspedes
+                      </p>
+                      <p className="text-lg font-semibold text-blue-500">
+                        $
+                        {(bookingDetails?.price ?? 0) +
+                          (selectedGuests - 1) * 10}
+                      </p>
+                    </div>
 
-                      <div className="flex justify-between items-center mb-4">
-                        <div>
-                          <p className="text-sm text-gray-500">
-                            x {calculateNights()} noches
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xl font-semibold text-blue-500">
-                            Total a pagar:
-                          </p>
-                          <p className="text-xl font-bold text-blue-700">
-                            ${totalAmount.toFixed(2)}
-                          </p>
-                        </div>
+                    <hr className="border-t border-gray-300 mb-4" />
+
+                    <div className="flex justify-between items-center mb-4">
+                      <div>
+                        <p className="text-sm text-gray-500">
+                          x {calculateNights()} noches
+                        </p>
                       </div>
-                      <br></br>
-
-                      <div className="w-min max-w-xs mx-auto">
-                        <PaypalButton
-                          total_price={totalAmount}
-                          onSuccess={() => {
-                            //reserva después de un pago exitoso
-                            create_booking();
-                            update_booking_dates();
-                            openSuccessModal();
-                          }}
-                        />
+                      <div>
+                        <p className="text-xl font-semibold text-blue-500">
+                          Total a pagar:
+                        </p>
+                        <p className="text-xl font-bold text-blue-700">
+                          ${totalAmount.toFixed(2)}
+                        </p>
                       </div>
                     </div>
+                    <br></br>
+
+                    {isLoggedIn ? (
+                      <>
+                        <div className="w-min max-w-xs mx-auto">
+                          <PaypalButton
+                            total_price={totalAmount}
+                            onSuccess={() => {
+                              //reserva después de un pago exitoso
+                              create_booking();
+                              update_booking_dates();
+                              openSuccessModal();
+                            }}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <div className="mt-8">
+                        <p className="text-center text-black">
+                          Inicia sesión o regístrate para continuar
+                        </p>
+                        <br />
+                        <div className="flex justify-center">
+                          <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={openSignUpModal} // Open SignUp modal on click
+                          >
+                            Registrate
+                          </button>
+                        </div>
+                        <p className="text-center text-black mt-4">
+                          Ya tienes una cuenta?{" "}
+                          <button
+                            onClick={openLoginModal}
+                            className="text-blue-500"
+                          >
+                            Iniciar Sesión
+                          </button>
+                          {isLoginModalOpen && (
+                            <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+                              <div className=" p-4 rounded-md" ref={modalRef}>
+                                {loginFailed ? (
+                                  <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
+                                    Por favor intenta de nuevo.
+                                  </p>
+                                ) : (
+                                  <Login
+                                    onSuccess={closeLoginModal}
+                                    onFailure={() => setLoginFailed(true)}
+                                  />
+                                )}
+                              </div>
+                            </div>
+                          )}
+                          {isSignUpModalOpen && (
+                            <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
+                              <div className=" p-4 rounded-md" ref={modalRef}>
+                                {signUpFailed ? (
+                                  <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
+                                    Sign up failed. Please try again.
+                                  </p>
+                                ) : (
+                                  <SignUp
+                                    onSuccess={closeSignUpModal}
+                                    onFailure={() => setSignUpFailed(true)}
+                                  />
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ) : (
-              <div className="mt-8">
-                <div className="flex justify-center">
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={openSignUpModal} // Open SignUp modal on click
-                  >
-                    Sign Up
-                  </button>
                 </div>
-                <p className="text-center text-white mt-4">
-                  Ya tienes una cuenta?{" "}
-                  <button onClick={openLoginModal} className="text-blue-500">
-                    Iniciar Sesión
-                  </button>
-                  {isLoginModalOpen && (
-                    <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
-                      <div className=" p-4 rounded-md" ref={modalRef}>
-                        {loginFailed ? (
-                          <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
-                            Por favor intenta de nuevo.
-                          </p>
-                        ) : (
-                          <Login
-                            onSuccess={closeLoginModal}
-                            onFailure={() => setLoginFailed(true)}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {isSignUpModalOpen && (
-                    <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
-                      <div className=" p-4 rounded-md" ref={modalRef}>
-                        {signUpFailed ? (
-                          <p className="text-white bg-red-500 p-2 rounded-md animate-pulse">
-                            Sign up failed. Please try again.
-                          </p>
-                        ) : (
-                          <SignUp
-                            onSuccess={closeSignUpModal}
-                            onFailure={() => setSignUpFailed(true)}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
