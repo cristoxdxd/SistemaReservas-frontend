@@ -12,6 +12,7 @@ export const History = () => {
   const { listBooking, listAvailability } = useHistory();
   const [isListAvailabilityFetched, setIsListAvailabilyFetched] = useState(false);
   const [isListBookingFetched, setIsListBookingFetched] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -33,6 +34,14 @@ export const History = () => {
 
     return () => clearTimeout(bookingTimeout);
   }, [listBooking]);
+
+  useEffect(() => {
+    const loadingTimeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+
+    return () => clearTimeout(loadingTimeout);
+  }, []);
 
   // Función para buscar
   const search = (term: string) => {
