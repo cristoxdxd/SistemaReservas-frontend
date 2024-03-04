@@ -3,6 +3,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { auth } from "../../Firebase";
 import { email } from "../../models/email.interface";
 import { sendEmail } from "../../services/sendEmail";
+import { useLocation } from "react-router-dom";
 
 // Renders errors or successfull transactions on the screen.
 function Message({ content }: { content: string }) {
@@ -26,13 +27,17 @@ function PaypalButton({ total_price, onSuccess }: PaypalButtonProps){
   const [message, setMessage] = useState("");
 
   // Función para enviar el correo electrónico de confirmación
-  
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
 
   async function send_email() {
     const email: email = {
       email: auth.currentUser?.email ?? "",
       subject: "Reservation Confirmation",
-      body: "Thank you for your reservation. We will be waiting for you. \n"
+      body: "Thank you for your reservation. We will be waiting for you. \n",
+      amount: total_price,
+      booking_id: id ?? "",
     };
     const res = await sendEmail(email);
     if (res.status == 200) {
