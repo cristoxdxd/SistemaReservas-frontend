@@ -16,6 +16,7 @@ interface HistoryCardProps {
   booking: Booking;
   availability: Availability;
 }
+
 const today = new Date();
 today.setDate(today.getDate() + 1);
 
@@ -42,10 +43,10 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
   const [checkOutDate, setCheckOutDate] = useState(availability.end_date);
 
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(
-    checkInDate ? new Date(checkInDate) : undefined
+    checkInDate ? new Date(checkInDate) : new Date()
   );
   const [departureDate, setDepartureDate] = useState<Date | undefined>(
-    checkOutDate ? new Date(checkOutDate) : undefined
+    checkOutDate ? new Date(checkOutDate) : new Date()
   );
 
   useEffect(() => {
@@ -335,10 +336,9 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
         <p className="text-blue-400 mb-2">Baños: {booking.bathrooms}</p>
         <div className="flex items-center justify-center">
           <p className="text-blue-400 mb-2">
-            {new Date(availability.start_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} | {new Date(availability.end_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+            {availability.start_date} | {availability.end_date}
           </p>
         </div>
-
       </div>
       {isUpdateModalOpen && (
         <div className="bg-black fixed inset-0 flex items-center justify-center z-50 bg-opacity-55">
@@ -360,22 +360,19 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
                   required
                   className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                   selected={arrivalDate}
-                  onChange={(date) => setArrivalDate(date || new Date())}
+                  onChange={(date) => setArrivalDate(date || undefined)}
                   filterDate={(date) =>
                     isDateSelectableArrival(date || new Date())
                   }
                 />
 
-                <label htmlFor="salida" className="text-white mt-6 mb-2">
-                  Salida:
-                </label>
                 <DatePicker
                   id="salida"
                   name="salida"
                   required
                   className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
                   selected={departureDate}
-                  onChange={(date) => setDepartureDate(date || new Date())}
+                  onChange={(date) => setDepartureDate(date || undefined)}
                   filterDate={(date) =>
                     isDateSelectableDeparture(date || new Date())
                   }
