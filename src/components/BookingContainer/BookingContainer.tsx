@@ -5,33 +5,24 @@ import { useEffect, useState } from "react";
 
 export interface IBookingContainerProps {
   listBooking: Booking[];
-  numAdults: number;
-  numChildren: number;
-  numBabies: number;
-  childAges: number[];
-  totalCapacity: number;
-  minPrice: number;
-  maxPrice: number;
+  checkin: string; // Nuevo: Fecha de check-in
+  checkout: string; // Nuevo: Fecha de check-out
+  numAdults: number; // Nueva: Número de adultos
+  numChildren: number; // Nueva: Número de niños
+  numBabies: number; // Nueva: Número de bebés
+  childAges: number[]; // Nueva: Edades de los niños
+  isServiceAnimal: boolean; // Nueva: ¿Lleva mascota de servicio?
 }
 
-export const BookingContainer = ({ listBooking, numAdults, numChildren, numBabies, childAges, totalCapacity, minPrice, maxPrice }: IBookingContainerProps) => {
+export const BookingContainer = ({ listBooking, checkin, checkout , numAdults, numChildren, numBabies, childAges, isServiceAnimal}: IBookingContainerProps) => {
   const { bookingList } = useBookingContainer(listBooking);
   const [isLoading, setIsLoading] = useState(true);
-  const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
     if (bookingList.length !== 0) {
       setIsLoading(false);
-      filterBookings();
     }
-  }, [bookingList, totalCapacity, minPrice, maxPrice]);
-
-  const filterBookings = () => {
-    const filtered = bookingList.filter((booking) => {
-      return booking.capacity >= totalCapacity && booking.price >= minPrice && booking.price <= maxPrice;
-    });
-    setFilteredBookings(filtered);
-  };
+  }, [bookingList]);
 
   return (
     <div className="flex justify-center items-center">
@@ -42,17 +33,18 @@ export const BookingContainer = ({ listBooking, numAdults, numChildren, numBabie
           </div>
         ) : (
           <>
-            {filteredBookings.map((booking) => (
+            {bookingList.map((booking) => (
               <BookingCard
-                booking={booking}
-                numAdults={numAdults}
-                numChildren={numChildren}
-                numBabies={numBabies}
-                childAges={childAges}
-                totalCapacity={totalCapacity}
-                minPrice={minPrice}
-                maxPrice={maxPrice}
-              />
+              booking={booking} // Propiedad de reserva
+              checkin={checkin} // Propiedad de fecha de check-in
+              checkout={checkout} // Propiedad de fecha de check-out
+              numAdults={numAdults} // Propiedad de número de adultos
+              numChildren={numChildren} // Propiedad de número de niños
+              numBabies={numBabies} // Propiedad de número de bebés
+              childAges={childAges} // Propiedad de edades de los niños
+              isServiceAnimal={isServiceAnimal} // Propiedad de ¿Lleva mascota de servicio?
+            />
+            
             ))}
           </>
         )}
