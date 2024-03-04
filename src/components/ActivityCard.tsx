@@ -24,6 +24,7 @@ export const ActivityCard = ({
         className="w-full h-32 object-cover mb-4 rounded-lg text-white"
       />
       <h2 className="text-white text-xl font-bold mb-2">{name}</h2>
+      <hr className="border-t border-gray-300 mb-4" />
       <p className="text-blue-400 mb-2">{description}</p>
       <p className="text-blue-400 mb-2">
       <FontAwesomeIcon icon={faSackDollar} className="h-5 w-5 mr-2" />Precio: ${price}</p>

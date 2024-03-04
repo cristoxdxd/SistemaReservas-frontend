@@ -39,6 +39,7 @@ export const BookingCard = ({ booking, checkin, checkout, numAdults, numChildren
         className="w-full h-32 object-cover mb-4 rounded-lg text-white"
       />
       <h2 className="text-white text-xl font-bold mb-2">{booking.name}</h2>
+      <hr className="border-t border-gray-300 mb-4" />
       <p className="text-blue-400 mb-2">
       {booking.summary}</p>
       <p className="text-blue-400 mb-2">

@@ -1,5 +1,5 @@
 import { Booking } from "../models/Booking.interface";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSackDollar, faUsers, faBed, faBath } from '@fortawesome/free-solid-svg-icons';
@@ -18,6 +18,18 @@ export const BookingPreview = (booking: Booking) => {
       prevIndex === 0 ? booking.images.length - 1 : prevIndex - 1
     );
   };
+
+  
+  // Efecto para cambiar automáticamente la imagen cada 5 segundos
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      handleNextImage();
+    }, 5000); // Cambia la imagen cada 5000 milisegundos (5 segundos)
+
+    // Limpia el temporizador cuando el componente se desmonta
+    return () => clearInterval(intervalId);
+  }, [currentImageIndex, booking.images.length]); // Dependencias del efecto
+
   return (
     <>
       <div
@@ -29,7 +41,7 @@ export const BookingPreview = (booking: Booking) => {
               <img
                 src={booking.images[currentImageIndex]}
                 alt={booking.name}
-                className="w-full h-80 object-cover mb-4 rounded-lg"
+                className="w-full h-80 object-cover mb-4 rounded-lg transition-opacity duration-500"
               />
               <button
                 onClick={handlePreviousImage}
@@ -49,6 +61,7 @@ export const BookingPreview = (booking: Booking) => {
 
         <div className="text-white font-semibold">
           <h2 className="text-4xl font-bold mb-2">{booking.name}</h2>
+          <hr className="border-t border-gray-300 mb-4" />
           <p className="text-blue-400 mb-2">{booking.description}</p>
           <div className="grid grid-cols-2 gap-4 mb-2">
             <p className="flex items-center text-white">

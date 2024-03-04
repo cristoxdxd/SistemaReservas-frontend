@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ActivityContainer } from "../../components/ActivityContainer/ActivityContainer";
 import { NavBar } from "../../components/NavBar";
 import { useAbout } from "./State/useAbout";
+import { Footer } from "../../components/Footer";
 
 export const About = () => {
   const { listActivities } = useAbout();
@@ -42,6 +43,7 @@ export const About = () => {
           )}
         </div>
       </div>
+      <Footer />
     </>
   );
 };

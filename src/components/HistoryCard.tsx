@@ -143,6 +143,7 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
           />
         </div>
         <h2 className="text-white text-4xl font-bold mb-2">{booking.name}</h2>
+        <hr className="border-t border-gray-300 mb-4" />
         {/* <p className="text-blue-400 mb-2">{booking.description}</p> */}
         <p className="text-blue-400 mb-2">Precio: ${booking.price} /noche</p>
         <p className="text-blue-400 mb-2">Precio Total: ${total}</p>
