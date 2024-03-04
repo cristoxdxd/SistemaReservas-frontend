@@ -1,5 +1,5 @@
-import {useState } from "react";
-//import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { Booking } from "../models/Booking.interface";
 import { BookingContainer } from "./BookingContainer/BookingContainer";
 
@@ -10,135 +10,40 @@ interface IFiltroBusquedasProps {
 export const FiltroBusquedas = ({
   listBooking,
 }: IFiltroBusquedasProps) => {
-  const [checkInDate, setCheckInDate] = useState("");
-  const [checkOutDate, setCheckOutDate] = useState("");
-  const [minCheckOutDate, setMinCheckOutDate] = useState("");
+
   const [numAdults, setNumAdults] = useState<number>(1);
   const [numChildren, setNumChildren] = useState<number>(0);
   const [numBabies, setNumBabies] = useState<number>(0);
-  const [isServiceAnimal, setIsServiceAnimal] = useState<boolean>(false);
   const [childAges] = useState<number[]>([]);
-  const [showCheckInLabel, setShowCheckInLabel] = useState(true);
-  const [showCheckOutLabel, setShowCheckOutLabel] = useState(true);
+  const totalCapacity = numAdults + numChildren;
   const [showQuien, setShowQuien] = useState(false);
-  const [adultsError, setAdultsError] = useState<string | null>(null);
-  const [childrenError, setChildrenError] = useState<string | null>(null);
-  const [babiesError, setBabiesError] = useState<string | null>(null);
+  const [showCuanto, setShowCuanto] = useState(false);
+  const [minPrice, setMinPrice] = useState<number>(50);
+  const [maxPrice, setMaxPrice] = useState<number>(300);
 
-  const today = new Date();
-  today.setDate(today.getDate() + 1);
-  //const minDate = today.toISOString().split("T")[0];
-
-  const MAX_ADULTS_CAPACITY = 12;
-  const MAX_CHILDREN_PER_ROOM = 9;
-  const MAX_CHILD_AGE = 12;
-  const MAX_BABY_AGE = 2;
-  const MAX_BABY_PER_ROOM = 5;
-
-  const handleCheckInDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCheckInDate = e.target.value;
-    setCheckInDate(newCheckInDate);
-    // Calcula la fecha mínima para checkOutDate como el día siguiente a checkInDate
-    const nextDay = new Date(newCheckInDate);
-    nextDay.setDate(nextDay.getDate() + 1);
-    const newMinCheckOutDate = nextDay.toISOString().split("T")[0];
-    // Establece la fecha mínima para checkOutDate
-    setMinCheckOutDate(newMinCheckOutDate);
-    // Si checkOutDate es anterior a la nueva fecha mínima, cámbialo a la nueva fecha mínima
-    if (checkOutDate < newMinCheckOutDate) {
-      setCheckOutDate(newMinCheckOutDate);
-    }
-  };
-
-  const handleCheckOutDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newCheckOutDate = e.target.value;
-    setCheckOutDate(newCheckOutDate);
-  };
-
-  const handleSubmit = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-
-    setAdultsError(null);
-    setChildrenError(null);
-    setBabiesError(null);
-
-
-    console.log("Datos del formulario:", {
-      checkInDate,
-      checkOutDate,
-      numAdults,
-      numChildren,
-      numBabies,
-      childAges,
-      isServiceAnimal,
-    });
-  };
-
-
-  const renderLabel = (showLabel: boolean, htmlFor: string, text: string, setShowLabel: React.Dispatch<React.SetStateAction<boolean>>) => {
-    return (
-      <>
-        {showLabel && (
-          <label
-            htmlFor={htmlFor}
-            className={`block text-sm font-semibold text-white animate-jump ${showLabel ? "" : "hidden"
-              }`}
-            onClick={() => setShowLabel(false)}
-          >
-            {text}
-          </label>
-        )}
-      </>
-    );
-  };
 
   return (
     <div className="flex flex-col items-center">
+
       <div className="bg-gray-900 bg-opacity-70 p-10 rounded-md shadow-md mx-auto mt-10">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-wrap justify-center gap-5"
-        >
-          <div className="flex items-center">
-            {renderLabel(showCheckInLabel, "checkInDate", "Llegada", setShowCheckInLabel)}
-            {!showCheckInLabel && (
-              <input
-                type="date"
-                id="checkInDate"
-                value={checkInDate}
-                onChange={handleCheckInDateChange}
-                min={new Date().toISOString().split("T")[0]}
-                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
-                required
-              />
-            )}
-          </div>
-          <div className="flex items-center">
-            {renderLabel(showCheckOutLabel, "checkOutDate", "Salida", setShowCheckOutLabel)}
-            {!showCheckOutLabel && (
-              <input
-                type="date"
-                id="checkOutDate"
-                value={checkOutDate}
-                onChange={handleCheckOutDateChange}
-                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
-                min={minCheckOutDate}
-                required
-              />
-            )}
-          </div>
+        <form className="flex flex-wrap justify-center gap-5">
           <div className="flex flex-col items-center">
+            <div>
+              <MagnifyingGlassIcon style={{ height: "40px", width: "40px", color: "white" }} />
+            </div>
             <div className="bg-gray-900 bg-opacity-70 p-4 rounded-md shadow-md mx-auto">
+
               <div className="flex flex-wrap justify-center gap-5">
                 <div className="flex items-center">
-                  <label
-                    htmlFor="quien"
-                    className={`block text-sm font-semibold text-white ${showQuien ? "animate-fade-left" : "animate-jump"
-                      }`}
+
+                  <button
+                    type="button"
+                    className={`block text-sm font-semibold text-white`}
                     onClick={() => setShowQuien(!showQuien)}
+                    style={{ padding: '0 8px' }}
                   >
-                    Quién
-                  </label>
+                    Capacidad
+                  </button>
                   {showQuien && (
                     <div className="flex flex-col gap-5">
                       <div className="flex items-center">
@@ -148,23 +53,29 @@ export const FiltroBusquedas = ({
                         >
                           Adultos
                         </label>
-                        <select
-                          id="numAdults"
-                          value={numAdults}
-                          onChange={(e) =>
-                            setNumAdults(parseInt(e.target.value, 10))
-                          }
-                          className="ml-2 block w-16 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                          required
-                        >
-                          {[...Array(MAX_ADULTS_CAPACITY).keys()].map((num) => (
-                            <option key={num + 1} value={num + 1}>
-                              {num + 1}
-                            </option>
-                          ))}
-                        </select>
-                        {adultsError && <span className="text-red-500 ml-2">{adultsError}</span>}
+                        <div className="flex items-center">
+                          <div className="flex ml-2 items-center">
+                            <button
+                              type="button"
+                              onClick={() => setNumAdults(prev => Math.max(prev - 1, 1))}
+                              className="px-2 py-1 rounded-l-md bg-gray-200 border border-gray-300 text-sm"
+                              disabled={numAdults === 1}
+                            >
+                              -
+                            </button>
+                            <span className="px-2 py-1 bg-gray-200 border border-gray-300 text-sm">{numAdults}</span>
+                            <button
+                              type="button"
+                              onClick={() => setNumAdults(prev => prev + 1)}
+                              className="px-2 py-1 rounded-r-md bg-gray-200 border border-gray-300 text-sm"
+                              disabled={totalCapacity === 12}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
                       </div>
+
                       <div className="flex items-center">
                         <label
                           htmlFor="numChildren"
@@ -172,24 +83,27 @@ export const FiltroBusquedas = ({
                         >
                           Niños
                         </label>
-                        <select
-                          id="numChildren"
-                          value={numChildren}
-                          onChange={(e) =>
-                            setNumChildren(parseInt(e.target.value, 10))
-                          }
-                          className="ml-2 block w-16 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                          required
-                        >
-                          {[...Array(MAX_CHILDREN_PER_ROOM + 1).keys()].map((num) => (
-                            <option key={num} value={num}>
-                              {num}
-                            </option>
-                          ))}
-                        </select>
-                        <span className="ml-2 text-sm text-white">{`De 2 a ${MAX_CHILD_AGE} años`}</span>
-                        {childrenError && <span className="text-red-500 ml-2">{childrenError}</span>}
+                        <div className="flex ml-2 items-center">
+                          <button
+                            type="button"
+                            onClick={() => setNumChildren(prev => Math.max(prev - 1, 0))}
+                            className="px-2 py-1 rounded-l-md bg-gray-200 border border-gray-300 text-sm"
+                            disabled={numChildren === 0}
+                          >
+                            -
+                          </button>
+                          <span className="px-2 py-1 bg-gray-200 border border-gray-300 text-sm">{numChildren}</span>
+                          <button
+                            type="button"
+                            onClick={() => setNumChildren(prev => prev + 1)}
+                            className="px-2 py-1 rounded-r-md bg-gray-200 border border-gray-300 text-sm"
+                            disabled={totalCapacity === 12}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
+
                       <div className="flex items-center">
                         <label
                           htmlFor="numBabies"
@@ -197,67 +111,103 @@ export const FiltroBusquedas = ({
                         >
                           Bebés
                         </label>
-                        <select
-                          id="numBabies"
-                          value={numBabies}
-                          onChange={(e) =>
-                            setNumBabies(parseInt(e.target.value, 10))
-                          }
-                          className="ml-2 block w-16 px-2 py-1 rounded-md bg-gray-200 border border-gray-300 text-sm"
-                          required
-                        >
-                          {[...Array(MAX_BABY_PER_ROOM + 1).keys()].map((num) => (
-                            <option key={num} value={num}>
-                              {num}
-                            </option>
-                          ))}
-                        </select>
-                        <span className="ml-2 text-sm text-white">{`Menos de ${MAX_BABY_AGE} años`}</span>
-                        {babiesError && <span className="text-red-500 ml-2">{babiesError}</span>}
+                        <div className="flex ml-2 items-center">
+                          <button
+                            type="button"
+                            onClick={() => setNumBabies(prev => Math.max(prev - 1, 0))}
+                            className="px-2 py-1 rounded-l-md bg-gray-200 border border-gray-300 text-sm"
+                            disabled={numBabies === 0}
+                          >
+                            -
+                          </button>
+                          <span className="px-2 py-1 bg-gray-200 border border-gray-300 text-sm">{numBabies}</span>
+                          <button
+                            type="button"
+                            onClick={() => setNumBabies(prev => Math.min(prev + 1, 4))}
+                            className="px-2 py-1 rounded-r-md bg-gray-200 border border-gray-300 text-sm"
+                            disabled={numBabies === 4}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
 
                       <div className="flex items-center">
-                        <label
-                          htmlFor="isServiceAnimal"
-                          className={`block text-sm font-semibold mb-1 text-white`}
-                        >
-                          Mascotas
-                        </label>
-                        <input
-                          type="checkbox"
-                          id="isServiceAnimal"
-                          checked={isServiceAnimal}
-                          onChange={(e) => setIsServiceAnimal(e.target.checked)}
-                          className="ml-2"
-                        />
-                        <span className="ml-2 text-sm text-white">
-                          ¿Traes a un animal de servicio?
-                        </span>
+
                       </div>
                     </div>
                   )}
                 </div>
               </div>
-            </div>
-          </div>
 
+            </div>
+
+
+            <div className="bg-blue-900 bg-opacity-70 p-4 rounded-md shadow-md mx-auto">
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  className={`block text-sm font-semibold text-white`}
+                  onClick={() => setShowCuanto(!showCuanto)}
+                  style={{ padding: '0 8px' }}
+                >
+                  Precio
+                </button>
+                {showCuanto && (
+                  <div className="flex flex-col gap-5">
+                    <div className="flex items-center">
+                      <label htmlFor="minPrice" className="text-white mr-2">Mínimo:</label>
+                      <button
+                        type="button"
+                        onClick={() => setMinPrice(prev => Math.max(prev - 10, 0))}
+                        className="px-2 py-1 rounded-l-md bg-gray-200 border border-gray-300 text-sm"
+                        disabled={minPrice === 50}
+                      >
+                        -
+                      </button>
+                      <span className="px-2 py-1 bg-gray-200 border border-gray-300 text-sm">{minPrice}</span>
+                      <button
+                        type="button"
+                        onClick={() => setMinPrice(prev => Math.min(prev + 10))}
+                        className="px-2 py-1 rounded-r-md bg-gray-200 border border-gray-300 text-sm"
+
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <div className="flex items-center">
+                      <label htmlFor="maxPrice" className="text-white mr-2">Máximo:</label>
+                      <button
+                        type="button"
+                        onClick={() => setMaxPrice(prev => Math.max(prev - 10, 0))}
+                        className="px-2 py-1 rounded-l-md bg-gray-200 border border-gray-300 text-sm"
+                        disabled={maxPrice === minPrice + 10}
+                      >
+                        -
+                      </button>
+                      <span className="px-2 py-1 bg-gray-200 border border-gray-300 text-sm">{maxPrice}</span>
+                      <button
+                        type="button"
+                        onClick={() => setMaxPrice(prev => Math.min(prev + 10))}
+                        className="px-2 py-1 rounded-r-md bg-gray-200 border border-gray-300 text-sm"
+
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+          </div>
         </form>
       </div>
       <br />
       <br />
-      <BookingContainer
-        listBooking={listBooking}
-        checkin={checkInDate}
-        checkout={checkOutDate}
-        numAdults={numAdults}
-        numChildren={numChildren}
-        numBabies={numBabies}
-        childAges={childAges}
-        isServiceAnimal={isServiceAnimal}
-      />
+      <BookingContainer listBooking={listBooking} numAdults={numAdults} numChildren={numChildren} numBabies={numBabies} childAges={childAges} totalCapacity={totalCapacity} minPrice={minPrice} maxPrice={maxPrice} />
     </div>
   );
 };
-
-
 

@@ -5,30 +5,32 @@ import { useEffect, useState } from "react";
 
 export interface IBookingContainerProps {
   listBooking: Booking[];
-  checkin: string; // Nuevo: Fecha de check-in
-  checkout: string; // Nuevo: Fecha de check-out
-  numAdults: number; // Nueva: Número de adultos
-  numChildren: number; // Nueva: Número de niños
-  numBabies: number; // Nueva: Número de bebés
-  childAges: number[]; // Nueva: Edades de los niños
-  isServiceAnimal: boolean; // Nueva: ¿Lleva mascota de servicio?
+  numAdults: number;
+  numChildren: number;
+  numBabies: number;
+  childAges: number[];
+  totalCapacity: number;
+  minPrice: number;
+  maxPrice: number;
 }
 
-export const BookingContainer = ({ listBooking, checkin, checkout, numAdults, numChildren, numBabies, childAges, isServiceAnimal }: IBookingContainerProps) => {
+export const BookingContainer = ({ listBooking, numAdults, numChildren, numBabies, childAges, totalCapacity, minPrice, maxPrice }: IBookingContainerProps) => {
   const { bookingList } = useBookingContainer(listBooking);
   const [isLoading, setIsLoading] = useState(true);
+  const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
     if (bookingList.length !== 0) {
       setIsLoading(false);
+      filterBookings();
     }
-  }, [bookingList]);
+  }, [bookingList, totalCapacity, minPrice, maxPrice]);
 
-
-  // Función para filtrar las reservas según la cantidad de personas
-  const filterBookingsByCapacity = (booking: Booking) => {
-    const totalPersons = numAdults + numChildren;
-    return booking.capacity >= totalPersons;
+  const filterBookings = () => {
+    const filtered = bookingList.filter((booking) => {
+      return booking.capacity >= totalCapacity && booking.price >= minPrice && booking.price <= maxPrice;
+    });
+    setFilteredBookings(filtered);
   };
 
   return (
@@ -40,21 +42,18 @@ export const BookingContainer = ({ listBooking, checkin, checkout, numAdults, nu
           </div>
         ) : (
           <>
-            {bookingList
-              .filter(filterBookingsByCapacity)
-              .map((booking) => (
-                <BookingCard
-                  booking={booking} // Propiedad de reserva
-                  checkin={checkin} // Propiedad de fecha de check-in
-                  checkout={checkout} // Propiedad de fecha de check-out
-                  numAdults={numAdults} // Propiedad de número de adultos
-                  numChildren={numChildren} // Propiedad de número de niños
-                  numBabies={numBabies} // Propiedad de número de bebés
-                  childAges={childAges} // Propiedad de edades de los niños
-                  isServiceAnimal={isServiceAnimal} // Propiedad de ¿Lleva mascota de servicio?
-                />
-
-              ))}
+            {filteredBookings.map((booking) => (
+              <BookingCard
+                booking={booking}
+                numAdults={numAdults}
+                numChildren={numChildren}
+                numBabies={numBabies}
+                childAges={childAges}
+                totalCapacity={totalCapacity}
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+              />
+            ))}
           </>
         )}
       </div>
