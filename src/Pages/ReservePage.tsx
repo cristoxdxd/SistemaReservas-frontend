@@ -278,7 +278,7 @@ export const ReservationForm = () => {
     <>
       <Link
         to={"/"}
-        className="absolute flex flex-row text-white font-bold py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-400"
+        className="absolute flex flex-row text-white font-bold bg-blue-400 py-2 px-4 rounded-full mx-10 my-4 hover:bg-blue-700 transition duration-500 easy-in-out"
       >
         <ChevronLeftIcon className="h-5 w-5" />
         <p className="font-bold">Regresar</p>
@@ -287,7 +287,7 @@ export const ReservationForm = () => {
         <br></br>
         <br></br>
         <br></br>
-        <div className="px-20 flex justify-self-auto items-center">
+        <div className="px-20 flex justify-self-aut rounded-lg items-center bg-gray-700 animate-fade-up ml-5 mr-5 p-7">
           {/* BookingPreview */}
           {bookingDetails && (
             <BookingPreview
@@ -323,7 +323,7 @@ export const ReservationForm = () => {
                 id="llegada"
                 name="llegada"
                 required
-                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white hover:bg-blue-700 transition duration-500 easy-in-out"
                 selected={arrivalDate}
                 onChange={(date) => setArrivalDate(date || new Date())}
                 filterDate={(date) =>
@@ -338,7 +338,7 @@ export const ReservationForm = () => {
                 id="salida"
                 name="salida"
                 required
-                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white hover:bg-blue-700 transition duration-500 easy-in-out"
                 selected={departureDate}
                 onChange={(date) => setDepartureDate(date || new Date())}
                 filterDate={(date) =>
@@ -355,7 +355,7 @@ export const ReservationForm = () => {
                     name="huéspedes"
                     value={selectedGuests}
                     onChange={handleGuestsChange} // Agregar el evento onChange
-                    className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white"
+                    className="ml-2 block w-40 px-6 py-2 rounded-md bg-blue-500 border border-blue-500 text-sm text-white hover:bg-blue-700 transition duration-500 easy-in-out"
                     required
                   >
                     {/* Generar opciones dinámicamente según la disponibilidad */}
@@ -374,7 +374,7 @@ export const ReservationForm = () => {
 
             <div className="flex justify-center items-center mt-10">
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-max transition duration-500 easy-in-out"
                 onClick={handleCreateBooking}
               >
                 Reservar
@@ -479,7 +479,7 @@ export const ReservationForm = () => {
                         <br />
                         <div className="flex justify-center">
                           <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-500 easy-in-out"
                             onClick={openSignUpModal} // Open SignUp modal on click
                           >
                             Registrate
@@ -489,7 +489,7 @@ export const ReservationForm = () => {
                           Ya tienes una cuenta?{" "}
                           <button
                             onClick={openLoginModal}
-                            className="text-blue-500"
+                            className="text-blue-500 hover:underline"
                           >
                             Iniciar Sesión
                           </button>
