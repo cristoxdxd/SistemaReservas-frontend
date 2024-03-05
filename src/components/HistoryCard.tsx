@@ -10,6 +10,9 @@ import { Link } from "react-router-dom";
 import { deleteAvailability } from "../services/deleteAvailability";
 import { getOneBooking } from "../services/getOneBooking";
 import { updateBookingDates } from "../services/updateBookingDates";
+import { auth } from "../Firebase";
+import { email } from "../models/email.interface";
+import { sendEmailCancelation } from "../services/sendEmailCancelation";
 
 interface HistoryCardProps {
   booking: Booking;
@@ -162,7 +165,24 @@ export const HistoryCard: React.FC<HistoryCardProps> = ({
     }
   }
 
+  async function send_email_cancelation() {
+    const email: email = {
+      email: auth.currentUser?.email ?? "",
+      subject: "Reservation Cancelation",
+      body: "Thank you for your reservation. We will be waiting for you. \n",
+      amount: total,
+      booking_id: id ?? "",
+    };
+    const res = await sendEmailCancelation(email);
+    if (res.status == 200) {
+      console.log("Email sent successfully");
+    } else {
+      console.error("Error sending email");
+    }
+  };
+
   const handleDeleteAvailability = () => {
+    send_email_cancelation()
     update_booking_dates_delete();
     delete_availability();
   };
