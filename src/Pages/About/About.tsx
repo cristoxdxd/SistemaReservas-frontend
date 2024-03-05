@@ -21,7 +21,7 @@ export const About = () => {
       <div className="min-h-screen">
         <div className="container mx-auto py-8">
           <div className="text-white text-4xl font-bold text-center mb-8 animate-pulse">
-            About Copo de Nieve
+            Sobre Nosotros
           </div>
           <div className="text-white text-lg text-center animate-fade-left">
             Bienvenido a Copo de Nieve, el hotel mágico donde los sueños se
@@ -43,7 +43,7 @@ export const About = () => {
           )}
         </div>
       </div>
-      <Footer />
+      <Footer></Footer>
     </>
   );
 };
