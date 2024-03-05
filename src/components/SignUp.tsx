@@ -55,11 +55,11 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Create an account
+              Bienvenido a Copo de Nieve
             </h1>
             <form onSubmit={registerForm.handleSubmit(onSubmit)} className="space-y-4 md:space-y-6" action="#">
               <div>
-                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your name</label>
+                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingrese su nombre</label>
                 <input
                   {...registerForm.register("name", {
                     required: "Este campo es requerido.",
@@ -67,7 +67,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
                   className={`w-full h-10 text-lg mb-4 px-2 py-1 border border-gray-300 rounded text-black ${!isEmpty(registerForm.formState.errors.name) ? "border-red-500" : ""
                     }`}
                   type="text"
-                  placeholder="Your name"
+                  placeholder="Nombre"
                 />
                 {!isEmpty(registerForm.formState.errors.name) && (
                   <p className="text-red-500 mb-4">
@@ -76,7 +76,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
                 )}
               </div>
               <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingrese su e-mail</label>
                 <input
                   {...registerForm.register("email", {
                     required: "Este campo es requerido.",
@@ -97,7 +97,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
                 )}
               </div>
               <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingrese su contraseña</label>
                 <input
                   {...registerForm.register("password", {
                     required: "Este campo es requerido.",
@@ -115,7 +115,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onSuccess, onFailure }) => {
               </div>
               <button
                 type="submit"
-                className={`w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 ${!registerForm.formState.isValid ? "cursor-not-allowed opacity-50" : ""
+                className={`w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 transition duration-500 easy-in-out ${!registerForm.formState.isValid ? "cursor-not-allowed opacity-50" : ""
                   }`}
                 disabled={!registerForm.formState.isValid}
               >

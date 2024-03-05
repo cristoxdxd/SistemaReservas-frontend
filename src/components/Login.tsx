@@ -53,12 +53,12 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
 
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl md:text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
-              Sign in to your account
+            <h1 className="text-xl md:text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white text-center">
+              Iniciar sesión.
             </h1>
             <form onSubmit={loginForm.handleSubmit(onSubmit)} className="space-y-4 md:space-y-6" action="#">
               <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingrese su e-mail</label>
                 <input
                   {...loginForm.register("email", {
                     required: "Este campo es requerido.",
@@ -79,7 +79,7 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
                 )}
               </div>
               <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingrese su contraseña</label>
                 <input
                   {...loginForm.register("password", {
                     required: "Este campo es requerido.",
@@ -97,11 +97,11 @@ export const Login: React.FC<LoginProps> = ({ onSuccess, onFailure }) => {
               </div>
               <button
                 type="submit"
-                className={`w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 ${!loginForm.formState.isValid ? "cursor-not-allowed" : ""
+                className={`w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 transition duration-500 easy-in-out${!loginForm.formState.isValid ? "cursor-not-allowed" : ""
                   }`}
                 disabled={!loginForm.formState.isValid}
               >
-                {loading ? "Signing in..." : "Sign in"}
+                {loading ? "Signing in..." : "Iniciar sesión"}
               </button>
             </form>
           </div>

@@ -47,7 +47,7 @@ export const BookingCard = ({ booking, checkin, checkout, numAdults, numChildren
       <FontAwesomeIcon icon={faUsers} className="h-5 w-5 mr-2" />Capacidad: {booking.capacity} personas</p>
       <Link to={`/reserve${queryParams}`}>
         <button
-          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
+          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-500 easy-in-out${
             isAnimating ? "animate-jump" : ""
           }`}
           onClick={handleReservarClick}

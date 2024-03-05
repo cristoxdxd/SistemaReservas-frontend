@@ -282,7 +282,7 @@ export const FiltroBusquedas = ({
           </div>
           <button
             type="submit"
-            className={`bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4 h-12 ${!isFormValid ? "cursor-not-allowed" : ""
+            className={`bg-blue-500 text-white px-4 py-2 rounded-md sm:px-6 sm:py-3 md:px-8 md:py-4 h-12 transition duration-500 easy-in-out${!isFormValid ? "cursor-not-allowed" : ""
               } animate-jump`}
             disabled={!isFormValid}
             onClick={handleButtonClick} // Agrega esta línea
